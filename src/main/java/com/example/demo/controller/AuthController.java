@@ -23,10 +23,6 @@ public class AuthController {
     @GetMapping("/register")
     public String register(Model model) {
         model.addAttribute("userDto", new UserDto());
-        List<RoleDto> roles = new ArrayList<>();
-        roles.add(RoleDto.builder().role("specialist").build());
-        roles.add(RoleDto.builder().role("customer").build());
-        model.addAttribute("roles", roles);
         return "auth/register";
     }
 

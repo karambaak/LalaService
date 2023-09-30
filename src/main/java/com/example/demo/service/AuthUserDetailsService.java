@@ -31,7 +31,7 @@ public class AuthUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByPhoneNumber(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
+                user.getPhoneNumber(),
                 user.getPassword(),
                 user.isEnabled(),
                 true,
