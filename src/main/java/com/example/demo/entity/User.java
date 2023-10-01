@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import com.example.demo.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,42 +20,32 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name = "id")
+    @Column(name = "id")
     private Long id;
-    @Column (name = "user_name")
+    @Column(name = "user_name")
     private String userName;
-    @Column (name = "user_type")
+    @Column(name = "user_type")
     private String userType;
-    @Column (name = "phone_number")
+    @Column(name = "phone_number")
     private String phoneNumber;
-    @Column (name = "email")
+    @Column(name = "email")
     private String email;
-    @Column (name = "password")
+    @Column(name = "password")
     private String password;
-    @Column (name = "enabled")
+    @Column(name = "enabled")
     private boolean enabled;
-    @Column (name = "registration_date")
+    @Column(name = "registration_date")
     private LocalDateTime registrationDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users", cascade = CascadeType.ALL)
-    private Collection<Role> roles;
-    public void addRole(Role role) {
-        this.roles.add(role);
-        role.getUsers().add(this);
-    }
-
-    public void removeRole(long roleId) {
-        Role role = this.roles.stream().filter(t -> t.getId() == roleId).findFirst().orElse(null);
-        if (role != null) {
-            this.roles.remove(role);
-            role.getUsers().remove(this);
-        }
-    }
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("FULL"));
     }
+
     public String getUserName() {
         return userName;
     }
