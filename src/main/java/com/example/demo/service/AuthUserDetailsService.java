@@ -37,12 +37,12 @@ public class AuthUserDetailsService implements UserDetailsService {
                 true,
                 true,
                 true,
-                getAuthorities(user.getRoles())
+                getAuthorities(user.getRole())
         );
     }
 
-    private Collection<? extends GrantedAuthority> getAuthorities(Collection<Role> roles) {
-        return getGrantedAuthorities(getPrivileges(roles));
+    private Collection<? extends GrantedAuthority> getAuthorities(Role role) {
+        return getGrantedAuthorities(getPrivileges(role));
     }
 
     private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
@@ -53,12 +53,11 @@ public class AuthUserDetailsService implements UserDetailsService {
         return authorities;
     }
 
-    private List<String> getPrivileges(Collection<Role> roles) {
+    private List<String> getPrivileges(Role role) {
         List<String> privileges = new ArrayList<>();
 
-        for (Role role : roles) {
             privileges.add(role.getRole());
-        }
+
         privileges.add("FULL");
 
         // ROLE_USER, FULL, READ_ONLY

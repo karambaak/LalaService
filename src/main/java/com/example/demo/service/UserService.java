@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -31,14 +30,13 @@ public class UserService {
                 .email(userDto.getEmail())
                 .password(encoder.encode(userDto.getPassword()))
                 .userName(userDto.getUserName())
-                .roles(new HashSet<>())
                 .enabled(Boolean.TRUE)
                 .build();
-        if(userDto.getRole().equalsIgnoreCase("specialist")) {
-            user.addRole(roleRepository.findByRole("ROLE_SPECIALIST"));
+        if (userDto.getRole().equalsIgnoreCase("specialist")) {
+            user.setRole(roleRepository.findByRole("ROLE_SPECIALIST"));
         }
-        if(userDto.getRole().equalsIgnoreCase("customer")) {
-            user.addRole(roleRepository.findByRole("ROLE_CUSTOMER"));
+        if (userDto.getRole().equalsIgnoreCase("customer")) {
+            user.setRole(roleRepository.findByRole("ROLE_CUSTOMER"));
         }
         repository.saveAndFlush(user);
     }
