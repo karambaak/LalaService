@@ -29,26 +29,32 @@ public class UserService {
     }
 
     public void register(UserDto userDto) {
-        Role role = null;
-        if (userDto.getRole().equalsIgnoreCase("role_specialist")) {
-            role = roleRepository.findByRole("ROLE_SPECIALIST");
+        var u = repository.findByPhoneNumber(userDto.getPhoneNumber());
+        if(u.isEmpty()) {
+            Role role = null;
+            if (userDto.getRole().equalsIgnoreCase("role_specialist")) {
+                role = roleRepository.findByRole("ROLE_SPECIALIST");
+            }
+            if (userDto.getRole().equalsIgnoreCase("role_customer")) {
+                role = roleRepository.findByRole("ROLE_CUSTOMER");
+            }
+            if (role == null) {
+                log.warn("Invalid role name: {}", userDto.getRole());
+                throw new IllegalArgumentException("Invalid role name: " + userDto.getRole());
+            }
+            var user = User.builder()
+                    .phoneNumber(userDto.getPhoneNumber())
+                    .email(userDto.getEmail())
+                    .password(encoder.encode(userDto.getPassword()))
+                    .userName(userDto.getUserName())
+                    .role(role)
+                    .enabled(Boolean.TRUE)
+                    .build();
+            repository.save(user);
+        } else {
+            log.warn("User already exists: {}", userDto.getPhoneNumber());
+            throw new IllegalArgumentException("User already exists");
         }
-        if (userDto.getRole().equalsIgnoreCase("role_customer")) {
-            role = roleRepository.findByRole("ROLE_CUSTOMER");
-        }
-        if (role == null) {
-            log.warn("Invalid role name: {}", userDto.getRole());
-            throw new IllegalArgumentException("Invalid role name: " + userDto.getRole());
-        }
-        var user = User.builder()
-                .phoneNumber(userDto.getPhoneNumber())
-                .email(userDto.getEmail())
-                .password(encoder.encode(userDto.getPassword()))
-                .userName(userDto.getUserName())
-                .role(role)
-                .enabled(Boolean.TRUE)
-                .build();
-        repository.save(user);
     }
 
     public List<String> getRoles() {
