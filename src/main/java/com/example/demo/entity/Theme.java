@@ -11,15 +11,14 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "roles")
-public class Role {
+@Table(name = "themes")
+public class Theme {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "role")
-    private String role;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
-    private List<User> user;
+    @Column(name = "theme_name")
+    private String themeName;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "theme")
+    List<User> users;
 }

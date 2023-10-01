@@ -37,10 +37,16 @@ public class User implements UserDetails {
     @Column(name = "registration_date")
     private LocalDateTime registrationDate;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
-
+    @OneToOne(mappedBy="sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Message sentMessage;
+    @OneToOne(mappedBy="receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Message receivedMessage;
+    @ManyToOne
+    @JoinColumn(name = "theme_id")
+    private Theme theme;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("FULL"));

@@ -56,7 +56,7 @@ public class AuthUserDetailsService implements UserDetailsService {
     private List<String> getPrivileges(Role role) {
         List<String> privileges = new ArrayList<>();
 
-            privileges.add(role.getRole());
+        privileges.add(role.getRole());
 
         privileges.add("FULL");
 
