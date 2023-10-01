@@ -11,7 +11,7 @@
           integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
 </head>
 <style>
-    .error {
+    .error{
         color: red;
         font-weight: 500;
         text-align: center;
@@ -26,45 +26,38 @@
                 </div>
                 <div class="card shadow-lg" style="border-radius: 15px; margin-top: 100px;">
                     <div class="card-body p-5">
-                        <h1 class="fs-4 card-title fw-bold mb-4">
-                            login
-                        </h1>
+                        <h1 class="fs-4 card-title fw-bold mb-4"><@spring.message 'user.login'/></h1>
                         <form method="post" class="needs-validation" action="/auth/login" id="/login-form">
                             <#if _csrf??>
                                 <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                        value="${(_csrf.token)!'--no-token--'}"/>
                             </#if>
                             <div class="mb-3">
-                                <label class="mb-2 text-muted" for="phoneNumber">Phone Number</label>
-                                <input id="phoneNumber" type="text" class="form-control" name="username" placeholder="Phone Number"
-                                       value="" required autofocus>
+                                <label class="mb-2 text-muted" for="email"><@spring.message 'user.register.phonenumber'/></label>
+                                <input id="email" type="text" class="form-control" name="username" placeholder="<@spring.message 'user.register.phonenumber'/>" value="" required autofocus>
                             </div>
 
                             <div class="mb-3">
                                 <div class="mb-2 w-100">
-                                    <label class="text-muted" for="password">
-                                        password
-                                    </label>
-                                    <input id="password" type="password" class="form-control" placeholder="password"
-                                           name="password" required>
+                                    <label class="text-muted" for="password"><@spring.message 'user.login.password'/></label>
                                 </div>
-
+                                <input id="password" type="password" class="form-control" placeholder="<@spring.message 'user.login.password'/>" name="password" required>
                             </div>
-
-                            <button class="btn btn-primary" type="submit">signin</button>
-
+                            <#if error??>
+                                <b class="error">${error}</b>
+                            </#if>
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary" style="padding-left: 50px; padding-right: 50px; margin-bottom: -20px;">
+                                    <@spring.message 'navbar.user.signin'/>
+                                </button>
+                            </div>
                         </form>
                     </div>
                     <div class="card-footer py-3 border-0">
                         <div class="text-center">
-                            I have not an account
-                            <a href="/auth/register" class="text-dark">
-                                create account
-                            </a>
+                            <@spring.message 'user.haventaccount'/><a href="/auth/register" class="text-dark">  <@spring.message 'user.create.account'/></a>
                             <hr>
-                            <a href="/auth/forgot_password" class="text-dark">
-                                forgot password
-                            </a>
+                            <a href="/auth/forgot_password" class="text-dark"><@spring.message 'user.forgot.password'/></a>
                         </div>
                     </div>
                 </div>
@@ -78,7 +71,7 @@
 
     let user = {}
 
-    function onLoginHandler(event) {
+    function onLoginHandler(event){
         let form = event.target
         let userFormData = new FormData(form)
 
