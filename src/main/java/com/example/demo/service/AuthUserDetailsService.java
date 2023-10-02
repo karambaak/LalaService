@@ -29,40 +29,47 @@ public class AuthUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByPhoneNumber(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return new org.springframework.security.core.userdetails.User(
-                user.getPhoneNumber(),
-                user.getPassword(),
-                user.isEnabled(),
-                true,
-                true,
-                true,
-                getAuthorities(user.getRole())
-        );
+        User userEntity = userRepository.findByPhoneNumber(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return new org.springframework.security.core.userdetails.User(userEntity.getPhoneNumber(), userEntity.getPassword(), userEntity.getAuthorities());
     }
 
-    private Collection<? extends GrantedAuthority> getAuthorities(Role role) {
-        return getGrantedAuthorities(getPrivileges(role));
-    }
 
-    private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        for (String privilege : privileges) {
-            authorities.add(new SimpleGrantedAuthority(privilege));
-        }
-        return authorities;
-    }
-
-    private List<String> getPrivileges(Collection<Role> roles) {
-        List<String> privileges = new ArrayList<>();
-
-        privileges.add(role.getRole());
-
-        privileges.add("FULL");
-
-        // ROLE_USER, FULL, READ_ONLY
-        return privileges;
-    }
+    //    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        User user = userRepository.findByPhoneNumber(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//        return new org.springframework.security.core.userdetails.User(
+//                user.getPhoneNumber(),
+//                user.getPassword(),
+//                user.isEnabled(),
+//                true,
+//                true,
+//                true,
+//                getAuthorities(user.getRole())
+//        );
+//    }
+//
+//    private Collection<? extends GrantedAuthority> getAuthorities(Role role) {
+//        return getGrantedAuthorities(getPrivileges(role));
+//    }
+//
+//    private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
+//        List<GrantedAuthority> authorities = new ArrayList<>();
+//        for (String privilege : privileges) {
+//            authorities.add(new SimpleGrantedAuthority(privilege));
+//        }
+//        return authorities;
+//    }
+//
+//    private List<String> getPrivileges(Collection<Role> roles) {
+//        List<String> privileges = new ArrayList<>();
+//
+//        privileges.add(role.getRole());
+//
+//        privileges.add("FULL");
+//
+//        // ROLE_USER, FULL, READ_ONLY
+//        return privileges;
+//    }
 
 
 }
