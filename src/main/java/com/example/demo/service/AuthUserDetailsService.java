@@ -31,7 +31,7 @@ public class AuthUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByPhoneNumber(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
+                user.getPhoneNumber(),
                 user.getPassword(),
                 user.isEnabled(),
                 true,
@@ -53,10 +53,10 @@ public class AuthUserDetailsService implements UserDetailsService {
         return authorities;
     }
 
-    private List<String> getPrivileges(Role role) {
+    private List<String> getPrivileges(Collection<Role> roles) {
         List<String> privileges = new ArrayList<>();
 
-            privileges.add(role.getRole());
+        privileges.add(role.getRole());
 
         privileges.add("FULL");
 

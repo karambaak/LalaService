@@ -18,76 +18,50 @@
             <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
                 <div class="card shadow-lg" style="border-radius: 15px; margin-top: 100px">
                     <div class="card-body p-5">
-                        <h1 class="fs-4 card-title fw-bold mb-4">
-                            <#--								<@spring.message 'user.register'/>-->
-                            Register
-                        </h1>
-                        <form method="post" class="needs-validation" action="/register">
+                        <h1 class="fs-4 card-title fw-bold mb-4"><@spring.message 'user.register'/></h1>
+                        <form method="post" class="needs-validation" action="/auth/register" >
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                             <div class="mb-3">
-                                <label class="mb-2 text-muted" for="role">
-                                    <#--										<@spring.message 'user.register.role'/>-->
-                                    User Type
-                                </label>
-                                <select id="role" class="form-select" name="roleId" required>
-                                    <option value="" disabled selected>
-                                        <#--											<@spring.message 'user.register.role.choose'/>-->
-                                        Choose Role
-                                    </option>
+                                <label class="mb-2 text-muted" for="role"><@spring.message 'user.register.role'/></label>
+                                <select id="role" class="form-select" name="role" required>
+                                    <option value="" disabled selected><@spring.message 'user.register.role.choose'/></option>
                                     <#list roles as role>
-                                        <option value="${role.role}">${role.role}</option>
+                                        <option value="${role}">${role}</option>
                                     </#list>
                                 </select>
                             </div>
 
-                            <div class="mb-3">
-                                <label class="mb-2 text-muted" for="name" id="userName">
-                                    <#--										<@spring.message 'user.register.username'/>-->
-                                    Username
-                                </label>
-                                <input id="name" type="text" class="form-control" name="userName" required>
-                            </div>
+<#--                            <div class="mb-3">-->
+<#--                                <label class="mb-2 text-muted" for="name" id="userName"><@spring.message 'user.register.username'/></label>-->
+<#--                                <input id="name" type="text" class="form-control" name="userName"  required>-->
+<#--                            </div>-->
 
-                            <div class="mb-3">
-                                <label class="mb-2 text-muted" for="email">E-Mail</label>
-                                <input id="email" type="email" class="form-control" name="email" required>
-                            </div>
+<#--                            <div class="mb-3">-->
+<#--                                <label class="mb-2 text-muted" for="email">E-Mail</label>-->
+<#--                                <input id="email" type="email" class="form-control" name="email"  required>-->
+<#--                            </div>-->
 
 
                             <div class="mb-3">
-                                <label class="mb-2 text-muted" for="phone">
-                                    <#--										<@spring.message 'user.register.phonenumber'/>-->
-                                    phone number
-                                </label>
+                                <label class="mb-2 text-muted" for="phone"><@spring.message 'user.register.phonenumber'/></label>
                                 <input id="phone" type="tel" class="form-control" name="phoneNumber" required>
                             </div>
 
                             <div class="mb-3">
-                                <label class="mb-2 text-muted" for="password">
-                                    <#--										<@spring.message 'user.register.password'/>-->
-                                    password
-                                </label>
+                                <label class="mb-2 text-muted" for="password"><@spring.message 'user.register.password'/></label>
                                 <input id="password" type="password" class="form-control" name="password" required>
                             </div>
-                            <@spring.formInput "userDto.password" 'id="form3Example4c"'/>
-                            <@spring.showErrors "<br>" "error"/>
+<#--                            <@spring.showErrors "<br>" "error"/>-->
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary ms-auto mt-3"
-                                        style="padding-left: 50px; padding-right: 50px; margin-bottom: -20px;">
-                                    <#--											<@spring.message 'user.register.next'/>-->
-                                    submit
+                                <button type="submit" class="btn btn-primary ms-auto mt-3" style="padding-left: 50px; padding-right: 50px; margin-bottom: -20px;">
+                                    <@spring.message 'user.register.next'/>
                                 </button>
                             </div>
                         </form>
                     </div>
                     <div class="card-footer border-0">
                         <div class="text-center">
-<!--                            <@spring.message 'user.register.haveaccount'/>-->
-                            I have account
-                            <a href="/login" class="text-dark">
-<#--                                <@spring.message 'user.register.singin'/>-->
-                                sing in
-                            </a>
+                            <@spring.message 'user.register.haveaccount'/> <a href="/auth/login" class="text-dark"><@spring.message 'user.register.singin'/></a>
                         </div>
                     </div>
                 </div>
@@ -96,25 +70,6 @@
     </div>
 </section>
 
-<script>
-    const select = document.getElementById("role")
 
-    select.addEventListener("change", function changeInnerHTML(event) {
-        const userNameOption = document.getElementById("userName");
-        const selectRoleOption = document.querySelector("role");
-        console.log(event.target.value)
-        switch (event.target.value) {
-            case "1":
-                userNameOption.innerHTML = "Имя пользователя";
-                break;
-            case "2":
-                userNameOption.innerHTML = "Имя компании";
-                break;
-            default:
-                userNameOption.innerHTML = "Имя пользователя";
-
-        }
-    })
-</script>
 </body>
 </html>

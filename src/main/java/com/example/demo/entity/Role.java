@@ -3,11 +3,13 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Collection;
+
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
 @Table(name = "roles")
 public class Role {
@@ -18,6 +20,6 @@ public class Role {
     @Column(name = "role")
     private String role;
 
-    @OneToOne(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private User user;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
+    private List<User> user;
 }

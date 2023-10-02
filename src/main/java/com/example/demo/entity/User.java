@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,7 +38,7 @@ public class User implements UserDetails {
     @Column(name = "registration_date")
     private LocalDateTime registrationDate;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
 
