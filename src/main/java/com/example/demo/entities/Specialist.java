@@ -28,5 +28,9 @@ public class Specialist {
     @JoinColumn(name = "tariff_id", referencedColumnName = "id")
     private Tariff tariff;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "geolocation_id", referencedColumnName = "id")
+    private Geolocation geolocation;
+
 
 }
