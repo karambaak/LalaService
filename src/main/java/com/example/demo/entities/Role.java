@@ -3,11 +3,8 @@ package com.example.demo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-<<<<<<<<< Temporary merge branch 1
-=========
 import java.util.List;
 
->>>>>>>>> Temporary merge branch 2
 @Getter
 @Setter
 @Builder

@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.demo.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,14 +9,14 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Entity
-@Table(name = "resumes")
-public class Resume {
+@Table(name = "portfolios")
+public class Portfolio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    //       @ManyToOne(fetch = FetchType.EAGER)
-//       @JoinColumn(name = "specialist_id")
-//       private Specialist specialist;
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "specialist_id")
+//    private Specialist specialist;
 //    private List<Photo> photos;
 }

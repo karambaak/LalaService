@@ -21,8 +21,8 @@ public class Specialist {
     @Column(name = "company_name")
     private String companyName;
 
-    @Column(name = "photo")
-    private Photo photo;
+//    @Column(name = "photo")
+//    private Photo photo;
 
     @ManyToOne
     @JoinColumn(name = "tariff_id", referencedColumnName = "id")
