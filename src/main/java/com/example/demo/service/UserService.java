@@ -58,7 +58,6 @@ public class UserService {
                 roles) {
             list.add(r.getRole());
         }
-        repository.saveAndFlush(user);
+        return list;
     }
-
 }

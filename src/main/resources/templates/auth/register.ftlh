@@ -31,15 +31,15 @@
                                 </select>
                             </div>
 
-<#--                            <div class="mb-3">-->
-<#--                                <label class="mb-2 text-muted" for="name" id="userName"><@spring.message 'user.register.username'/></label>-->
-<#--                                <input id="name" type="text" class="form-control" name="userName"  required>-->
-<#--                            </div>-->
+                            <#--                            <div class="mb-3">-->
+                            <#--                                <label class="mb-2 text-muted" for="name" id="userName"><@spring.message 'user.register.username'/></label>-->
+                            <#--                                <input id="name" type="text" class="form-control" name="userName"  required>-->
+                            <#--                            </div>-->
 
-<#--                            <div class="mb-3">-->
-<#--                                <label class="mb-2 text-muted" for="email">E-Mail</label>-->
-<#--                                <input id="email" type="email" class="form-control" name="email"  required>-->
-<#--                            </div>-->
+                            <#--                            <div class="mb-3">-->
+                            <#--                                <label class="mb-2 text-muted" for="email">E-Mail</label>-->
+                            <#--                                <input id="email" type="email" class="form-control" name="email"  required>-->
+                            <#--                            </div>-->
 
 
                             <div class="mb-3">
@@ -51,7 +51,7 @@
                                 <label class="mb-2 text-muted" for="password"><@spring.message 'user.register.password'/></label>
                                 <input id="password" type="password" class="form-control" name="password" required>
                             </div>
-<#--                            <@spring.showErrors "<br>" "error"/>-->
+                            <#--                            <@spring.showErrors "<br>" "error"/>-->
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary ms-auto mt-3" style="padding-left: 50px; padding-right: 50px; margin-bottom: -20px;">
                                     <@spring.message 'user.register.next'/>
