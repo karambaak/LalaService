@@ -1,6 +1,5 @@
-package com.example.demo.entity;
+package com.example.demo.entities;
 
-import com.example.demo.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -51,10 +50,6 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("FULL"));
-    }
-
-    public String getUserName() {
-        return userName;
     }
 
     @Override
