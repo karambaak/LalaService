@@ -5,14 +5,18 @@ import com.example.demo.entities.User;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,8 +26,6 @@ import java.util.List;
 public class AuthUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
-
-    private final PasswordEncoder encoder;
 
     private final RoleRepository roleRepository;
 

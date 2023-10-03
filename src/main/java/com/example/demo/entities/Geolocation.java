@@ -1,10 +1,9 @@
 package com.example.demo.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,4 +25,7 @@ public class Geolocation {
 
     @Column(name = "street")
     private String street;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "geolocation")
+    List<Specialist> specialists;
 }

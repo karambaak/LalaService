@@ -20,7 +20,8 @@ public class Ratings {
     @JoinColumn(name = "specialist_id", referencedColumnName = "id")
     private Specialist specialist;
 
-    @Column(name = "user_id")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "rating")
