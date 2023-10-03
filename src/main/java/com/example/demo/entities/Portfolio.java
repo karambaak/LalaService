@@ -15,8 +15,8 @@ public class Portfolio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "specialist_id")
-//    private Specialist specialist;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "specialist_id")
+    private Specialist specialist;
 //    private List<Photo> photos;
 }

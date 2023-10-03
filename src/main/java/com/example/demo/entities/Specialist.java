@@ -3,6 +3,8 @@ package com.example.demo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -15,14 +17,20 @@ public class Specialist {
     @Id
     private Long id;
 
-    @Column(name = "user_id")
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "company_name")
     private String companyName;
 
-//    @Column(name = "photo")
+    //    @Column(name = "photo")
 //    private Photo photo;
+    @OneToMany(mappedBy = "specialist", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Favourite> favourites;
+
+    @OneToMany(mappedBy = "specialist", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Portfolio> portfolios;
 
     @ManyToOne
     @JoinColumn(name = "tariff_id", referencedColumnName = "id")
@@ -32,5 +40,10 @@ public class Specialist {
     @JoinColumn(name = "geolocation_id", referencedColumnName = "id")
     private Geolocation geolocation;
 
+    @OneToMany(mappedBy = "specialist", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Contacts> contacts;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "specialist")
+    private List<Resume> resumes;
 
 }

@@ -10,11 +10,11 @@ public class Favourite {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "specialist_id")
-//    private Specialist specialist;
+    @ManyToOne
+    @JoinColumn(name = "specialist_id")
+    private Specialist specialist;
 
-    //    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

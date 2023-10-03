@@ -11,13 +11,13 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "specialist_id")
-//    private Specialist specialist;
+    @ManyToOne
+    @JoinColumn(name = "specialist_id")
+    private Specialist specialist;
 
-    //    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "review_text")
     private String reviewText;
