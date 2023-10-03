@@ -23,9 +23,6 @@ public class Geolocation {
     @Column(name = "city")
     private String city;
 
-    @Column(name = "street")
-    private String street;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "geolocation")
     List<Specialist> specialists;
 }
