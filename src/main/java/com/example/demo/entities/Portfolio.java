@@ -3,6 +3,8 @@ package com.example.demo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,5 +20,7 @@ public class Portfolio {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "specialist_id")
     private Specialist specialist;
-//    private List<Photo> photos;
+
+    @OneToMany(mappedBy = "portfolio")
+    private List<Photo> photos;
 }
