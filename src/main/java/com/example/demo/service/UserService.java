@@ -72,6 +72,10 @@ public class UserService {
     }
 
     public String defineUserType(String userRole) {
+        if(userRole == null) {
+            log.warn("Passed a null value for user role");
+            throw new IllegalArgumentException("User role cannot be null");
+        }
         int underscoreIndex = userRole.indexOf('_');
         String type = userRole.substring(underscoreIndex + 1);
         UserType userType = null;
@@ -79,6 +83,10 @@ public class UserService {
             if (t.name().equalsIgnoreCase(type)) {
                 userType = t;
             }
+        }
+        if(userType == null) {
+            log.warn("Unknown user role was passed as argument");
+            throw new IllegalArgumentException("User role has unknown value");
         }
         return userType.name();
     }
