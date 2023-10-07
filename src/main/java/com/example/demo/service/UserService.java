@@ -94,8 +94,7 @@ public class UserService {
     public List<String> getRoles() {
         List<Role> roles = roleRepository.findAll();
         List<String> list = new ArrayList<>();
-        for (Role r :
-                roles) {
+        for (Role r : roles) {
             list.add(r.getRole());
         }
         return list;
