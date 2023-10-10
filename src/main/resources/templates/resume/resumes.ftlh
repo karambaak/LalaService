@@ -52,13 +52,15 @@
     </style>
     <div id="content" class="content">
         <div class="resume-list">
-            <#list resumes as resume>
-                <div class="resume-item">
-                    <h2 class="resume-title">${resume.name}</h2>
-                    <p class="resume-category">${resume.category}</p>
-                    <p class="resume-date">Дата: ${resume.createdDate}</p>
-                </div>
-            </#list>
+            <#if resumes?has_content>
+                <#list resumes as resume>
+                    <div class="resume-item">
+                        <h2 class="resume-title">${resume.name}</h2>
+                        <p class="resume-category">${resume.category}</p>
+                        <p class="resume-date">Дата: ${resume.createdDate}</p>
+                    </div>
+                </#list>
+            </#if>
         </div>
     </div>
 </@main.layout>
