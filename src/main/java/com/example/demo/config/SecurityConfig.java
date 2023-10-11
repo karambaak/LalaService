@@ -1,5 +1,8 @@
 package com.example.demo.config;
 
+import com.example.demo.entities.CustomOAuth2User;
+import com.example.demo.service.AuthUserDetailsService;
+import com.example.demo.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +19,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final AuthUserDetailsService userDetailsService;
     @Bean
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
@@ -40,7 +45,19 @@ public class SecurityConfig {
                 )
                 .rememberMe(customizer -> customizer
                         .key("secret")
-                        .tokenValiditySeconds(60));
+                        .tokenValiditySeconds(60))
+                .oauth2Login(oauth -> oauth
+                        .loginPage("/auth/login")
+                        .userInfoEndpoint(config -> config
+                                .userService(customOAuth2UserService))
+                        .successHandler((request, response, authentication) -> {
+                            CustomOAuth2User user = (CustomOAuth2User) authentication.getPrincipal();
+                            if(userDetailsService.processOAuthPostLogin(user)) {
+                                response.sendRedirect("/auth/oauth_2");
+                            } else {
+                                response.sendRedirect("/");
+                            }
+                        }));
         return http.build();
     }
 }
