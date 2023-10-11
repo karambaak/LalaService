@@ -3,6 +3,8 @@ package com.example.demo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Timestamp;
+
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -10,7 +12,7 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "resumes")
-public class Resume {
+public class  Resume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -18,5 +20,8 @@ public class Resume {
     @ManyToOne
     @JoinColumn(name = "specialist_id")
     private Specialist specialist;
-//    private List<Photo> photos;
+
+    private Timestamp timeOfResume;
+
+    private String resumeDescription;
 }
