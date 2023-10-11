@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 02-create-test-table
+      author: Sanat
+      changes:
+        - sql:
+            sql: |
+              CREATE TABLE butterfly (
+                id INT PRIMARY KEY,
+                name VARCHAR(255)
+              );
