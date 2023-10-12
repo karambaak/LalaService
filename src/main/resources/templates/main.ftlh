@@ -106,4 +106,46 @@
             </#if>
         </div>
     </div>
+    <script>
+        const searchInput = document.getElementById("searchInput");
+        const searchResults = document.getElementById("searchResults");
+
+        searchInput.addEventListener("input", () => {
+            const query = searchInput.value.trim();
+
+            if (query !== "") {
+                fetch("/search/specialist/" + query)
+                    .then(response => response.json())
+                    .then(data => {
+                        displaySearchResults(data);
+                    })
+                    .catch(error => {
+                        console.error("Error searching for vacancies:", error);
+                    });
+            } else {
+                searchResults.innerHTML = "";
+            }
+        });
+
+        function displaySearchResults(results) {
+            searchResults.innerHTML = "";
+
+            if (results.length === 0) {
+                searchResults.innerHTML = "<p>Нет результатов</p>";
+                return;
+            }
+
+            results.forEach(result => {
+                const resultItem = document.createElement("div");
+                const resultUrl = document.createElement("a")
+
+                resultItem.classList.add("search-result");
+                resultUrl.textContent = result.name;
+                resultUrl.href = "/vacancies/" + result.id
+
+                resultItem.appendChild(resultUrl)
+                searchResults.appendChild(resultItem);
+            });
+        }
+    </script>
 </@main.layout>
