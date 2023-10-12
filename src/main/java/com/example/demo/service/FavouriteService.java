@@ -37,7 +37,7 @@ public class FavouriteService {
         User user = userRepository.findById(userId).orElse(null);
         Specialist specialist = specialistRepository.findById(specialistId).orElse(null);
         if (user != null && specialist != null) {
-            deleteFavourite(userId, specialistId);
+            favouriteRepository.deleteFavouriteByUserIdAndAndSpecialistId(userId, specialistId);
         } else {
             log.warn("User or Specialist does not exist");
             throw new IllegalArgumentException("User or Specialist does not exist");
