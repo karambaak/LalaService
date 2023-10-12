@@ -133,7 +133,6 @@
 
         function displaySearchResults(results) {
             searchResults.innerHTML = "";
-            console.log("Result searching: "+results)
 
             if (results.length === 0) {
                 searchResults.innerHTML = "<p>Нет результатов</p>";
