@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface SpecialistRepository extends JpaRepository<Specialist, Long> {
 
-    List<Specialist> searchByCompanyName(String name);
+    List<Specialist> searchSpecialistByCompanyNameContainingIgnoreCase(String companyName);
 }
