@@ -5,7 +5,9 @@ import com.example.demo.entities.Category;
 import com.example.demo.repository.CategoryRepository;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 
@@ -16,12 +18,13 @@ import static org.mockito.Mockito.when;
 class CategoryServiceTest {
     @Mock
     CategoryService categoryService;
-    @Mock
+    @InjectMocks
     CategoryRepository categoryRepository;
 
     @Before("")
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        categoryRepository = Mockito.mock(CategoryRepository.class);
         categoryService = new CategoryService(categoryRepository);
     }
 
