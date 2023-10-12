@@ -1,17 +1,7 @@
 <#import "/spring.ftl" as spring>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="author" content="Muhammed">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="description" content="This is a login page template based on Bootstrap 5">
-    <title>Регистрация</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-</head>
+<#import "../layout.ftlh" as main>
+<@main.layout>
 
-<body>
 <section class="h-100">
     <div class="container h-100">
         <div class="row justify-content-sm-center h-100">
@@ -50,5 +40,5 @@
 </section>
 
 
-</body>
-</html>
+
+</@main.layout>

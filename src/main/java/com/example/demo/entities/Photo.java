@@ -18,4 +18,5 @@ public class Photo {
     @ManyToOne
     @JoinColumn(name = "portfolio_id")
     private Portfolio portfolio;
+    private String photoLink;
 }
