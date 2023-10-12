@@ -11,6 +11,6 @@ public class MainControllerImpl implements MainController {
 
     @Override
     public String mainPage(Model model) {
-        return "resume/resumes";
+        return "main";
     }
 }
