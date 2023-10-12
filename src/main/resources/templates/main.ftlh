@@ -71,6 +71,10 @@
             background-color: #057ae0;
             color: #fff;
         }
+
+        .searchResults{
+            text-align: center;
+        }
     </style>
     <div class="search-and-filter-container">
         <div class="search-form">
@@ -82,7 +86,7 @@
         </button>
     </div>
 
-    <div id="searchResults">
+    <div class="searchResults" id="searchResults">
 
     </div>
 
@@ -114,7 +118,7 @@
             const query = searchInput.value.trim();
 
             if (query !== "") {
-                fetch("/search/specialist/" + query)
+                fetch("/api/search/specialist/" + query)
                     .then(response => response.json())
                     .then(data => {
                         displaySearchResults(data);
@@ -129,6 +133,7 @@
 
         function displaySearchResults(results) {
             searchResults.innerHTML = "";
+            console.log("Result searching: "+results)
 
             if (results.length === 0) {
                 searchResults.innerHTML = "<p>Нет результатов</p>";
@@ -140,7 +145,7 @@
                 const resultUrl = document.createElement("a")
 
                 resultItem.classList.add("search-result");
-                resultUrl.textContent = result.name;
+                resultUrl.textContent = result.companyName;
                 resultUrl.href = "/vacancies/" + result.id
 
                 resultItem.appendChild(resultUrl)
