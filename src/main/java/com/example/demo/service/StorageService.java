@@ -17,12 +17,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class StorageService {
-    private static String ROOT = "https://s3.amazonaws.com/";
+    private static String ROOT = "https://servicesearchlalaservice.s3.eu-north-1.amazonaws.com/";
     private final PhotosRepository photosRepository;
     private final AmazonS3 s3Client;
     @Value("${application.bucket.name}")
@@ -35,7 +37,7 @@ public class StorageService {
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
         photosRepository.save(Photo.builder()
                 .portfolio(Portfolio.builder()
-                        .id(1)
+                        .id(2)
                         .build())
                 .photoLink(ROOT + fileName)
                 .build());
@@ -72,5 +74,17 @@ public class StorageService {
             log.error("Error converting multipartFile to file", e);
         }
         return convertedFile;
+    }
+
+    public List<String> getAllPhotos() {
+        List<Photo> photos = photosRepository.findAll();
+        List<String> urls = new ArrayList<>();
+        if(photos.size()>0) {
+            for (Photo p:
+                 photos) {
+                urls.add(p.getPhotoLink());
+            }
+        }
+        return urls;
     }
 }

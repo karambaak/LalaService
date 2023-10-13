@@ -8,8 +8,8 @@
                 <div class="border rounded p-4 bg-white">
                     <form action="/file/upload" method="post" enctype="multipart/form-data">
                         <#if _csrf??>
-                        <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                               value="${(_csrf.token)!'--no-token--'}"/>
+                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                                   value="${(_csrf.token)!'--no-token--'}"/>
                         </#if>
                         <div class="mb-3">
                             <label for="fileInput" class="form-label">Choose File</label>
@@ -22,13 +22,15 @@
         </div>
 
         <div class="row mt-4 justify-content-center">
-            <div class="col-md-6">
-                <div class="card border-primary mb-3">
-                    <div class="card-body">
-                        <div> class="card-image">Card Image</div>
+            <#if photos??>
+                <#list photos as item>
+                    <div class="card border-primary mb-3">
+                        <div class="card-body">
+                            <img src="${item}" class="card-img-top" alt="photo">
+                        </div>
                     </div>
-                </div>
-            </div>
+                </#list>
+            </#if>
         </div>
     </div>
 </@main.layout>

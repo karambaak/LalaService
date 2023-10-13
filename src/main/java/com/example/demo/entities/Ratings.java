@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "ratings")
 public class Ratings {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

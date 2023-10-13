@@ -6,6 +6,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class StorageController {
     private final StorageService service;
     @GetMapping("/upload")
-    public String uploadFile() {
+    public String uploadFile(Model model) {
+        model.addAttribute("photos", service.getAllPhotos());
         return "functions/photos";
     }
     @PostMapping("/upload")

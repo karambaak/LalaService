@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="/static/static.css">
     </head>
     <body>
+
     <div class="container">
         <nav class="tab-bar">
             <a href="#main" class="tab" id="home">
@@ -33,10 +34,10 @@
             </a>
         </nav>
     </div>
-
     <div id="content" class="content">
         <#nested>
     </div>
+
     </body>
     </html>
 
