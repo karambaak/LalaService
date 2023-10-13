@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class StorageService {
-    private static String ROOT = "https://servicesearchlalaservice.s3.eu-north-1.amazonaws.com/";
+    private final static String ROOT = "https://servicesearchlalaservice.s3.eu-north-1.amazonaws.com/";
     private final PhotosRepository photosRepository;
     private final AmazonS3 s3Client;
     @Value("${application.bucket.name}")
@@ -79,7 +79,7 @@ public class StorageService {
     public List<String> getAllPhotos() {
         List<Photo> photos = photosRepository.findAll();
         List<String> urls = new ArrayList<>();
-        if(photos.size()>0) {
+        if(!photos.isEmpty()) {
             for (Photo p:
                  photos) {
                 urls.add(p.getPhotoLink());

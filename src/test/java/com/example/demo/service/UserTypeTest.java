@@ -18,7 +18,7 @@ class UserTypeTest {
     PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
     AuthUserDetailsService authUserDetailsService = mock(AuthUserDetailsService.class);
 
-    UserService userService = new UserService(userRepository, roleRepository, passwordEncoder, authUserDetailsService);
+    UserService userService = new UserService(userRepository, specialistRepository, roleRepository, passwordEncoder, authUserDetailsService);
 
     @Test
     void insertRoleSpecialistShouldReturnUserTypeSpecialist() {
