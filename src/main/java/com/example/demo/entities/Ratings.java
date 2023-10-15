@@ -28,8 +28,8 @@ public class Ratings {
     @Column(name = "rating")
     private Integer rating;
 
-    @Column(name = "raiting_date")
-    private LocalDateTime localDateTime;
+    @Column(name = "rating_date")
+    private LocalDateTime ratingDate;
 
 
 }

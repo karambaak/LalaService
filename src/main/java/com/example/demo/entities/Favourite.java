@@ -11,7 +11,6 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "favourites")
-
 public class Favourite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -20,6 +20,7 @@ public class Portfolio {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "specialist_id")
     private Specialist specialist;
+    private String title;
 
     @OneToMany(mappedBy = "portfolio")
     private List<Photo> photos;

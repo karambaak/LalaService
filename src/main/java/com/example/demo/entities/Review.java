@@ -1,9 +1,14 @@
 package com.example.demo.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
-
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "reviews")
 public class Review {

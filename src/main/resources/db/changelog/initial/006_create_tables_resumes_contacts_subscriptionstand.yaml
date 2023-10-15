@@ -1,0 +1,101 @@
+databaseChangeLog:
+  - changeSet:
+      id: create tables - resumes, contacts, subscription_stand
+      author: Asem
+      changes:
+        - createTable:
+            tableName: resumes
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: specialist_id
+                  type: long
+                  constraints:
+                    nullable: false
+              - column:
+                  name: resume_description
+                  type: varchar(255)
+              - column:
+                  name: time_of_resume
+                  type: timestamp
+        - createTable:
+            tableName: contacts
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: specialist_id
+                  type: long
+                  constraints:
+                    nullable: false
+              - column:
+                  name: contact_type
+                  type: varchar(255)
+              - column:
+                  name: contact_value
+                  type: varchar(255)
+        - createTable:
+            tableName: subscription_stand
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: specialist_id
+                  type: long
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category_id
+                  type: long
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: resumes
+            baseColumnNames: specialist_id
+            constraintName: fk_specialist_id_resumes
+            referencedTableName: specialists
+            referencedColumnNames: id
+            onDelete: cascade
+            onUpdate: cascade
+        - addForeignKeyConstraint:
+            baseTableName: contacts
+            baseColumnNames: specialist_id
+            constraintName: fk_specialist_id_contacts
+            referencedTableName: specialists
+            referencedColumnNames: id
+            onDelete: cascade
+            onUpdate: cascade
+        - addForeignKeyConstraint:
+            baseTableName: subscription_stand
+            baseColumnNames: specialist_id
+            constraintName: fk_specialist_id_subscription_stand
+            referencedTableName: specialists
+            referencedColumnNames: id
+            onDelete: cascade
+            onUpdate: cascade
+        - addForeignKeyConstraint:
+            baseTableName: subscription_stand
+            baseColumnNames: category_id
+            constraintName: fk_category_id_subscription_stand
+            referencedTableName: categories
+            referencedColumnNames: id
+            onDelete: cascade
+            onUpdate: cascade
+
+

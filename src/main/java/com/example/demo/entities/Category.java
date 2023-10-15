@@ -15,9 +15,12 @@ import java.util.List;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
     private String categoryName;
     private String description;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     private List<Post> posts;
+    @OneToMany(mappedBy = "category")
+    private List<SubscriptionStand> subscriptions;
+
 }

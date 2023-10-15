@@ -1,0 +1,85 @@
+databaseChangeLog:
+  - changeSet:
+      id: create tables - users, roles, themes
+      author: Asem
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: phone_number
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+              - column:
+                  name: user_name
+                  type: varchar(255)
+              - column:
+                  name: user_type
+                  type: varchar(255)
+              - column:
+                  name: email
+                  type: varchar(255)
+              - column:
+                  name: password
+                  type: varchar(255)
+              - column:
+                  name: enabled
+                  type: boolean
+              - column:
+                  name: role_id
+                  type: long
+              - column:
+                  name: theme_id
+                  type: long
+              - column:
+                  name: registration_date
+                  type: timestamp
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(255)
+        - createTable:
+            tableName: themes
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: theme_name
+                  type: varchar(255)
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: role_id
+            constraintName: fk_role_id_users
+            referencedTableName: roles
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: theme_id
+            constraintName: fk_theme_id_users
+            referencedTableName: themes
+            referencedColumnNames: id
+
+
+
