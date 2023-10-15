@@ -3,6 +3,8 @@ package com.example.demo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,4 +18,6 @@ public class Category {
     private int id;
     private String categoryName;
     private String description;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+    private List<Post> posts;
 }
