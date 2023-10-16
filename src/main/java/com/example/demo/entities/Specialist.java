@@ -15,6 +15,7 @@ import java.util.List;
 public class Specialist {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
@@ -24,8 +25,9 @@ public class Specialist {
     @Column(name = "company_name")
     private String companyName;
 
-    //    @Column(name = "photo")
-//    private Photo photo;
+    @Column(name = "photo")
+    private String photo;
+
     @OneToMany(mappedBy = "specialist", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Favourite> favourites;
 
@@ -45,5 +47,9 @@ public class Specialist {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "specialist")
     private List<Resume> resumes;
+
+    @OneToMany(mappedBy = "specialist")
+    private List<SubscriptionStand> subscriptions;
+
 
 }

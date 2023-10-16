@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class SpecialistDto {
-    private int id;
+    private Long id;
     private UserDto user;
     private String companyName;
     private TariffDto tariff;

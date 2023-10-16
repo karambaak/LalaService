@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "ratings")
 public class Ratings {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -27,8 +28,8 @@ public class Ratings {
     @Column(name = "rating")
     private Integer rating;
 
-    @Column(name = "raiting_date")
-    private LocalDateTime localDateTime;
+    @Column(name = "rating_date")
+    private LocalDateTime ratingDate;
 
 
 }

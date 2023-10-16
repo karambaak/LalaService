@@ -1,0 +1,84 @@
+databaseChangeLog:
+  - changeSet:
+      id: create tables - specialists, geolocation, tariffs
+      author: Asem
+      changes:
+        - createTable:
+            tableName: specialists
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: long
+                  constraints:
+                    nullable: false
+              - column:
+                  name: company_name
+                  type: varchar(255)
+              - column:
+                  name: photo
+                  type: varchar(255)
+              - column:
+                  name: tariff_id
+                  type: long
+              - column:
+                  name: geolocation_id
+                  type: long
+        - createTable:
+            tableName: geolocation
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: country
+                  type: varchar(255)
+              - column:
+                  name: city
+                  type: varchar(255)
+        - createTable:
+            tableName: tariffs
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: tariff_name
+                  type: varchar(255)
+              - column:
+                  name: cost
+                  type: double
+              - column:
+                  name: availability
+                  type: boolean
+        - addForeignKeyConstraint:
+            baseTableName: specialists
+            baseColumnNames: tariff_id
+            constraintName: fk_tariff_id_specialists
+            referencedTableName: tariffs
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: specialists
+            baseColumnNames: geolocation_id
+            constraintName: fk_geolocation_id_specialists
+            referencedTableName: geolocation
+            referencedColumnNames: id
+
+
+
+
+
