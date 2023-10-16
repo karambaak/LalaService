@@ -23,6 +23,6 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private List<SubscriptionStand> subscriptions;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "category")
     private List<Resume> resumes;
 }
