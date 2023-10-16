@@ -24,4 +24,8 @@ public class  Resume {
     private Timestamp timeOfResume;
 
     private String resumeDescription;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private Category category;
 }

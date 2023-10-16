@@ -13,4 +13,5 @@ public class ResumeDto {
     //private long photoId;
     private Timestamp timeOfResume;
     private String resumeDescription;
+    private Integer categoryId;
 }

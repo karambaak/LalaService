@@ -20,4 +20,6 @@ public class Category {
     private String description;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     private List<Post> posts;
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Resume> resumes;
 }
