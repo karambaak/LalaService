@@ -14,6 +14,7 @@ import java.util.List;
 @Table(name = "tariffs")
 public class Tariff {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "tariff_name")

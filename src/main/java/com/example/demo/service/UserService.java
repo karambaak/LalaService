@@ -2,9 +2,11 @@ package com.example.demo.service;
 
 import com.example.demo.dto.UserDto;
 import com.example.demo.entities.Role;
+import com.example.demo.entities.Specialist;
 import com.example.demo.entities.User;
 import com.example.demo.enums.UserType;
 import com.example.demo.repository.RoleRepository;
+import com.example.demo.repository.SpecialistRepository;
 import com.example.demo.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository repository;
+    private final SpecialistRepository specialistRepository;
 
     private final RoleRepository roleRepository;
 
@@ -49,7 +52,16 @@ public class UserService {
                     .enabled(Boolean.TRUE)
                     .registrationDate(LocalDateTime.now())
                     .build();
-            repository.save(user);
+            repository.saveAndFlush(user);
+            if(userType.equalsIgnoreCase("specialist")) {
+                var newUser = repository.findByPhoneNumber(userDto.getPhoneNumber());
+                if(newUser.isPresent()) {
+                    specialistRepository.save(Specialist.builder()
+                                    .user(newUser.get())
+                            .build());
+                }
+            }
+
         } else {
             log.warn("User already exists: {}", userDto.getPhoneNumber());
             throw new IllegalArgumentException("User already exists");
@@ -72,7 +84,7 @@ public class UserService {
     }
 
     public String defineUserType(String userRole) {
-        if(userRole == null) {
+        if (userRole == null) {
             log.warn("Passed a null value for user role");
             throw new IllegalArgumentException("User role cannot be null");
         }
@@ -84,7 +96,7 @@ public class UserService {
                 userType = t;
             }
         }
-        if(userType == null) {
+        if (userType == null) {
             log.warn("Unknown user role was passed as argument");
             throw new IllegalArgumentException("User role has unknown value");
         }

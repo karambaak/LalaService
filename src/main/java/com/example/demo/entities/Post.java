@@ -8,28 +8,23 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "ratings")
-public class Ratings {
+@Table(name = "posts")
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "specialist_id", referencedColumnName = "id")
-    private Specialist specialist;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @Column(name = "rating")
-    private Integer rating;
-
-    @Column(name = "raiting_date")
-    private LocalDateTime localDateTime;
-
-
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+    private String title;
+    private String description;
+    private LocalDateTime workRequiredTime;
+    private LocalDateTime publishedDate;
 }
