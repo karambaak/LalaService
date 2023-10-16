@@ -1,0 +1,117 @@
+databaseChangeLog:
+  - changeSet:
+      id: create tables - reviews, ratings, favourites
+      author: Asem
+      changes:
+        - createTable:
+            tableName: reviews
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: specialist_id
+                  type: long
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: long
+                  constraints:
+                    nullable: false
+              - column:
+                  name: review_text
+                  type: varchar(255)
+              - column:
+                  name: review_date
+                  type: timestamp
+        - createTable:
+            tableName: ratings
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: long
+                  constraints:
+                    nullable: false
+              - column:
+                  name: specialist_id
+                  type: long
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rating
+                  type: integer
+              - column:
+                  name: rating_date
+                  type: timestamp
+        - createTable:
+            tableName: favourites
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: long
+                  constraints:
+                    nullable: false
+              - column:
+                  name: specialist_id
+                  type: long
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: reviews
+            baseColumnNames: user_id
+            constraintName: fk_user_id_reviews
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: cascade
+            onUpdate: cascade
+        - addForeignKeyConstraint:
+            baseTableName: ratings
+            baseColumnNames: user_id
+            constraintName: fk_user_id_ratings
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: cascade
+            onUpdate: cascade
+        - addForeignKeyConstraint:
+            baseTableName: ratings
+            baseColumnNames: specialist_id
+            constraintName: fk_specialist_id_ratings
+            referencedTableName: specialists
+            referencedColumnNames: id
+            onDelete: cascade
+            onUpdate: cascade
+        - addForeignKeyConstraint:
+            baseTableName: favourites
+            baseColumnNames: user_id
+            constraintName: fk_user_id_favourites
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: cascade
+            onUpdate: cascade
+        - addForeignKeyConstraint:
+            baseTableName: favourites
+            baseColumnNames: specialist_id
+            constraintName: fk_specialist_id_favourites
+            referencedTableName: specialists
+            referencedColumnNames: id
+            onDelete: cascade
+            onUpdate: cascade

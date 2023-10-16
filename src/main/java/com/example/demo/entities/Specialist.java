@@ -48,4 +48,8 @@ public class Specialist {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "specialist")
     private List<Resume> resumes;
 
+    @OneToMany(mappedBy = "specialist")
+    private List<SubscriptionStand> subscriptions;
+
+
 }
