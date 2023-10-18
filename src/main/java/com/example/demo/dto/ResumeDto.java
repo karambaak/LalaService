@@ -10,7 +10,6 @@ import java.sql.Timestamp;
 public class ResumeDto {
     private long id;
     private long specialistId;
-    //private long photoId;
     private Timestamp timeOfResume;
     private String resumeDescription;
     private Integer categoryId;
