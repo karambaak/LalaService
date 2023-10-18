@@ -15,10 +15,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class PostDto {
     private Long id;
+    private String userPhoto;
     private String userName;
     private String category;
     private String title;
     private String description;
+    private int responseNumber;
     private LocalDateTime workRequiredTime;
     private LocalDateTime publishedDate;
 }
