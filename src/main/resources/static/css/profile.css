@@ -1,0 +1,178 @@
+
+.round-image {
+    margin-top: 10px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    padding: 0px;
+}
+
+.personal-info {
+    margin-left: 10px;
+}
+
+.personal-info p {
+    margin: 0px;
+}
+
+.username {
+    font-weight: bold;
+    font-size: 15px;
+    padding: 15px 0px 15px 0px;
+}
+
+.tabs {
+    margin: 30px 40px 0px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-item {
+    background-color: transparent;
+    color: #000;
+    cursor: pointer;
+    padding: 7px 15px;
+    border: 0px solid transparent;
+}
+
+.tab-item.active {
+    border: 2px solid #2552e7;
+    color: #2552e7;
+    font-weight: bold;
+    border-radius: 15px;
+}
+
+
+.resume {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding: 5px 10px;
+    margin: 10px 0px;
+    box-shadow: 0px 5px 15px rgba(0.0, 0.0, 0.1, 0.1);
+}
+
+.resume p {
+    margin: 0rem;
+}
+
+.resume-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    border-radius: inherit;
+}
+
+.create-resume {
+    padding: 20px;
+}
+
+.add-resume-link {
+    text-decoration: none;
+    color: #2552e7;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: inherit;
+}
+
+.create-resume:hover {
+    background-color: #d8d5d5;
+}
+
+.resume-name {
+    font-size: 18px;
+    padding: 8px 0px;
+    font-weight: bold;
+    color: #2552e7;
+    margin-bottom: 6px;
+}
+
+.resume-experience, .resume-category, .resume-date {
+    font-size: 15px;
+    opacity: 65%;
+}
+
+
+.portfolio {
+    background-color: white;
+    display: flex;
+    justify-content: flex-start;
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0px 5px 15px rgba(0.0, 0.0, 0.1, 0.1);
+}
+
+.portfolio-img {
+    width: 20%;
+}
+
+
+@media screen and (min-width: 769px) {
+    .content {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .profile-header {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+.menu-toggle {
+    cursor: pointer;
+    text-align: right;
+    padding: -5px;
+    margin: -5px -5px -10px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+
+
+.modal-content {
+    background-color: #fff;
+    border-radius: 15px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0px 5px 15px rgba(0.0, 0.0, 0.1, 0.4);
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+
+.side-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 50px 0 0 20px;
+}
+
+.side-menu ul li {
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.close-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    font-size: 24px;
+}
