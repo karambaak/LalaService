@@ -7,6 +7,7 @@
         <title>Home page</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <link rel="stylesheet" href="/static/styles/static.css">
+        <script src="https://kit.fontawesome.com/198548d859.js" crossorigin="anonymous"></script>
     </head>
     <body>
 
