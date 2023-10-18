@@ -53,19 +53,16 @@
             font-size: 17px;
         }
 
-        /* Change background color of buttons on hover */
         .msg button:hover {
             background-color: #ccc;
             color: white;
         }
 
-        /* Create an active/current tablink class */
         .msg button.active {
             background-color: #2552e7;
             color: white;
         }
 
-        /* Style the tab content */
         .tabcontent {
             display: none;
             padding: 12px 25px;
@@ -113,7 +110,6 @@
             width: 50px;
             height: 50px;
             object-fit: cover;
-            /* This property ensures that the image covers the entire container while maintaining aspect ratio */
         }
 
         .notification-card {
