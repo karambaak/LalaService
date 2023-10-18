@@ -21,6 +21,9 @@ databaseChangeLog:
               - column:
                   name: title
                   type: varchar(255)
+              - column:
+                  name: time_of_portfolio
+                  type: timestamp
         - createTable:
             tableName: photos
             columns:
