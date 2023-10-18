@@ -3,6 +3,7 @@ package com.example.demo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -25,4 +26,5 @@ public class Category {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "category")
     private List<Resume> resumes;
+
 }
