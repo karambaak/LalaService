@@ -3,6 +3,7 @@ package com.example.demo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Getter
@@ -24,4 +25,5 @@ public class Portfolio {
 
     @OneToMany(mappedBy = "portfolio")
     private List<Photo> photos;
+    private Timestamp timeOfPortfolio;
 }
