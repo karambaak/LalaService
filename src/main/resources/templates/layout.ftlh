@@ -5,25 +5,29 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Home page</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-        <link rel="stylesheet" href="/static/styles/static.css">
-        <script src="https://kit.fontawesome.com/198548d859.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link
+                href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+                rel="stylesheet"
+                integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+                crossorigin="anonymous">
+        <link rel="stylesheet" href="../static/css/layout.css">
     </head>
     <body>
-
-    <div class="container">
+    <div class="tab-container">
         <nav class="tab-bar">
-            <a href="#main" class="tab" id="home">
+            <a href="/" class="tab" id="home">
                 <i class="fas fa-home"></i>
                 <!-- <span>Главный экран</span> -->
             </a>
-            <a href="#stand" class="tab">
-                <i class="fas fa-store"></i>
-                <!-- <span>Стенд</span> -->
+            <a href="#visit" class="tab" id="home">
+                <i class="fas fa-id-card"></i>
+                <!-- <span>Визитница</span> -->
             </a>
-            <a href="#notifications" class="tab">
-                <i class="fas fa-bell"></i>
-                <!-- <span>Уведомления</span> -->
+            <a href="/stand" class="tab">
+                <i class="fas fa-tasks"></i>
+                <!-- <span>Стенд</span> -->
             </a>
             <a href="#messages" class="tab">
                 <i class="fas fa-envelope"></i>
@@ -35,11 +39,10 @@
             </a>
         </nav>
     </div>
-    <div id="content" class="content">
-        <#nested>
-    </div>
 
+    <div id="content" class="content">
+
+    </div>
     </body>
     </html>
-
 </#macro>

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class MoviesRestControllerImpl implements MainRestController {
+public class MainRestControllerImpl implements MainRestController {
     private final SpecialistService service;
 
     @Override
