@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: modify users and specialists tables
+      author: Asem
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: photo
+                  type: varchar(255)
+                  defaultValue: 'https://servicesearchlalaservice.s3.eu-north-1.amazonaws.com/default_user_photo.jpg'
+        - dropColumn:
+            tableName: specialists
+            columns:
+              - column:
+                  name: photo
