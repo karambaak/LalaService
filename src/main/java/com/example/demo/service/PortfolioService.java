@@ -22,15 +22,13 @@ public class  PortfolioService {
     private final SpecialistRepository specialistRepository;
 
     public Page<PortfolioDto> getAllPortfolios(int start, int end) {
-        Sort sort = Sort.by(Sort.Order.desc("timeOfPortfolio"));
-        Pageable pageable = PageRequest.of(start, end, sort);
+        Pageable pageable = PageRequest.of(start, end);
         Page<Portfolio> portfolios = portfolioRepository.findAll(pageable);
         Page<PortfolioDto> portfolioDtos = portfolios.map(portfolio -> {
             return PortfolioDto.builder()
                     .id(portfolio.getId())
                     .specialistId(portfolio.getSpecialist().getId())
                     .title(portfolio.getTitle())
-                    .timeOfPortfolio(portfolio.getTimeOfPortfolio())
                     .build();
 
         });
@@ -45,7 +43,6 @@ public class  PortfolioService {
                         .orElseThrow(() -> new NoSuchElementException("Specialist not found")
                         )
                 )
-                .timeOfPortfolio(portfolioDto.getTimeOfPortfolio())
                 .title(portfolioDto.getTitle())
                 .build());
     }
