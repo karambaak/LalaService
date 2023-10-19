@@ -40,9 +40,7 @@
         </nav>
     </div>
 
-    <div id="content" class="content">
-
-    </div>
+<#nested>
     </body>
     </html>
 </#macro>
