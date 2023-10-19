@@ -1,5 +1,6 @@
 <#import "layout.ftlh" as main>
 <@main.layout>
+    <link rel="stylesheet" href="../static/css/main.css">
     <div id="content" class="content">
         <div class="searchBox">
             <input type="text" id="search" placeholder="Поиск..." class="searchInput">
