@@ -25,5 +25,7 @@ public class Portfolio {
 
     @OneToMany(mappedBy = "portfolio")
     private List<Photo> photos;
-    private Timestamp timeOfPortfolio;
+
+
+
 }
