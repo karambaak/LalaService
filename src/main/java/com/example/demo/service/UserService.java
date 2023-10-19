@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -123,5 +124,20 @@ public class UserService {
             repository.saveAndFlush(u);
         }
         service.loadUserByUsernameEmail(user.get().getEmail());
+    }
+
+    public UserDto getUserByAuthentication(Authentication auth){
+        User user = (User) auth.getPrincipal();
+        return makeUserDto(repository.findByPhoneNumber(user.getUsername()).orElseThrow(() -> new NoSuchElementException("Auth is null, user not found")));
+    }
+
+    private UserDto makeUserDto(User user){
+        return UserDto.builder()
+                .id(user.getId())
+                .userName(user.getUserName())
+                .role(user.getRole().getRole())
+                .phoneNumber(user.getPhoneNumber())
+                .email(user.getEmail())
+                .build();
     }
 }
