@@ -8,8 +8,8 @@ import java.sql.Timestamp;
 @Data
 @Builder
 public class ResumeDto {
-    private long id;
-    private long specialistId;
+    private Long id;
+    private Long specialistId;
     private Timestamp timeOfResume;
     private String resumeDescription;
     private Integer categoryId;

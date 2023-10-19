@@ -5,8 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface ResumeRepository extends JpaRepository<Resume,Integer> {
 
     Page<Resume> findAll(Pageable pageable);
+    List<Resume> findAllBySpecialist_Id(Long id);
 
 }
