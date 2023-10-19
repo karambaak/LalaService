@@ -17,7 +17,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -68,7 +67,7 @@ public class UserService {
         }
     }
 
-    public Role defineUserRole(String userRole) {
+    private Role defineUserRole(String userRole) {
         Role role = null;
         if (userRole.equalsIgnoreCase("role_specialist")) {
             role = roleRepository.findByRole("ROLE_SPECIALIST");
@@ -104,12 +103,9 @@ public class UserService {
     }
 
     public List<String> getRoles() {
-        List<Role> roles = roleRepository.findAll();
-        List<String> list = new ArrayList<>();
-        for (Role r : roles) {
-            list.add(r.getRole());
-        }
-        return list;
+        return roleRepository.findAll().stream()
+                .map(Role::getRole)
+                .toList();
     }
 
 
@@ -120,7 +116,7 @@ public class UserService {
         var userAuth = (OAuth2User) auth.getPrincipal();
         String email = userAuth.getAttribute("email");
         var user = repository.getByEmail(email);
-        if (!user.isEmpty()) {
+        if (user.isPresent()) {
             User u = user.get();
             u.setRole(role);
             u.setUserType(userType);
