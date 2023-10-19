@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="../static/css/main.css">
     <div id="content" class="content">
         <div class="searchBox">
-            <input type="text" id="search" placeholder="Поиск..." class="searchInput">
+            <input type="text" id="searchInput" placeholder="Поиск..." class="searchInput">
         </div>
         <div id="searchResults" class="searchResults">
 
@@ -12,7 +12,7 @@
             <#if categories?has_content>
                 <#list categories as category>
                     <a href="/category/${category.id}" class="category-card">
-                        <span>${category.name}</span>
+                        <span>${category.categoryName}</span>
                     </a>
                 </#list>
             </#if>
@@ -24,8 +24,9 @@
 
         searchInput.addEventListener("input", () => {
             const query = searchInput.value.trim();
-
             if (query !== "") {
+
+                console.log("query for specialist: ", query)
                 fetch("/api/search/specialist/" + query)
                     .then(response => response.json())
                     .then(data => {
