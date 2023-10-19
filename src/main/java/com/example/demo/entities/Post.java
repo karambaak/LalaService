@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,4 +28,6 @@ public class Post {
     private String description;
     private LocalDateTime workRequiredTime;
     private LocalDateTime publishedDate;
+    @OneToMany(mappedBy = "post")
+    private List<Response> responses;
 }

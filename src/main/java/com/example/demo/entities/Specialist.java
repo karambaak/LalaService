@@ -25,9 +25,6 @@ public class Specialist {
     @Column(name = "company_name")
     private String companyName;
 
-    @Column(name = "photo")
-    private String photo;
-
     @OneToMany(mappedBy = "specialist", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Favourite> favourites;
 
@@ -50,6 +47,6 @@ public class Specialist {
 
     @OneToMany(mappedBy = "specialist")
     private List<SubscriptionStand> subscriptions;
-
-
+@OneToMany(mappedBy = "specialist")
+private List<Response> responses;
 }

@@ -43,7 +43,8 @@ public class User implements UserDetails {
 
     @Column(name = "registration_date")
     private LocalDateTime registrationDate;
-
+    @Column(name = "photo")
+    private String photo;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Notification> notifications;
 
