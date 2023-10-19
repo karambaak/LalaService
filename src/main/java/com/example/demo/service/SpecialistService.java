@@ -21,7 +21,7 @@ public class SpecialistService {
 
     public List<SpecialistDto> searchSpecialistByName(String name){
         List<Specialist> specialists = repository.searchSpecialistByCompanyNameContainingIgnoreCase(name);
-
+        log.info("Specialist:  {}", specialists.toString());
         return specialists.stream().map(this::makeDto).collect(Collectors.toList());
     }
 
