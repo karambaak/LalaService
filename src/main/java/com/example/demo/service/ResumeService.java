@@ -18,6 +18,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -79,6 +80,20 @@ public class ResumeService {
             log.warn("Value does not exist or you do not have access to this value");
             throw new IllegalArgumentException("Value does not exist or you do not have access to this value");
         }
+    }
+
+    public List<ResumeDto> getResumesByCategory(Long categoryId){
+        List<Resume> resumes = resumeRepository.findByCategoryId(categoryId);
+        return resumes.stream().map(this::makeDto).collect(Collectors.toList());
+    }
+
+    private ResumeDto makeDto(Resume resume){
+        return ResumeDto.builder()
+                .id(resume.getId())
+                .specialistId(resume.getSpecialist().getId())
+                .timeOfResume(resume.getTimeOfResume())
+                .resumeDescription(resume.getResumeDescription())
+                .build();
     }
 
 }

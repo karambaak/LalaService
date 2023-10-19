@@ -13,4 +13,6 @@ public interface ResumeRepository extends JpaRepository<Resume,Integer> {
     List<Resume> findAllBySpecialist_Id(Long id);
     Boolean findResumeBySpecialistIdAndId(long specialistId,long resumeId);
 
+    List<Resume> findByCategoryId(Long categoryId);
+
 }

@@ -12,5 +12,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface ResumeController {
 
     @GetMapping("/category/{categoryId}")
-    String getResumesByCategory(@PathVariable Integer categoryId, Model model);
+    String getResumesByCategory(@PathVariable Long categoryId, Model model);
 }

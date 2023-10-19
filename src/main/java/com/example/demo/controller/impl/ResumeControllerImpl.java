@@ -13,7 +13,8 @@ public class ResumeControllerImpl implements ResumeController {
     private final ResumeService service;
 
     @Override
-    public String getResumesByCategory(Integer categoryId, Model model) {
-        return null;
+    public String getResumesByCategory(Long categoryId, Model model) {
+        model.addAttribute("resumes", service.getResumesByCategory(categoryId));
+        return "resumes/resumes";
     }
 }
