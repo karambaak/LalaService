@@ -21,8 +21,8 @@ public class  Resume {
     @JoinColumn(name = "specialist_id")
     private Specialist specialist;
 
+    private String name;
     private Timestamp timeOfResume;
-
     private String resumeDescription;
 
     @ManyToOne
