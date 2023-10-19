@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class PortfolioService {
+public class  PortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final SpecialistRepository specialistRepository;
 
