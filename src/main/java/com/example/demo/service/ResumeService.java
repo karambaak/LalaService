@@ -32,12 +32,12 @@ public class ResumeService {
         Pageable pageable = PageRequest.of(start, end, sort);
         Page<Resume> resumes = resumeRepository.findAll(pageable);
         return resumes.map(resume ->
-            ResumeDto.builder()
-                    .id(resume.getId())
-                    .specialistId(resume.getSpecialist().getId())
-                    .timeOfResume(resume.getTimeOfResume())
-                    .resumeDescription(resume.getResumeDescription())
-                    .build()
+                ResumeDto.builder()
+                        .id(resume.getId())
+                        .specialistId(resume.getSpecialist().getId())
+                        .timeOfResume(resume.getTimeOfResume())
+                        .resumeDescription(resume.getResumeDescription())
+                        .build()
         );
     }
 
@@ -70,6 +70,15 @@ public class ResumeService {
             }
         }
         return true;
+    }
+
+    public void deleteResume(long specialistId, long resumeId) {
+        if (resumeRepository.findResumeBySpecialistIdAndId(specialistId, resumeId)) {
+            resumeRepository.deleteById((int) resumeId);
+        } else {
+            log.warn("Value does not exist or you do not have access to this value");
+            throw new IllegalArgumentException("Value does not exist or you do not have access to this value");
+        }
     }
 
 }

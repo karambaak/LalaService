@@ -23,5 +23,7 @@ public class Response {
     @JoinColumn(name = "specialist_id", referencedColumnName = "id")
     private Specialist specialist;
     private String response;
+
+    @Column(name="date_time")
     private LocalDateTime dateTime;
 }

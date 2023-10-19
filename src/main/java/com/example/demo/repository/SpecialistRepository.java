@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface SpecialistRepository extends JpaRepository<Specialist, Long> {
 
     List<Specialist> searchSpecialistByCompanyNameContainingIgnoreCase(String companyName);
+
 }
