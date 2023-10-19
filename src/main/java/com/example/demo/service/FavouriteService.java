@@ -34,6 +34,7 @@ public class FavouriteService {
     }
 
     public void deleteFavourite(long userId, long specialistId) {
+
         User user = userRepository.findById(userId).orElse(null);
         Specialist specialist = specialistRepository.findById(specialistId).orElse(null);
         if (user != null && specialist != null) {
