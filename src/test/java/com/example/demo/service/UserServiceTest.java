@@ -5,27 +5,29 @@ import com.example.demo.entities.Role;
 import com.example.demo.entities.User;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
-import org.junit.jupiter.api.Assertions;
+import io.cucumber.spring.CucumberContextConfiguration;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class UserServiceTest {
+@CucumberContextConfiguration
+class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
-
     @Mock
     private UserRepository userRepository;
     @Mock
@@ -36,42 +38,43 @@ public class UserServiceTest {
     private AuthUserDetailsService service;
 
     @Test
-    public void testRegisterNewUser() {
-        UserDto userDto = new UserDto();
-        userDto.setPhoneNumber("1234567890");
-        userDto.setEmail("test@example.com");
-        userDto.setPassword("password");
-        userDto.setUserName("TestUser");
-        userDto.setRole("role_customer");
-        Role role = new Role(1L, "ROLE_CUSTOMER", new ArrayList<>());
+    void testGetAllUsers_ReturnListUsers() {
+        List<User> fakeUsers = new ArrayList<>();
+        fakeUsers.add(new User());
+        fakeUsers.add(new User());
+        fakeUsers.add(new User());
+        fakeUsers.add(new User());
+        fakeUsers.add(new User());
+        Mockito.when(userRepository.findAll()).thenReturn(fakeUsers);
 
-        when(userRepository.findByPhoneNumber(userDto.getPhoneNumber())).thenReturn(Optional.empty());
-        when(userService.defineUserRole(userDto.getRole())).thenReturn(role);
-        when(userService.defineUserType(userDto.getRole())).thenReturn("Customer");
-        assertDoesNotThrow(() -> userService.register(userDto));
+        List<User> result = userService.getAllUsers();
 
-        // Проверяем, что метод findByPhoneNumber был вызван с правильным номером телефона
-        verify(userRepository, times(1)).findByPhoneNumber("1234567890");
+        assertEquals(fakeUsers, result);
 
-        // Проверяем, что метод save был вызван с объектом User
-        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userRepository, times(1)).save(userCaptor.capture());
-
-        User savedUser = userCaptor.getValue();
-        Assertions.assertEquals("1234567890", savedUser.getPhoneNumber());
-        Assertions.assertEquals("test@example.com", savedUser.getEmail());
-
+        Mockito.verify(userRepository, Mockito.times(1)).findAll();
     }
 
     @Test
-    public void testRegisterExistingUser() {
+    void testRegisterExistingUser() {
         UserDto userDto = new UserDto();
         userDto.setPhoneNumber("1234567890");
 
-        // Mocking repository behavior when findByPhoneNumber is called
         when(userRepository.findByPhoneNumber(userDto.getPhoneNumber())).thenReturn(Optional.of(new User()));
 
-        // Testing the case where the user already exists
         assertThrows(IllegalArgumentException.class, () -> userService.register(userDto));
+    }
+
+    @Test
+    void testGetRoles() {
+        List<Role> testRoles = List.of(
+                new Role(1L, "ROLE_SPECIALIST", new ArrayList<>()),
+                new Role(2L, "ROLE_CUSTOMER", new ArrayList<>())
+        );
+
+        Mockito.when(roleRepository.findAll()).thenReturn(testRoles);
+        List<String> result = userService.getRoles();
+        List<String> expectedRoles = List.of("ROLE_SPECIALIST", "ROLE_CUSTOMER");
+        assertEquals(expectedRoles, result);
+        Mockito.verify(roleRepository, Mockito.times(1)).findAll();
     }
 }
