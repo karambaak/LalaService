@@ -11,7 +11,7 @@
         <div class="category-container">
             <#if categories?has_content>
                 <#list categories as category>
-                    <a href="/category/${category.id}" class="category-card">
+                    <a href="/resume/category/${category.id}" class="category-card">
                         <span>${category.categoryName}</span>
                     </a>
                 </#list>

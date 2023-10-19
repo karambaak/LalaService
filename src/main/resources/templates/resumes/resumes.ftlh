@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="../../static/css/layout.css">
     <div id="content" class="content">
         <div class="category-header">
-            <a href="#" class="back-button">
+            <a href="javascript:history.go(-1);" class="back-button">
                 <i class="fas fa-arrow-left"></i>Назад
             </a>
         </div>
