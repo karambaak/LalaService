@@ -27,7 +27,7 @@ databaseChangeLog:
                   name: response
                   type: varchar(255)
               - column:
-                  name: dateTime
+                  name: date_time
                   type: timestamp
         - addForeignKeyConstraint:
             baseColumnNames: post_id
