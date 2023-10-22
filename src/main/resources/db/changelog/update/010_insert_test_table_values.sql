@@ -44,9 +44,9 @@ insert into FAVOURITES (SPECIALIST_ID, USER_ID) VALUES ( 1, 2 );
 
 insert into SUBSCRIPTION_STAND (CATEGORY_ID, SPECIALIST_ID) VALUES ( (select id from CATEGORIES where CATEGORY_NAME like 'Строительные работы%'), 1 );
 
-insert into REVIEWS (REVIEW_DATE, SPECIALIST_ID, USER_ID, REVIEW_TEXT) VALUES ( '2023-10-18 12:00:00', 1, 2, 'Специалист заменил трубы в ванной комнате. работа выполнена отлично' ),
-                                                                              ('2023-10-17 11:00:00', 1, 2, 'Специалист сделал работу некачественно');
-insert into RATINGS (RATING, RATING_DATE, SPECIALIST_ID, USER_ID) VALUES ( 5, '2023-10-18 12:00:00', 1, 2 ), (3, '2023-10-18 12:00:00', 1, 2);
+insert into RATINGS (USER_ID, SPECIALIST_ID, RATING, REVIEW_TEXT, RATING_DATE)
+VALUES ( 2, 1, 5,'Специалист заменил трубы в ванной комнате. работа выполнена отлично', '2023-10-18 12:00:00'  ),
+(2, 1, 3, 'Специалист сделал работу некачественно', '2023-10-18 12:00:00');
 
 insert into POSTS (CATEGORY_ID, PUBLISHED_DATE, USER_ID, WORK_REQUIRED_TIME, DESCRIPTION, TITLE)
 VALUES ( (select  id from  CATEGORIES where CATEGORY_NAME like 'Строительные работы%'), '2023-10-15 10:00:00', 2, '2023-10-17 10:00:00', 'Требуется устранить утечку труб', 'Требуется сантехник' );

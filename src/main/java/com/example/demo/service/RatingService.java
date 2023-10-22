@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class RaitingService {
+public class RatingService {
     private final RatingsRepository ratingsRepository;
     private final UserRepository userRepository;
     private final SpecialistRepository specialistRepository;
 
-    public void saveRating(long userId, long specialistId, int rating) {
+    public void saveRating(long userId, long specialistId, int rating, String reviewText) {
         User user = userRepository.findById(userId).orElse(null);
         Specialist specialist = specialistRepository.findById(specialistId).orElse(null);
         if (user != null && specialist != null) {
@@ -26,6 +26,7 @@ public class RaitingService {
                     .user(user)
                     .specialist(specialist)
                     .rating(rating)
+                    .reviewText(reviewText)
                     .build();
             ratingsRepository.save(ratings);
         } else {
@@ -34,7 +35,7 @@ public class RaitingService {
         }
     }
 
-    public void updateRating(long userId, long specialistId, int rating) {
+    public void updateRating(long userId, long specialistId, int rating, String reviewText) {
         User user = userRepository.findById(userId).orElse(null);
         Specialist specialist = specialistRepository.findById(specialistId).orElse(null);
         if (user != null && specialist != null) {
@@ -48,6 +49,7 @@ public class RaitingService {
                         .user(user)
                         .specialist(specialist)
                         .rating(rating)
+                        .reviewText(reviewText)
                         .build();
                 ratingsRepository.save(newRating);
             }
