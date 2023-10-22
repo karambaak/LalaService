@@ -3,47 +3,99 @@
     <h1 class="text-center"> Стенд </h1>
 
     <div class="p-5">
-        <div class="stand mb-4">
-            <h2>Мои подписки</h2>
-            <div class="category">${category.categoryName}</div>
-            <ul class="tasks">
-                <li class="task"> ${post.title}
-
-                </li>
-                <li class="task"> ${post.title}
-
-                </li>
-                <li class="task"> ${post.title}
-
-                </li>
-            </ul>
-        </div>
+        <#if (specialist)??>
+            <div class="stand mb-4">
+                <h2>Мои подписки</h2>
+                <#if myPosts??>
+                    <#list myPosts as item>
+                        <div class="category">${item.category}</div>
+                        <#if (item.postDtoList)?? && (item.postDtoList?size > 0)>
+                            <ul class="tasks">
+                                <#list (item.postDtoList) as post>
+                                    <li class="task"> ${post.title}</li>
+                                    <div class="task-content">
+                                        <div class="task-details mt-3 me-2">
+                                            <div class="row">
+                                                <div class="col-2 user-photo">
+                                                    <img src="${post.userPhoto}" alt="User Photo">
+                                                </div>
+                                                <div class="col-3 text-center">${post.userName}</div>
+                                            </div>
+                                            <hr>
+                                            <div class="description">
+                                                <i class="fa-solid fa-calendar-days"></i> Когда: ${post.workRequiredTime}
+                                                <br>
+                                                ${post.title}
+                                                <br>
+                                                ${post.description}
+                                            </div>
+                                            <hr>
+                                            <div class="response-info">
+                                                <div class="responses-count"><p>Откликнулось специалистов: ${post.responseNumber}</p>
+                                                    <p>Дата публикации: ${post.publishedDate}</p></div>
+                                                <div class="">
+                                                    <#if (specialist)??>
+                                                        <a href="/stand/respond/${post.id}" class="respond-button my-3">Откликнуться</a>
+                                                    </#if>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </#list>
+                            </ul>
+                        <#else>
+                            Вы не подписались ни на одну категорию.
+                        </#if>
+                    </#list>
+                </#if>
+            </div>
+        </#if>
         <div id="stand">
             <h2>Все категории</h2>
-            <div class="category">${category.categoryName}</div>
-            <ul class="tasks">
-                <li class="task"> ${post.title}
+            <#if posts??>
+                <#list posts as item>
+                    <div class="category">${item.category}</div>
+                    <#if (item.postDtoList)?? && (item.postDtoList?size > 0)>
+                        <ul class="tasks">
+                            <#list (item.postDtoList) as post>
+                                <li class="task"> ${post.title}</li>
+                                <div class="task-content">
+                                    <div class="task-details mt-3 me-2">
+                                        <div class="row">
+                                            <div class="col-2 user-photo">
+                                                <img src="${post.userPhoto}" alt="User Photo">
+                                            </div>
+                                            <div class="col-3 text-center">${post.userName}</div>
+                                        </div>
+                                        <hr>
+                                        <div class="description">
+                                            <i class="fa-solid fa-calendar-days"></i> Когда: ${post.workRequiredTime}
+                                            <br>
+                                            ${post.title}
+                                            <br>
+                                            ${post.description}
+                                        </div>
+                                        <hr>
+                                        <div class="response-info">
+                                            <div class="responses-count"><p>Откликнулось специалистов: ${post.responseNumber}</p>
+                                            <p>Дата публикации: ${post.publishedDate}</p></div>
+                                            <div class="">
+                                                <#if (specialist)??>
+                                                <a href="/stand/respond/${post.id}" class="respond-button my-3">Откликнуться</a>
+                                                </#if>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </#list>
+                        </ul>
+                    <#else>
+                        В данной категории нет запросов
+                    </#if>
+                </#list>
+            </#if>
 
-                </li>
-                <li class="task"> ${post.title}
 
-                </li>
-                <li class="task"> ${post.title}
-
-                </li>
-            </ul>
-
-
-            <div class="category">Category 2</div>
-            <ul class="tasks">
-                <li class="task">Task 4</li>
-            </ul>
-
-            <div class="category">Category 3</div>
-            <ul class="tasks">
-                <li class="task">Task 8</li>
-                <li class="task">Task 9</li>
-            </ul>
         </div>
     </div>
     <style>
@@ -63,6 +115,7 @@
             padding: 25px;
             cursor: pointer;
         }
+
         .category:hover {
             background-color: #2552e7;
             color: white;
@@ -81,15 +134,6 @@
         .category.collapsed::after {
             content: "\f147";
             /* Unicode for square-minus icon */
-        }
-
-        .badge {
-            background-color: #4b6ad0;
-            color: #fff;
-            border-radius: 10px;
-            padding: 6px 10px;
-            margin-left: 15px;
-            font-size: 15px;
         }
 
         #content {
@@ -116,19 +160,20 @@
             cursor: pointer;
             /* Make it clickable */
         }
+
         .task-content {
-            display: flex;
+            display: none;
             align-items: center;
         }
-        .flag-icon {
-            margin-right: 10px;
-        }
+
+
         .task-details {
             border: 1px solid #ccc;
             border-radius: 15px;
             padding: 30px;
             width: 100%;
         }
+
         .user-photo img {
             margin-right: 10px;
             width: 50px;
@@ -181,141 +226,37 @@
         }
     </style>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const respondLinks = document.querySelectorAll('.card-link');
-
-            respondLinks.forEach(link => {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault();
-
-                    const card = this.closest('.card');
-                    const commentField = document.createElement('textarea');
-                    commentField.classList.add('response-comment');
-                    commentField.setAttribute('rows', '4');
-                    commentField.setAttribute('cols', '50');
-                    card.appendChild(commentField);
-
-                    const respondButton = document.createElement('button');
-                    respondButton.classList.add('btn', 'btn-primary');
-                    respondButton.innerText = 'Ответить';
-                    card.appendChild(respondButton);
-
-                    respondButton.addEventListener('click', function() {
-                        const responseText = commentField.value;
-                        const itemId = card.dataset.itemId;
-                        sendResponse(itemId, responseText);
-                    });
-                });
-            });
-
-            function sendResponse(itemId, responseText) {
-                fetch(`/stand/respond/${itemId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ responseText })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        // Handle the response from the backend if needed
-                        console.log(data);
-                    })
-                    .catch(error => console.error('Error:', error));
-            }
-        });
         document.addEventListener('DOMContentLoaded', function () {
-            let currentCategory = null;
-
             const categories = document.querySelectorAll('.category');
 
-            categories.forEach(category => {
-                const tasks = category.nextElementSibling.querySelectorAll('.task');
-                const badge = document.createElement('span');
-                badge.classList.add('badge');
-                badge.textContent = tasks.length;
-                category.appendChild(badge);
-
+            categories.forEach(function (category) {
                 category.addEventListener('click', function () {
-                    const tasksContainer = this.nextElementSibling;
-                    const isCollapsed = tasksContainer.style.display === 'none' ||
-                        tasksContainer.style.display === '';
+                    const tasks = this.nextElementSibling;
 
-                    if (currentCategory && currentCategory !== this) {
-                        const prevTasksContainer = currentCategory.nextElementSibling;
-                        prevTasksContainer.style.display = 'none';
-                        currentCategory.classList.remove('expanded-category');
+                    if (tasks.style.display === 'none' || tasks.style.display === '') {
+                        tasks.style.display = 'block';
+                    } else {
+                        tasks.style.display = 'none';
                     }
-
-                    tasksContainer.style.display = isCollapsed ? 'block' : 'none';
-                    this.classList.toggle('collapsed');
-                    this.classList.toggle('expanded-category');
-
-                    tasks.forEach(task => {
-                        const taskContent = task.querySelector('.task-content');
-                        if (isCollapsed) {
-                            taskContent.classList.add('hidden');
-                        } else {
-                            taskContent.classList.remove('hidden');
-                        }
-                    });
-
-                    currentCategory = this;
                 });
             });
-
-            const userPhoto = "${post.userPhoto}";
-            const workRequiredTime = "${post.workRequiredTime}";
-            const userName = "${post.userName}";
-            const title = "${post.title}";
-            const description = "${post.description}";
-            const responseNumber = "${post.responseNumber}";
 
             const tasks = document.querySelectorAll('.task');
 
-            tasks.forEach(task => {
-                const taskContent = document.createElement('div');
-                taskContent.classList.add('task-content', 'hidden');
-
-                taskContent.innerHTML = `
-        <div class="task-details mt-3 me-2">
-            <div class="row">
-                <div class="col-2 user-photo">
-                    <!-- Add user photo here -->
-                    <img src="${userPhoto}" alt="User Photo">
-                </div>
-                <div class="col-3 text-center">${userName}</div>
-            </div>
-            <hr>
-            <div class="description">
-                <i class="fa-solid fa-calendar-days"></i> Когда: ${workRequiredTime}
-                <br>
-                ${title}
-                <br>
-                ${description}
-            </div>
-            <hr>
-            <div class="response-info">
-                <div class="responses-count">Количество откликов: ${responseNumber}</div>
-                <div class="">
-                    <!-- Add your respond button here -->
-                    <a href="#respond" class="respond-button my-3">Откликнуться</a>
-                </div>
-            </div>
-        </div>
-        `;
-
-                task.appendChild(taskContent);
-
+            tasks.forEach((function (task) {
                 task.addEventListener('click', function () {
-                    taskContent.classList.toggle('hidden');
+                    const posts = this.nextElementSibling;
+                    if (posts.style.display === 'none' || posts.style.display === '') {
+                        posts.style.display = 'flex';
+                    } else {
+                        posts.style.display = 'none';
+                    }
                 });
 
-                taskContent.addEventListener('click', function (event) {
-                    event.stopPropagation(); // Prevent task click event from firing
-                });
-            });
-        });
+            }))
+        })
+
+
     </script>
 </@main.layout>
 
