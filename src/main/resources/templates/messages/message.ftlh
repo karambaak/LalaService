@@ -76,7 +76,7 @@
         .message-card {
             background-color: white;
             border-radius: 15px;
-            box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.2, 0.2);
+            box-shadow: 0 0 10px rgba(0.0, 0.0, 0.2, 0.2);
             margin: 10px;
             color: black;
             text-decoration: none;
@@ -115,7 +115,7 @@
         .notification-card {
             background-color: white;
             border-radius: 15px;
-            box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.2, 0.2);
+            box-shadow: 0 0 10px rgba(0.0, 0.0, 0.2, 0.2);
             margin: 10px;
             padding: 20px 30px;
             overflow: hidden;

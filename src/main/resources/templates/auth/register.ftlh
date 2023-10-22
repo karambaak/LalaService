@@ -86,7 +86,7 @@
         background-color: #ffffff;
         height: 70vh;
         padding: 30px 60px 60px;
-        box-shadow: 0px -5px 15px rgba(0.0, 0.0, 0.1, 0.2);
+        box-shadow: 0 -5px 15px rgba(0.0, 0.0, 0.1, 0.2);
         border-radius: 15px;
         display: flex;
         align-items: center;

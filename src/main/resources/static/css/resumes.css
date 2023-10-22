@@ -9,16 +9,16 @@
     background-color: rgb(255, 255, 255);
     border-radius: 15px;
     padding: 5px 10px;
-    margin: 10px 0px;
-    box-shadow: 0px 5px 15px rgba(0.0, 0.0, 0.1, 0.1);
+    margin: 10px 0;
+    box-shadow: 0 5px 15px rgba(0.0, 0.0, 0.1, 0.1);
 }
 
 .resume:hover{
-    box-shadow: 0px 5px 18px rgba(0.1, 0.2, 0.3, 0.4);
+    box-shadow: 0 5px 18px rgba(0.1, 0.2, 0.3, 0.4);
 }
 
 .resume p{
-    margin: 0rem;
+    margin: 0;
 }
 
 .resume-link {
@@ -31,7 +31,7 @@
 
 .resume-name{
     font-size: 18px;
-    padding: 8px 0px;
+    padding: 8px 0;
     font-weight: bold;
     color: #2552e7;
     margin-bottom: 6px;
@@ -77,7 +77,7 @@
 }
 
 .resume-buttons{
-    padding: 10px 0px;
+    padding: 10px 0;
     display: flex;
     justify-content: space-between;
 }

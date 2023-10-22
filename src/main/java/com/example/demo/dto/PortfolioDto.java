@@ -1,6 +1,5 @@
 package com.example.demo.dto;
 
-import com.example.demo.entities.Specialist;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;

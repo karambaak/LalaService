@@ -100,9 +100,7 @@
     </div>
     <style>
         .category {
-            cursor: pointer;
             font-weight: bold;
-            margin-bottom: 5px;
             border: 1px #ccc solid;
             border-radius: 15px;
             margin: 25px 10px;

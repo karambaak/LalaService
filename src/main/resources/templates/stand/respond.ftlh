@@ -97,7 +97,7 @@
             width: 80%;
             border-radius: 15px;
             padding: 15px;
-            box-shadow: 0px -5px 15px rgb(224, 220, 220);
+            box-shadow: 0 -5px 15px rgb(224, 220, 220);
             height: 100px;
             margin: 30px 0 10px;
         }

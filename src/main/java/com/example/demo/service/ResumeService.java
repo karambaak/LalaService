@@ -18,7 +18,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -84,7 +83,7 @@ public class ResumeService {
 
     public List<ResumeDto> getResumesByCategory(Long categoryId){
         List<Resume> resumes = resumeRepository.findByCategoryId(categoryId);
-        return resumes.stream().map(this::makeDto).collect(Collectors.toList());
+        return resumes.stream().map(this::makeDto).toList();
     }
 
     private ResumeDto makeDto(Resume resume){
