@@ -18,6 +18,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -81,18 +82,35 @@ public class ResumeService {
         }
     }
 
-    public List<ResumeDto> getResumesByCategory(Long categoryId){
+    public List<ResumeDto> getResumesByCategory(Long categoryId) {
         List<Resume> resumes = resumeRepository.findByCategoryId(categoryId);
-        return resumes.stream().map(this::makeDto).toList();
+        return resumes.stream().map(this::makeDto).collect(Collectors.toList());
     }
 
-    private ResumeDto makeDto(Resume resume){
+    private ResumeDto makeDto(Resume resume) {
         return ResumeDto.builder()
                 .id(resume.getId())
                 .specialistId(resume.getSpecialist().getId())
                 .timeOfResume(resume.getTimeOfResume())
                 .resumeDescription(resume.getResumeDescription())
                 .build();
+    }
+
+    public void updateResume(ResumeDto resumeDto) {
+        Resume existingResume = resumeRepository.findResumeById(resumeDto.getId()).orElse(null);
+        if (existingResume != null) {
+            existingResume.setResumeDescription(resumeDto.getResumeDescription());
+            existingResume.setTimeOfResume(Timestamp.valueOf(LocalDateTime.now()));
+            existingResume.setCategory(categoryRepository.findById(
+                            resumeDto.getCategoryId())
+                    .orElseThrow(() -> new NoSuchElementException("Category not found")));
+
+            resumeRepository.save(existingResume);
+        } else {
+            log.warn("Value does not exist ");
+            throw new IllegalArgumentException("Value does not exist");
+        }
+
     }
 
 }
