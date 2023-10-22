@@ -13,5 +13,5 @@ import java.util.List;
 public interface MainRestController {
 
     @GetMapping("/search/specialist/{name}")
-    public List<SpecialistDto> searchSpecialistByName(@PathVariable String name);
+    List<SpecialistDto> searchSpecialistByName(@PathVariable String name);
 }

@@ -18,6 +18,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -32,12 +33,12 @@ public class ResumeService {
         Pageable pageable = PageRequest.of(start, end, sort);
         Page<Resume> resumes = resumeRepository.findAll(pageable);
         return resumes.map(resume ->
-            ResumeDto.builder()
-                    .id(resume.getId())
-                    .specialistId(resume.getSpecialist().getId())
-                    .timeOfResume(resume.getTimeOfResume())
-                    .resumeDescription(resume.getResumeDescription())
-                    .build()
+                ResumeDto.builder()
+                        .id(resume.getId())
+                        .specialistId(resume.getSpecialist().getId())
+                        .timeOfResume(resume.getTimeOfResume())
+                        .resumeDescription(resume.getResumeDescription())
+                        .build()
         );
     }
 
@@ -70,6 +71,29 @@ public class ResumeService {
             }
         }
         return true;
+    }
+
+    public void deleteResume(long specialistId, long resumeId) {
+        if (resumeRepository.findResumeBySpecialistIdAndId(specialistId, resumeId)) {
+            resumeRepository.deleteById((int) resumeId);
+        } else {
+            log.warn("Value does not exist or you do not have access to this value");
+            throw new IllegalArgumentException("Value does not exist or you do not have access to this value");
+        }
+    }
+
+    public List<ResumeDto> getResumesByCategory(Long categoryId){
+        List<Resume> resumes = resumeRepository.findByCategoryId(categoryId);
+        return resumes.stream().map(this::makeDto).collect(Collectors.toList());
+    }
+
+    private ResumeDto makeDto(Resume resume){
+        return ResumeDto.builder()
+                .id(resume.getId())
+                .specialistId(resume.getSpecialist().getId())
+                .timeOfResume(resume.getTimeOfResume())
+                .resumeDescription(resume.getResumeDescription())
+                .build();
     }
 
 }

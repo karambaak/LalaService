@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.support.JpaRepositoryImplementati
 
 public interface PortfolioRepository extends JpaRepositoryImplementation<Portfolio,Integer> {
     Page<Portfolio> findAll(Pageable pageable);
+    Boolean findPortfolioByIdAndAndSpecialistId(long portfolioId,long specialistId);
 }

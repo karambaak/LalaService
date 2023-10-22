@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class  PortfolioService {
+public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final SpecialistRepository specialistRepository;
 
@@ -34,7 +34,7 @@ public class  PortfolioService {
         });
         return portfolioDtos;
     }
-    
+
 
     public void savePortfolio(PortfolioDto portfolioDto) {
         portfolioRepository.save(Portfolio.builder()
@@ -46,4 +46,15 @@ public class  PortfolioService {
                 .title(portfolioDto.getTitle())
                 .build());
     }
+
+    public void deletePortfolio(long specialistId, long portfolioId) {
+        if (portfolioRepository.findPortfolioByIdAndAndSpecialistId(portfolioId, specialistId)) {
+            portfolioRepository.deleteById((int) portfolioId);
+        } else {
+            log.warn("Value does not exist or you do not have access to this value");
+            throw new IllegalArgumentException("Value does not exist or you do not have access to this value");
+
+        }
+    }
 }
+
