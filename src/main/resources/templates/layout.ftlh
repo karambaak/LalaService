@@ -33,7 +33,7 @@
                 <i class="fas fa-envelope"></i>
                 <!-- <span>Сообщения</span> -->
             </a>
-            <a href="#profile" class="tab">
+            <a href="/profile" class="tab">
                 <i class="fas fa-user"></i>
                 <!-- <span>Личный кабинет</span> -->
             </a>

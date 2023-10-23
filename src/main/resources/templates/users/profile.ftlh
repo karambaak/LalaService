@@ -16,14 +16,24 @@
     <div class="profile">
         <div class="profile-header row">
             <div class="profile-image-block col-4">
-                <img src="${user.photo}"
-                     class="round-image" alt>
+                <#if user.photo?has_content>
+                    <img src="${user.photo}"
+                         class="round-image" alt>
+                </#if>
             </div>
             <div class="personal-info col-6">
-                <p class="username">${user.username}</p>
-                <p>${user.email}</p>
-                <p>${user.phoneNumber}</p>
-                <p>Ваш город: ${user.city}</p>
+                <#if user.userName?has_content>
+                    <p class="username">${user.userName}</p>
+                </#if>
+                <#if user.email?has_content>
+                    <p>${user.email}</p>
+                </#if>
+                <#if user.phoneNumber?has_content>
+                    <p>${user.phoneNumber}</p>
+                </#if>
+                <#if user.city?has_content>
+                    <p>Ваш город: ${user.city}</p>
+                </#if>
                 <#if specialist?has_content>
                     <#if specialist.rating??>
                         <p style="cursor: pointer;">Ваш рейтинг: ${specialist.rating}</p>
@@ -34,7 +44,7 @@
     </div>
 
     <div>
-        <#if user.roleId = 2>
+        <#if user.role = "ROLE_SPECIALIST">
             <div class="tabs">
                 <button class="tab-item" id="resume-tab">Резюме</button>
                 <button class="tab-item" id="portfolio-tab">Портфолио</button>
@@ -52,10 +62,10 @@
                         <#list resumes as resume>
                             <div class="resume">
                                 <a href="#${resume.id}" class="resume-link">
-                                    <p class="resume-name">${resume.name}</p>
-                                    <p class="resume-experience">Опыт работы: ${resume.experience}</p>
-                                    <p class="resume-category">Категория: ${resume.category}</p>
-                                    <p class="resume-date">Дата создания: ${resume.createdDate}</p>
+                                    <p class="resume-name">${resume.header}</p>
+<#--                                    <p class="resume-experience">Опыт работы: ${resume.experience}</p>-->
+<#--                                    <p class="resume-category">Категория: ${resume.category}</p>-->
+                                    <p class="resume-date">Дата создания: ${resume.timeOfResume}</p>
                                 </a>
                             </div>
                         </#list>
@@ -84,7 +94,7 @@
                     </#if>
                 </div>
             </div>
-        <#elseif user.roleId = 1>
+        <#elseif user.role = "ROLE_CUSTOMER">
             <div class="tabs">
                 <button class="tab-item" id="portfolio-tab">Ваши запросы на стенд</button>
             </div>
@@ -119,6 +129,7 @@
                 <ul>
                     <li><a href="#">Редактировать профиль</a></li>
                     <li><a href="#">Изменить город</a></li>
+                    <li><a href="/logout">Выйти из аккаунта</a> </li>
                 </ul>
             </div>
         </div>
