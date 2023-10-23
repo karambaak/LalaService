@@ -18,7 +18,7 @@
                                     <select id="role" class="form-select" name="role" required>
                                         <#if roles??>
                                             <option value="" disabled
-                                                    selected><@spring.message 'user.register.role.choose'/></option>
+                                                    selected>Выберите роль</option>
                                             <#list roles as role>
                                                 <option value="${role}">${role}</option>
                                             </#list>
@@ -31,7 +31,7 @@
                         </div>
                         <div class="card-footer border-0">
                             <div class="text-center">
-                                <@spring.message 'user.register.haveaccount'/> <a href="/auth/login" class="text-dark"><@spring.message 'user.register.singin'/></a>
+                                У вас уже есть аккаунт? <a href="/auth/login" class="text-dark">Войти</a>
                             </div>
                         </div>
                     </div>

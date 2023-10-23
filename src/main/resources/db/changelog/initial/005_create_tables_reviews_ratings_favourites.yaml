@@ -1,34 +1,8 @@
 databaseChangeLog:
   - changeSet:
-      id: create tables - reviews, ratings, favourites
+      id: create tables - ratings, favourites
       author: Asem
       changes:
-        - createTable:
-            tableName: reviews
-            columns:
-              - column:
-                  name: id
-                  type: long
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: specialist_id
-                  type: long
-                  constraints:
-                    nullable: false
-              - column:
-                  name: user_id
-                  type: long
-                  constraints:
-                    nullable: false
-              - column:
-                  name: review_text
-                  type: varchar(255)
-              - column:
-                  name: review_date
-                  type: timestamp
         - createTable:
             tableName: ratings
             columns:
@@ -53,6 +27,9 @@ databaseChangeLog:
                   name: rating
                   type: integer
               - column:
+                  name: review_text
+                  type: varchar(255)
+              - column:
                   name: rating_date
                   type: timestamp
         - createTable:
@@ -75,14 +52,6 @@ databaseChangeLog:
                   type: long
                   constraints:
                     nullable: false
-        - addForeignKeyConstraint:
-            baseTableName: reviews
-            baseColumnNames: user_id
-            constraintName: fk_user_id_reviews
-            referencedTableName: users
-            referencedColumnNames: id
-            onDelete: cascade
-            onUpdate: cascade
         - addForeignKeyConstraint:
             baseTableName: ratings
             baseColumnNames: user_id
