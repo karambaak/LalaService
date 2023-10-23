@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .permitAll())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/profile").authenticated()
+                        .requestMatchers("/favourites").authenticated()
                         .anyRequest().permitAll()
                 )
                 .rememberMe(customizer -> customizer
