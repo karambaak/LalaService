@@ -26,6 +26,7 @@ public class UserDto {
     @Email(message = "Invalid email!")
     @NotBlank(message = "email is required")
     private String email;
+    private String photo;
 
     @NotBlank(message = "Password is required")
     @Size(min = 6, max = 24, message = "Length must be >= 4 and <= 24")
