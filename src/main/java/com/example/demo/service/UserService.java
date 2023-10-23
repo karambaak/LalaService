@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.UserDto;
+import com.example.demo.dto.ViewerDto;
 import com.example.demo.entities.Role;
 import com.example.demo.entities.Specialist;
 import com.example.demo.entities.User;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Service
@@ -27,9 +31,7 @@ public class UserService {
 
     private final UserRepository repository;
     private final SpecialistRepository specialistRepository;
-
     private final RoleRepository roleRepository;
-
     private final PasswordEncoder encoder;
     private final AuthUserDetailsService service;
 
@@ -82,7 +84,15 @@ public class UserService {
         }
         return role;
     }
-
+public Specialist getSpecialistFromSecurityContextHolder() {
+        String username = getUsernameFromSecurityContextHolder();
+        if(username.isEmpty()) return null;
+        var user = findUserByUsername(username);
+        if(user == null) return null;
+        var specialist = specialistRepository.findByUser(user);
+        if(specialist.isEmpty()) return null;
+        return specialist.get();
+}
     public String defineUserType(String userRole) {
         if (userRole == null) {
             log.warn("Passed a null value for user role");
@@ -127,7 +137,7 @@ public class UserService {
     }
 
     public UserDto getUserByAuthentication(Authentication auth) {
-        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
+        User user = (User) auth.getPrincipal();
         return makeUserDto(repository.findByPhoneNumber(user.getUsername()).orElseThrow(() -> new NoSuchElementException("Auth is null, user not found")));
     }
 
@@ -138,7 +148,58 @@ public class UserService {
                 .role(user.getRole().getRole())
                 .phoneNumber(user.getPhoneNumber())
                 .email(user.getEmail())
-                .photo(user.getPhoto())
                 .build();
+    }
+
+    public String getUsernameFromSecurityContextHolder() {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth == null || !auth.isAuthenticated()) {
+                return null;
+            }
+
+            org.springframework.security.core.userdetails.User u = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
+            return u.getUsername();
+        } catch (Exception e) {
+
+            return null;
+        }
+    }
+
+    public ViewerDto defineSpecialist() {
+        String username = getUsernameFromSecurityContextHolder();
+        if (username == null) return null;
+
+        User user = findUserByUsername(username);
+        if (user == null || !user.getUserType().equalsIgnoreCase("specialist")) {
+            return null;
+        }
+
+        Specialist specialist = specialistRepository.findByUser(user).orElse(null);
+        if (specialist == null) {
+            return null;
+        }
+
+        return ViewerDto.builder()
+                .userId(user.getId())
+                .specialistId(specialist.getId())
+                .userType(user.getUserType())
+                .build();
+
+
+    }
+
+    private User findUserByUsername(String username) {
+        if (isValidEmail(username)) {
+            return repository.findByEmail(username).orElse(null);
+        } else {
+            return repository.findByPhoneNumber(username).orElse(null);
+        }
+    }
+    public boolean isValidEmail(String email) {
+        String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }

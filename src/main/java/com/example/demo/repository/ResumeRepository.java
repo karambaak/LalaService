@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ResumeRepository extends JpaRepository<Resume,Integer> {
 
@@ -16,6 +15,4 @@ public interface ResumeRepository extends JpaRepository<Resume,Integer> {
 
     List<Resume> findByCategoryId(Long categoryId);
 
-
-    Optional<Resume> findResumeById(long integer);
 }

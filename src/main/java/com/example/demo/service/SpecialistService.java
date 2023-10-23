@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -22,7 +21,7 @@ public class SpecialistService {
     public List<SpecialistDto> searchSpecialistByName(String name){
         List<Specialist> specialists = repository.searchSpecialistByCompanyNameContainingIgnoreCase(name);
         log.info("Specialist:  {}", specialists.toString());
-        return specialists.stream().map(this::makeDto).collect(Collectors.toList());
+        return specialists.stream().map(this::makeDto).toList();
     }
 
     public SpecialistDto getSpecialistByAuthentication(Authentication auth){

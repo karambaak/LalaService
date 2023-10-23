@@ -1,25 +1,25 @@
-INSERT INTO users (user_name, user_type, phone_number, email, enabled, registration_date, role_id)
+INSERT INTO users (user_name, user_type, phone_number, email, password, enabled, registration_date, role_id, theme_id)
 VALUES
-    ('Пользователь 1', 'Тип 1', '111-111-1111', 'user1@example.com', true, NOW(), 1),
-    ('Пользователь 2', 'Тип 2', '222-222-2222', 'user2@example.com', true, NOW(), 2),
-    ('Пользователь 3', 'Тип 3', '333-333-3333', 'user3@example.com', true, NOW(), 1),
-    ('Пользователь 4', 'Тип 4', '444-444-4444', 'user4@example.com', true, NOW(), 2),
-    ('Пользователь 5', 'Тип 5', '555-555-5555', 'user5@example.com', true, NOW(), 1),
-    ('Пользователь 6', 'Тип 6', '666-666-6666', 'user6@example.com', true, NOW(), 2),
-    ('Пользователь 7', 'Тип 7', '777-777-7777', 'user7@example.com', true, NOW(), 1),
-    ('Пользователь 8', 'Тип 8', '888-888-8888', 'user8@example.com', true, NOW(), 2),
-    ('Пользователь 9', 'Тип 9', '999-999-9999', 'user9@example.com', true, NOW(), 1),
-    ('Пользователь 10', 'Тип 10', '101-101-1010', 'user10@example.com', true, NOW(), 2),
-    ('Пользователь 11', 'Тип 11', '111-111-11112', 'user11@example.com', true, NOW(), 1),
-    ('Пользователь 12', 'Тип 12', '121-121-1212', 'user12@example.com', true, NOW(), 2),
-    ('Пользователь 13', 'Тип 13', '131-131-1313', 'user13@example.com', true, NOW(), 1),
-    ('Пользователь 14', 'Тип 14', '141-141-1414', 'user14@example.com', true, NOW(), 2),
-    ('Пользователь 15', 'Тип 15', '151-151-1515', 'user15@example.com', true, NOW(), 1);
+    ('Пользователь 1', 'SPECIALIST', '111-111-1111', 'user1@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light')),
+    ('Пользователь 2', 'CUSTOMER', '222-222-2222', 'user2@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 2, (select id from THEMES where THEME_NAME = 'light')),
+    ('Пользователь 3', 'SPECIALIST', '333-333-3333', 'user3@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light')),
+    ('Пользователь 4', 'CUSTOMER', '444-444-4444', 'user4@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 2, (select id from THEMES where THEME_NAME = 'light')),
+    ('Пользователь 5', 'SPECIALIST', '555-555-5555', 'user5@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light')),
+    ('Пользователь 6', 'CUSTOMER', '666-666-6666', 'user6@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 2, (select id from THEMES where THEME_NAME = 'light')),
+    ('Пользователь 7', 'SPECIALIST', '777-777-7777', 'user7@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light')),
+    ('Пользователь 8', 'CUSTOMER', '888-888-8888', 'user8@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 2, (select id from THEMES where THEME_NAME = 'light')),
+    ('Пользователь 9', 'SPECIALIST', '999-999-9999', 'user9@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light')),
+    ('Пользователь 10', 'CUSTOMER', '101-101-1010', 'user10@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 2, (select id from THEMES where THEME_NAME = 'light')),
+    ('Пользователь 11', 'SPECIALIST', '111-111-11112', 'user11@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light')),
+    ('Пользователь 12', 'CUSTOMER', '121-121-1212', 'user12@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 2, (select id from THEMES where THEME_NAME = 'light')),
+    ('Пользователь 13', 'SPECIALIST', '131-131-1313', 'user13@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light')),
+    ('Пользователь 14', 'CUSTOMER', '141-141-1414', 'user14@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 2, (select id from THEMES where THEME_NAME = 'light')),
+    ('Пользователь 15', 'SPECIALIST', '151-151-1515', 'user15@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light'));
 
 
 INSERT INTO specialists (user_id, company_name, tariff_id, geolocation_id)
 VALUES
-    (1, 'Facebook, Inc.', 1, 1),
+    (17, 'Facebook, Inc.', 1, 1),
     (2, 'Tesla, Inc.', 1, 1),
     (3, 'Intel Corporation', 1, 1),
     (4, 'IBM Corporation', 1, 1),

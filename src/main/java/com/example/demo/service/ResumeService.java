@@ -2,13 +2,10 @@ package com.example.demo.service;
 
 import com.example.demo.dto.ResumeDto;
 import com.example.demo.entities.Resume;
-import com.example.demo.entities.Specialist;
-import com.example.demo.entities.User;
 import com.example.demo.errors.exceptions.OnlyOneResumeInSameCategoryException;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ResumeRepository;
 import com.example.demo.repository.SpecialistRepository;
-import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,7 +18,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -30,7 +26,6 @@ public class ResumeService {
     private final ResumeRepository resumeRepository;
     private final SpecialistRepository specialistRepository;
     private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
 
     public Page<ResumeDto> getAllResumes(int start, int end) {
         Sort sort = Sort.by(Sort.Order.desc("timeOfResume"));
@@ -86,44 +81,18 @@ public class ResumeService {
         }
     }
 
-    public List<ResumeDto> getResumesByCategory(Long categoryId) {
+    public List<ResumeDto> getResumesByCategory(Long categoryId){
         List<Resume> resumes = resumeRepository.findByCategoryId(categoryId);
-        return resumes.stream().map(this::makeDto).collect(Collectors.toList());
+        return resumes.stream().map(this::makeDto).toList();
     }
 
-    private ResumeDto makeDto(Resume resume) {
+    private ResumeDto makeDto(Resume resume){
         return ResumeDto.builder()
                 .id(resume.getId())
-                .header(resume.getName())
                 .specialistId(resume.getSpecialist().getId())
                 .timeOfResume(resume.getTimeOfResume())
                 .resumeDescription(resume.getResumeDescription())
                 .build();
-    }
-
-    public void updateResume(ResumeDto resumeDto) {
-        Resume existingResume = resumeRepository.findResumeById(resumeDto.getId()).orElse(null);
-        if (existingResume != null) {
-            existingResume.setResumeDescription(resumeDto.getResumeDescription());
-            existingResume.setTimeOfResume(Timestamp.valueOf(LocalDateTime.now()));
-            existingResume.setCategory(categoryRepository.findById(
-                            resumeDto.getCategoryId())
-                    .orElseThrow(() -> new NoSuchElementException("Category not found")));
-
-            resumeRepository.save(existingResume);
-        } else {
-            log.warn("Value does not exist ");
-            throw new IllegalArgumentException("Value does not exist");
-        }
-
-    }
-
-    public List<ResumeDto> getResumesByUserId(Long userId){
-        User user = userRepository.findById(userId).get();
-        Specialist specialist = specialistRepository.findByUser(user).orElseThrow(() -> new NoSuchElementException("Specialist not found"));
-        List<Resume> resumes = resumeRepository.findAllBySpecialist_Id(specialist.getId());
-
-        return resumes.stream().map(this::makeDto).collect(Collectors.toList());
     }
 
 }

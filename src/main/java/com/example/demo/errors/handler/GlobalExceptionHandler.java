@@ -3,7 +3,6 @@ package com.example.demo.errors.handler;
 import com.example.demo.errors.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.h2.server.web.WebServlet;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.ui.Model;
