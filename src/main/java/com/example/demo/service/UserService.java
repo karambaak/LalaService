@@ -84,15 +84,17 @@ public class UserService {
         }
         return role;
     }
-public Specialist getSpecialistFromSecurityContextHolder() {
+
+    public Specialist getSpecialistFromSecurityContextHolder() {
         String username = getUsernameFromSecurityContextHolder();
-        if(username.isEmpty()) return null;
+        if (username.isEmpty()) return null;
         var user = findUserByUsername(username);
-        if(user == null) return null;
+        if (user == null) return null;
         var specialist = specialistRepository.findByUser(user);
-        if(specialist.isEmpty()) return null;
+        if (specialist.isEmpty()) return null;
         return specialist.get();
-}
+    }
+
     public String defineUserType(String userRole) {
         if (userRole == null) {
             log.warn("Passed a null value for user role");
@@ -139,6 +141,10 @@ public Specialist getSpecialistFromSecurityContextHolder() {
     public UserDto getUserByAuthentication(Authentication auth) {
         User user = (User) auth.getPrincipal();
         return makeUserDto(repository.findByPhoneNumber(user.getUsername()).orElseThrow(() -> new NoSuchElementException("Auth is null, user not found")));
+    }
+
+    public UserDto getUserByPhone(String phone) {
+        return makeUserDto(repository.findByPhoneNumber(phone).orElseThrow(() -> new NoSuchElementException("Auth is null, user not found")));
     }
 
     private UserDto makeUserDto(User user) {
@@ -196,6 +202,7 @@ public Specialist getSpecialistFromSecurityContextHolder() {
             return repository.findByPhoneNumber(username).orElse(null);
         }
     }
+
     public boolean isValidEmail(String email) {
         String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         Pattern pattern = Pattern.compile(regex);
