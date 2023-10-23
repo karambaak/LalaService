@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 public class ResumeDto {
     private Long id;
     private Long specialistId;
+    private String header;
 
     @Past(message = "Time  must be in the past or current")
     private Timestamp timeOfResume;
