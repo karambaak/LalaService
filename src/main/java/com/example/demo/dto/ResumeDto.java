@@ -19,5 +19,5 @@ public class ResumeDto {
 
     @Size(min = 1, max = 255, message = "Description must be between 1 and 255 characters")
     private String resumeDescription;
-    private Integer categoryId;
+    private Long categoryId;
 }
