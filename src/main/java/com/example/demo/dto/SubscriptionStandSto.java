@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class SubscriptionStandSto {
-    private int id;
+    private Long id;
     //private UserDto user;
 }

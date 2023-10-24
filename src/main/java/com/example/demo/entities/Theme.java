@@ -17,8 +17,10 @@ public class Theme {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @Column(name = "theme_name")
     private String themeName;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "theme")
     List<User> users;
 }

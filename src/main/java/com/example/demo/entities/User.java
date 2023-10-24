@@ -43,8 +43,10 @@ public class User implements UserDetails {
 
     @Column(name = "registration_date")
     private LocalDateTime registrationDate;
+
     @Column(name = "photo")
     private String photo;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Notification> notifications;
 
@@ -53,8 +55,10 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Post> posts;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Favourite> favourites;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
@@ -85,7 +89,6 @@ public class User implements UserDetails {
     public String getUsername() {
         return phoneNumber;
     }
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
