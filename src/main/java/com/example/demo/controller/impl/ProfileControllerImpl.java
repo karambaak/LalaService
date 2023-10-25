@@ -4,6 +4,7 @@ import com.example.demo.controller.ProfileController;
 import com.example.demo.dto.UserDto;
 import com.example.demo.service.ResumeService;
 import com.example.demo.service.UserService;
+import com.example.demo.utils.QRCodeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,7 @@ import org.springframework.ui.Model;
 public class ProfileControllerImpl implements ProfileController {
     private final UserService userService;
     private final ResumeService resumeService;
+    private final QRCodeServiceImpl qrCodeService;
     @Override
     public String profile(Authentication auth, Model model) {
         User authUser = (User) auth.getPrincipal();
@@ -26,6 +28,7 @@ public class ProfileControllerImpl implements ProfileController {
             model.addAttribute("resumes", resumeService.getResumesByUserId(currentUser.getId()));
         }
         model.addAttribute("user", currentUser);
+        model.addAttribute("qrCode", qrCodeService.generateQRCode("/favorites/add/" + currentUser.getPhoneNumber(), 500, 500));
         return "users/profile";
     }
 }

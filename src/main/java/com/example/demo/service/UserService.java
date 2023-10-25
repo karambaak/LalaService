@@ -90,9 +90,8 @@ public class UserService {
         if (username.isEmpty()) return null;
         var user = findUserByUsername(username);
         if (user == null) return null;
-        var specialist = specialistRepository.findByUser(user);
-        if (specialist.isEmpty()) return null;
-        return specialist.get();
+        var specialist = specialistRepository.findByUser_Id(user.getId());
+        return specialist.orElseThrow(() -> new NoSuchElementException("User not found"));
     }
 
     public String defineUserType(String userRole) {
@@ -181,7 +180,7 @@ public class UserService {
             return null;
         }
 
-        Specialist specialist = specialistRepository.findByUser(user).orElse(null);
+        Specialist specialist = specialistRepository.findByUser_Id(user.getId()).orElse(null);
         if (specialist == null) {
             return null;
         }
