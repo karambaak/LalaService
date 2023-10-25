@@ -139,7 +139,7 @@ public class UserService {
     }
 
     public UserDto getUserByAuthentication(Authentication auth) {
-        User user = (User) auth.getPrincipal();
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
         return makeUserDto(repository.findByPhoneNumber(user.getUsername()).orElseThrow(() -> new NoSuchElementException("Auth is null, user not found")));
     }
 
