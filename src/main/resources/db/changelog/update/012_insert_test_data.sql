@@ -14,27 +14,35 @@ VALUES
     ('Пользователь 12', 'CUSTOMER', '121-121-1212', 'user12@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 2, (select id from THEMES where THEME_NAME = 'light')),
     ('Пользователь 13', 'SPECIALIST', '131-131-1313', 'user13@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light')),
     ('Пользователь 14', 'CUSTOMER', '141-141-1414', 'user14@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 2, (select id from THEMES where THEME_NAME = 'light')),
-    ('Пользователь 15', 'SPECIALIST', '151-151-1515', 'user15@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light'));
+    ('Пользователь 15', 'SPECIALIST', '151-151-1515', 'user15@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light')),
+('Пользователь 16', 'SPECIALIST', '161-161-1616', 'user16@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light')),
+('Пользователь 17', 'SPECIALIST', '171-171-1717', 'user17@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light')),
+('Пользователь 18', 'SPECIALIST', '181-181-1818', 'user18@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light')),
+('Пользователь 19', 'SPECIALIST', '191-191-1919', 'user19@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light')),
+('Пользователь 20', 'SPECIALIST', '120-120-2020', 'user20@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light')),
+('Пользователь 21', 'SPECIALIST', '121-121-2121', 'user21@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light')),
+('Пользователь 22', 'SPECIALIST', '122-122-2222', 'user22@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light')),
+('Пользователь 23', 'SPECIALIST', '123-123-2323', 'user23@example.com', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true, NOW(), 1, (select id from THEMES where THEME_NAME = 'light'));
 
 
 INSERT INTO specialists (user_id, company_name, tariff_id, geolocation_id)
 VALUES
     (17, 'Facebook, Inc.', 1, 1),
-    (2, 'Tesla, Inc.', 1, 1),
-    (3, 'Intel Corporation', 1, 1),
-    (4, 'IBM Corporation', 1, 1),
-    (5, 'Oracle Corporation', 1, 1),
-    (6, 'Samsung Electronics', 1, 1),
-    (7, 'Ford Motor Company', 1, 1),
-    (8, 'General Electric', 1, 1),
-    (9, 'Procter & Gamble', 1, 1),
-    (10, 'Boeing', 1, 1),
-    (11, 'Walt Disney', 1, 1),
-    (12, 'Sony Corporation', 1, 1),
-    (13, 'McDonalds', 1, 1),
-  (14, 'Nike, Inc.', 1, 1),
-  (15, 'Coca-Cola', 1, 1),
-  (16, 'Nestle', 1, 1);
+    (3, 'Tesla, Inc.', 1, 1),
+    (5, 'Intel Corporation', 1, 1),
+    (7, 'IBM Corporation', 1, 1),
+    (9, 'Oracle Corporation', 1, 1),
+    (11, 'Samsung Electronics', 1, 1),
+    (13, 'Ford Motor Company', 1, 1),
+    (15, 'General Electric', 1, 1),
+    (19, 'Procter & Gamble', 1, 1),
+    (18, 'Boeing', 1, 1),
+    (20, 'Walt Disney', 1, 1),
+    (21, 'Sony Corporation', 1, 1),
+    (22, 'McDonalds', 1, 1),
+  (23, 'Nike, Inc.', 1, 1),
+  (24, 'Coca-Cola', 1, 1),
+  (25, 'Nestle', 1, 1);
 
 
 -- Добавление 15 реальных резюме

@@ -21,8 +21,12 @@ databaseChangeLog:
               - column:
                   name: specialist_id
                   type: long
-                  constraints:
-                    nullable: false
+              - column:
+                  name: user_id
+                  type: long
+              - column:
+                  name: conversation_id
+                  type: varchar(50)
               - column:
                   name: response
                   type: varchar(255)
@@ -43,5 +47,13 @@ databaseChangeLog:
             constraintName: fk_specialist_id_responses
             referencedColumnNames: id
             referencedTableName: specialists
+            onDelete: cascade
+            onUpdate: cascade
+        - addForeignKeyConstraint:
+            baseTableName: responses
+            baseColumnNames: user_id
+            constraintName: fk_user_id_responses
+            referencedColumnNames: id
+            referencedTableName: users
             onDelete: cascade
             onUpdate: cascade

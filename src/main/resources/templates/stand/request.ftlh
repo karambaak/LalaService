@@ -1,0 +1,248 @@
+<#import '../layout.ftlh' as main>
+<@main.layout>
+    <header>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+              crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+                crossorigin="anonymous"></script>
+    </header>
+    <div class="padding-div">
+        <div class="category-header">
+            <a href="javascript:history.go(-1);" class="back-button">
+                <i class="fas fa-arrow-left"></i>Назад
+            </a>
+        </div>
+        <h1 class="text-center"> Запрос пользователя </h1>
+        <div class="task-content">
+            <#if post??>
+                <div class="task-details mt-3 me-2">
+                    <div class="row">
+                        <div class="col-2 user-photo">
+                            <img src="${post.userPhoto}" alt="User Photo">
+                        </div>
+                        <div class="col-3 text-center">${post.userName}</div>
+                    </div>
+                    <hr>
+                    <div class="description">
+                        <i class="fa-solid fa-calendar-days"></i> Когда: ${post.workRequiredTime}
+                        <br>
+                        ${post.title}
+                        <br>
+                        ${post.description}
+                    </div>
+                    <hr>
+                    <div class="response-info">
+                        <div class="responses-count">
+                            <p>Откликнулось специалистов: ${post.responseNumber}</p>
+                            <p>Дата публикации: ${post.publishedDate}</p>
+                        </div>
+
+                    </div>
+                </div>
+            <#else>
+                Данный запрос больше не актуален.
+            </#if>
+        </div>
+
+        <#if conversations??>
+            <#list conversations as item>
+                <#assign varId = item.conversationId>
+                <p>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseExample-${varId}" aria-expanded="false"
+                            aria-controls="collapseExample-${varId}">
+                        Отклик ${item_index + 1}
+                    </button>
+                </p>
+                <div class="collapse" id="collapseExample-${varId}">
+                    <div class="card card-body mb-5">
+                        <#if (item.messages)??>
+                            <#list (item.messages) as msg>
+                                <#if msg.viewer == 'author'>
+                                    <div class="message ms-auto">${msg.response}</div>
+                                <#else>
+                                    <div class="incoming-msg">${msg.response}</div>
+                                </#if>
+                            </#list>
+                            <div class="sent-messages d-flex flex-column align-items-end me-3 my-3">
+                                <!-- Messages will be displayed here -->
+                            </div>
+
+                            <div class="message-container">
+                                <form method="post" action="/stand/response/${post.id}"
+                                      id="message-form" class="d-flex flex-column align-items-end me-3">
+
+                                    <input type="text" id="message-text" name="response" class="msg-input" autofocus
+                                           required>
+                                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                                           value="${(_csrf.token)!'--no-token--'}"/>
+                                    <input type="hidden" name="viewer" value="${item.conversationId}">
+                                    <input type="hidden" name="formIdentifier" value="${item.conversationId}">
+
+                                    <button type="submit" class="respond-button">Отправить</button>
+                                </form>
+                            </div>
+                        </#if>
+                    </div>
+                </div>
+
+            </#list>
+        </#if>
+
+
+    </div>
+    <style>
+        .padding-div {
+            padding: 30px;
+        }
+
+        .category-card span {
+            margin-top: 10px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .task-content {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15%;
+            padding: 30px;
+        }
+
+        .task-details {
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+        }
+
+
+        .user-photo img {
+            margin-right: 10px;
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+        }
+
+        .description {
+            margin-top: 10px;
+        }
+
+        .response-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .responses-count {
+            color: #747373;
+            margin-bottom: 20px;
+        }
+
+        .msg-input {
+            width: 80%;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 -5px 15px rgb(224, 220, 220);
+            height: 100px;
+            margin: 30px 0 10px;
+        }
+
+        .respond-button {
+            padding: 15px 20px;
+            color: #2552e7;
+            border: 2px solid #2552e7;
+            background-color: #fff;
+            cursor: pointer;
+            border-radius: 15px;
+            text-decoration: none;
+            width: 25%;
+        }
+
+        .respond-button:hover {
+            background-color: #2552e7;
+            color: #fff;
+        }
+
+        .message {
+            margin: 5px 15px 5px;
+            background-color: #2552e74a;
+            border-radius: 15px;
+            width: fit-content;
+            max-width: 500px;
+            padding: 5px 10px;
+
+        }
+
+        .back-button {
+            text-decoration: none;
+            color: #2552e7;
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            margin-right: 40px;
+            margin-left: 10px;
+        }
+
+        .incoming-messages {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .incoming-msg {
+            margin: 5px 15px 5px;
+            background-color: #66e08497;
+            border-radius: 15px;
+            width: fit-content;
+            max-width: 500px;
+            padding: 5px 10px;
+            margin-right: auto !important;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('form').forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    event.preventDefault();
+
+                    var formData = new FormData(this);
+                    var formIdentifier = formData.get('formIdentifier');
+                    const viewer = formData.get('viewer');
+                    const response = formData.get('response');
+                    const csrfToken = document.querySelector('input[name="_csrf"]').value;
+                    const formBody = {
+                        "response": response,
+                        "viewer": viewer
+                    }
+                    const sentMessages = this.closest('.card-body').querySelector('.sent-messages')
+
+                    fetch(this.action, {
+                        method: this.method,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify(formBody)
+                    })
+                        .then(data => {
+                            const messageElement = document.createElement('div');
+                            messageElement.classList.add('message');
+                            messageElement.textContent = response;
+                            sentMessages.appendChild(messageElement);
+                            form.reset();
+                        })
+
+                        .catch(function (error) {
+                            console.error('Error:', error);
+                        });
+                });
+            });
+        });
+
+    </script>
+</@main.layout>

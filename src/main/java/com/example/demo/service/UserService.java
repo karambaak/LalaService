@@ -57,11 +57,9 @@ public class UserService {
             repository.saveAndFlush(user);
             if (userType.equalsIgnoreCase("specialist")) {
                 var newUser = repository.findByPhoneNumber(userDto.getPhoneNumber());
-                if (newUser.isPresent()) {
-                    specialistRepository.save(Specialist.builder()
-                            .user(newUser.get())
-                            .build());
-                }
+                newUser.ifPresent(value -> specialistRepository.save(Specialist.builder()
+                        .user(value)
+                        .build()));
             }
 
         } else {
@@ -84,14 +82,14 @@ public class UserService {
         }
         return role;
     }
+    public User getUserFromSecurityContextHolder() {
 
-    public Specialist getSpecialistFromSecurityContextHolder() {
         String username = getUsernameFromSecurityContextHolder();
         if (username.isEmpty()) return null;
         var user = findUserByUsername(username);
         if (user == null) return null;
-        var specialist = specialistRepository.findByUser_Id(user.getId());
-        return specialist.orElseThrow(() -> new NoSuchElementException("User not found"));
+        return user;
+
     }
 
     public String defineUserType(String userRole) {
@@ -171,27 +169,37 @@ public class UserService {
         }
     }
 
-    public ViewerDto defineSpecialist() {
+    public ViewerDto defineViewer() {
         String username = getUsernameFromSecurityContextHolder();
         if (username == null) return null;
 
         User user = findUserByUsername(username);
-        if (user == null || !user.getUserType().equalsIgnoreCase("specialist")) {
+        if (user == null) {
             return null;
+        } else {
+            if (user.getUserType().equalsIgnoreCase("specialist")) {
+                var specialist = specialistRepository.findByUser(user);
+                if (specialist.isPresent()) {
+
+                    return ViewerDto.builder()
+                            .userId(user.getId())
+                            .specialistId(specialist.get().getId())
+                            .userType(user.getUserType())
+                            .build();
+                }
+
+            } else if (user.getUserType().equalsIgnoreCase("customer")) {
+                return ViewerDto.builder()
+                        .userId(user.getId())
+                        .specialistId(null)
+                        .userType(user.getUserType())
+                        .build();
+            } else {
+                return null;
+            }
+
         }
-
-        Specialist specialist = specialistRepository.findByUser_Id(user.getId()).orElse(null);
-        if (specialist == null) {
-            return null;
-        }
-
-        return ViewerDto.builder()
-                .userId(user.getId())
-                .specialistId(specialist.getId())
-                .userType(user.getUserType())
-                .build();
-
-
+        return null;
     }
 
     private User findUserByUsername(String username) {

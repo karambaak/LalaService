@@ -1,55 +1,75 @@
 <#import '../layout.ftlh' as main>
 <@main.layout>
-    <div class="category-header">
-        <a href="javascript:history.go(-1);" class="back-button">
-            <i class="fas fa-arrow-left"></i>Назад
-        </a>
-    </div>
-    <h1 class="text-center"> Ответить на запрос </h1>
-
-    <h2>Запрос пользователя</h2>
-    <div class="task-content">
-        <#if post??>
-            <div class="task-details mt-3 me-2">
-                <div class="row">
-                    <div class="col-2 user-photo">
-                        <img src="${post.userPhoto}" alt="User Photo">
+    <div class="padding-div">
+        <div class="category-header">
+            <a href="javascript:history.go(-1);" class="back-button">
+                <i class="fas fa-arrow-left"></i>Назад
+            </a>
+        </div>
+        <h1 class="text-center"> Запрос пользователя </h1>
+        <div class="task-content">
+            <#if post??>
+                <div class="task-details mt-3 me-2">
+                    <div class="row">
+                        <div class="col-2 user-photo">
+                            <img src="${post.userPhoto}" alt="User Photo">
+                        </div>
+                        <div class="col-3 text-center">${post.userName}</div>
                     </div>
-                    <div class="col-3 text-center">${post.userName}</div>
-                </div>
-                <hr>
-                <div class="description">
-                    <i class="fa-solid fa-calendar-days"></i> Когда: ${post.workRequiredTime}
-                    <br>
-                    ${post.title}
-                    <br>
-                    ${post.description}
-                </div>
-                <hr>
-                <div class="response-info">
-                    <div class="responses-count">
-                        <p>Откликнулось специалистов: ${post.responseNumber}</p>
-                        <p>Дата публикации: ${post.publishedDate}</p>
+                    <hr>
+                    <div class="description">
+                        <i class="fa-solid fa-calendar-days"></i> Когда: ${post.workRequiredTime}
+                        <br>
+                        ${post.title}
+                        <br>
+                        ${post.description}
                     </div>
+                    <hr>
+                    <div class="response-info">
+                        <div class="responses-count">
+                            <p>Откликнулось специалистов: ${post.responseNumber}</p>
+                            <p>Дата публикации: ${post.publishedDate}</p>
+                        </div>
 
+                    </div>
                 </div>
+            <#else>
+                Данный запрос больше не актуален.
+            </#if>
+        </div>
+        <#if (viewer.specialistId)??>
+            <div class="d-flex flex-column align-items-end me-3 my-3">
+                <#if (pastMessages)??>
+                    <#list pastMessages as item>
+                        <#if item.viewer == 'author'>
+                            <div class="message">${item.response}</div>
+                        <#else>
+                            <div class="incoming-msg">${item.response}</div>
+                        </#if>
+                    </#list>
+                </#if>
             </div>
-<#else>
-Данный запрос больше не актуален.
-</#if>
-    </div>
-    <div class="sent-messages d-flex flex-column align-items-end me-3 my-3">
-        <!-- Messages will be displayed here -->
-    </div>
-    <div class="message-container">
-        <form method="post" action="/stand/response/${post.id}" id="message-form" class="d-flex flex-column align-items-end me-3">
-            <input type="text" id="message-text" class="msg-input" autofocus required>
-            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                   value="${(_csrf.token)!'--no-token--'}"/>
-            <button type="submit" class="respond-button">Отправить</button>
-        </form>
+
+        </#if>
+
+        <div class="sent-messages d-flex flex-column align-items-end me-3 my-3">
+            <!-- Messages will be displayed here -->
+        </div>
+        <div class="message-container">
+            <form method="post" action="/stand/response/${post.id}" id="message-form"
+                  class="d-flex flex-column align-items-end me-3">
+                <input type="text" id="message-text" class="msg-input" autofocus required>
+                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                       value="${(_csrf.token)!'--no-token--'}"/>
+                <button type="submit" class="respond-button">Отправить</button>
+            </form>
+        </div>
     </div>
     <style>
+        .padding-div {
+            padding: 30px;
+        }
+
         .category-card span {
             margin-top: 10px;
             font-size: 12px;
@@ -59,6 +79,8 @@
         .task-content {
             display: flex;
             align-items: center;
+            margin-bottom: 15%;
+            padding: 30px;
         }
 
         .task-details {
@@ -123,7 +145,9 @@
             background-color: #2552e74a;
             border-radius: 15px;
             width: fit-content;
+            max-width: 500px;
             padding: 5px 10px;
+
         }
 
         .back-button {
@@ -134,6 +158,16 @@
             font-size: 18px;
             margin-right: 40px;
             margin-left: 10px;
+        }
+
+        .incoming-msg {
+            margin: 5px 15px 5px;
+            background-color: #66e08497;
+            border-radius: 15px;
+            width: fit-content;
+            max-width: 500px;
+            padding: 5px 10px;
+            margin-right: auto !important;
         }
     </style>
     <script>
@@ -148,13 +182,22 @@
                 const message = messageText.value;
                 const csrfToken = document.querySelector('input[name="_csrf"]').value;
 
+                const specialist = ${viewer.specialistId}
+                const postId = ${post.id}
+                const viewer = postId + '-' + specialist;
+
+                const responseText = {
+                    viewer: viewer,
+                    response: message,
+                };
+                console.log(responseText)
                 fetch(`/stand/response/${post.id}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': csrfToken
                     },
-                    body: JSON.stringify({ responseText: message })
+                    body: JSON.stringify(responseText)
                 })
                     .then(response => {
                         const messageElement = document.createElement('div');
@@ -168,6 +211,7 @@
                     });
             });
         });
+
 
     </script>
 </@main.layout>

@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -36,5 +34,15 @@ public class SpecialistService {
                 .id(specialist.getId())
                 .companyName(specialist.getCompanyName())
                 .build();
+    }
+    public String findSpecialistName(Specialist specialist) {
+        String name = specialist.getCompanyName();
+        if (name == null) {
+            name = specialist.getUser().getUserName();
+            if (name == null) {
+                name = specialist.getId().toString();
+            }
+        }
+        return name;
     }
 }
