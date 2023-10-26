@@ -73,21 +73,21 @@
 <body>
 <div class="content">
     <form action="/resume/create" method="post">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+
         <label for="resumeTitle">Заголовок резюме:</label>
-        <input type="text" id="resumeTitle" name="resumeTitle" required>
+        <input type="text" id="resumeTitle" name="header" required>
 
         <label for="resumeExperience">Опыт работы (в годах):</label>
-        <input type="date" id="resumeExperience" name="resumeExperience"
-               required>
+        <input type="date" id="resumeExperience" name="resumeExperience">
         <label for="resumeExperience">Опыт работы (в годах):</label>
-        <input type="date" id="resumeExperience" name="resumeExperience"
-               required>
+        <input type="date" id="resumeExperience" name="resumeExperience">
 
         <label for="resumeCategory">Категория резюме:</label>
-        <select id="resumeCategory" name="resumeCategory" required>
+        <select id="resumeCategory" name="categoryId" required>
             <#if categories?has_content>
                 <#list categories as category>
-                    <option value="${category.id}">${category.name}</option>
+                    <option value="${category.id}">${category.categoryName}</option>
                 </#list>
             </#if>
         </select>
