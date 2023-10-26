@@ -57,11 +57,9 @@ public class UserService {
             repository.saveAndFlush(user);
             if (userType.equalsIgnoreCase("specialist")) {
                 var newUser = repository.findByPhoneNumber(userDto.getPhoneNumber());
-                if (newUser.isPresent()) {
-                    specialistRepository.save(Specialist.builder()
-                            .user(newUser.get())
-                            .build());
-                }
+                newUser.ifPresent(value -> specialistRepository.save(Specialist.builder()
+                        .user(value)
+                        .build()));
             }
 
         } else {
@@ -85,6 +83,7 @@ public class UserService {
         return role;
     }
     public User getUserFromSecurityContextHolder() {
+
         String username = getUsernameFromSecurityContextHolder();
         if (username.isEmpty()) return null;
         var user = findUserByUsername(username);

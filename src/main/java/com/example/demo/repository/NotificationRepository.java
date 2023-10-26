@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+import java.util.List;
+
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     List<Notification> findAllByUser(User customer);
     List<Notification> findByNotificationTextContaining(String keyword);

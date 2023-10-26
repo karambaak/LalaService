@@ -24,6 +24,7 @@ public class PostService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
 
+
     public List<StandCategoryDto> getAll() {
         List<Post> list = postRepository.findAll();
         list.sort(Comparator.comparing(post -> post.getCategory().getCategoryName()));
@@ -126,6 +127,7 @@ public class PostService {
         }
         List<PostShortInfoDto> result = new ArrayList<>();
         for (Long l : set) {
+
             var post = postRepository.findById(l);
             if (post.isPresent()) {
                 result.add(PostShortInfoDto.builder()
@@ -158,6 +160,7 @@ public class PostService {
         }
     }
 
+
     public HttpStatus processResponse(Long postId, ResponseDto response) {
         var post = postRepository.findById(postId);
         if (post.isEmpty()) return HttpStatus.NOT_FOUND;
@@ -180,6 +183,7 @@ public class PostService {
                 if (userFromSpecialist.isPresent()) u = userFromSpecialist.get();
 
                 deleteUserNotification(u, notifications);
+
                 responseRepository.save(Response.builder()
                         .post(post.get())
                         .user(user)
@@ -193,6 +197,7 @@ public class PostService {
             } else {
                 User u = post.get().getUser();
                 deleteUserNotification(u, notifications);
+
                 responseRepository.save(Response.builder()
                         .post(post.get())
                         .specialist(specialist.get())
@@ -203,6 +208,7 @@ public class PostService {
                 notificationRepository.save(Notification.builder().user(u)
                         .notificationText(String.format("Вы получили новое сообщение в ответ на запрос: %s (%s).", post.get().getTitle(), post.get().getPublishedDate()))
                         .notificationDate(LocalDateTime.now()).build());
+
             }
             return HttpStatus.OK;
         }
@@ -217,6 +223,7 @@ public class PostService {
             return "";
         }
     }
+
 
     private List<Response> getAllPostResponses(Long postId) {
         var post = postRepository.findById(postId);
