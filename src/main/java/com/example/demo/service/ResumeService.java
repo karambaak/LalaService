@@ -86,12 +86,12 @@ public class ResumeService {
         }
     }
 
-    public List<ResumeDto> getResumesByCategory(Long categoryId){
+    public List<ResumeDto> getResumesByCategory(Long categoryId) {
         List<Resume> resumes = resumeRepository.findByCategoryId(categoryId);
         return resumes.stream().map(this::makeDto).toList();
     }
 
-    private ResumeDto makeDto(Resume resume){
+    private ResumeDto makeDto(Resume resume) {
         return ResumeDto.builder()
                 .id(resume.getId())
                 .header(resume.getName())
@@ -100,9 +100,20 @@ public class ResumeService {
                 .resumeDescription(resume.getResumeDescription())
                 .build();
     }
-    public List<ResumeDto> getResumesByUserId(Long userId){
+
+    public List<ResumeDto> getResumesByUserId(Long userId) {
         User user = userRepository.findById(userId).get();
         Specialist specialist = specialistRepository.findByUser_Id(userId).orElseThrow(
+                () -> new NoSuchElementException("Specialist not found")
+        );
+        List<Resume> resumes = resumeRepository.findAllBySpecialist_Id(specialist.getId());
+
+        return resumes.stream().map(this::makeDto).collect(Collectors.toList());
+    }
+
+
+    public List<ResumeDto> getResumesSpecialistId(Long specialistId) {
+        Specialist specialist = specialistRepository.findByUser_Id(specialistId).orElseThrow(
                 () -> new NoSuchElementException("Specialist not found")
         );
         List<Resume> resumes = resumeRepository.findAllBySpecialist_Id(specialist.getId());

@@ -72,7 +72,7 @@
                                 <a href="#${resume.id}" class="resume-link">
                                     <#if resume.header?has_content>
                                         <p class="resume-name">${resume.header}</p>
-                                        <#else>
+                                    <#else>
                                         <p class="resume-name">Без заголовок</p>
                                     </#if>
                                     <#--                                    <p class="resume-experience">Опыт работы: ${resume.experience}</p>-->
@@ -81,6 +81,8 @@
                                 </a>
                             </div>
                         </#list>
+                    <#else>
+                        <p>У вас еще нету созданных резюме</p>
                     </#if>
                 </div>
             </div>
@@ -103,6 +105,8 @@
                                 </div>
                             </div>
                         </#list>
+                    <#else>
+                        <p>У вас еще нету созданных портфолио</p>
                     </#if>
                 </div>
             </div>

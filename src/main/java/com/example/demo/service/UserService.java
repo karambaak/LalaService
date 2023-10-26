@@ -82,6 +82,7 @@ public class UserService {
         }
         return role;
     }
+
     public User getUserFromSecurityContextHolder() {
 
         String username = getUsernameFromSecurityContextHolder();
@@ -213,5 +214,11 @@ public class UserService {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+    public UserDto getSpecialistUserById(Long specialistId) {
+        Specialist specialist = specialistRepository.findById(specialistId).orElseThrow(() -> new NoSuchElementException("Specialist not found"));
+        User user = repository.findById(specialist.getUser().getId()).get();
+        return makeUserDto(user);
     }
 }
