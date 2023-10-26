@@ -8,6 +8,7 @@ import com.example.demo.repository.FavouriteRepository;
 import com.example.demo.repository.ResumeRepository;
 import com.example.demo.repository.SpecialistRepository;
 import com.example.demo.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,7 @@ public class FavouriteService {
         }
     }
 
+    @Transactional
     public void deleteFavourite(long userId, long specialistId) {
 
         User user = userRepository.findById(userId).orElse(null);
@@ -59,6 +61,7 @@ public class FavouriteService {
                         .companyName(e.getSpecialist().getCompanyName())
                         .city(e.getSpecialist().getGeolocation().getCity())
                         .resumes(resumeService.getResumesByUserId(userId))
+                        .specilaitsId(e.getSpecialist().getId())
                         .build()
         ).collect(Collectors.toList());
     }
