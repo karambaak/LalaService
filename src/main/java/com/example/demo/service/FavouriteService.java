@@ -28,12 +28,15 @@ public class FavouriteService {
     public void saveFavourite(long userId, long specialistId) {
         User user = userRepository.findById(userId).orElse(null);
         Specialist specialist = specialistRepository.findById(specialistId).orElse(null);
+
         if (user != null && specialist != null) {
-            Favourite favourite = Favourite.builder()
-                    .user(user)
-                    .specialist(specialist)
-                    .build();
-            favouriteRepository.save(favourite);
+            if (!favouriteRepository.existsByUserIdAndSpecialistId(userId, specialistId)) {
+                Favourite favourite = Favourite.builder()
+                        .user(user)
+                        .specialist(specialist)
+                        .build();
+                favouriteRepository.save(favourite);
+            }
         } else {
             log.warn("User or Specialist does not exist");
             throw new IllegalArgumentException("User or Specialist does not exist");

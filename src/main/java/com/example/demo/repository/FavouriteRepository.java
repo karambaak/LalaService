@@ -8,4 +8,5 @@ import java.util.List;
 public interface FavouriteRepository extends JpaRepository<Favourite, Long> {
     void deleteFavouriteByUserIdAndAndSpecialistId(long userId,long specialistId);
     List<Favourite> findFavouriteByUserId (long userId);
+    boolean existsByUserIdAndSpecialistId(long userId, long specialistId);
 }
