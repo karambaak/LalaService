@@ -12,4 +12,5 @@ public class FavoritesDto {
     private String companyName;
     private String city;
     private List<ResumeDto> resumes;
+    private Long specilaitsId;
 }

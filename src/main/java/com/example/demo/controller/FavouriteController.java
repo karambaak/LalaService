@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -25,11 +26,21 @@ public class FavouriteController {
     @GetMapping
     public String getFavourites(Authentication auth, Model model) {
         User authUser = (User) auth.getPrincipal();
-        UserDto user=userService.getUserByPhone(authUser.getUsername());
+        UserDto user = userService.getUserByPhone(authUser.getUsername());
         List<FavoritesDto> favoritesDtoList = favouriteService.getFavouritesByUserId(user.getId());
         model.addAttribute("favourites", favoritesDtoList);
         return "favorites/favorites";
 
     }
+
+    @GetMapping("/delete/{specialistId}")
+    public String deleteFavourites(Authentication auth, Model model, @PathVariable long specialistId) {
+        User authUser = (User) auth.getPrincipal();
+        UserDto user = userService.getUserByPhone(authUser.getUsername());
+        favouriteService.deleteFavourite(user.getId(), specialistId);
+        return "redirect:/favourites";
+    }
+
+
 
 }

@@ -16,9 +16,12 @@
                                         <h5 class="card-title">
                                             <a href="#" class="company-link">${favorite.companyName}</a>
                                         </h5>
+
+                                       <a href="/favourites/delete/${favorite.specilaitsId}">
                                         <span class="delete-icon" style="color: black;">
                                             <i class="fas fa-trash-alt"></i>
                                         </span>
+                                       </a>
                                     </div>
                                     <p class="card-text">
                                         <span class="company-city">${favorite.city}</span>
