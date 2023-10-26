@@ -10,5 +10,9 @@ import java.util.List;
 public interface ResponseRepository extends JpaRepository<Response, Long> {
     List<Response> findAllByPostId(Long postId);
 
-    List<Response> findByPostAndSpecialist(Post post, Specialist specialist);
+    List<Response> findAllByPostAndSpecialist(Post post, Specialist specialist);
+
+    List<Response> findAllBySpecialistId(Long specialistId);
+
+    List<Response> findAllByConversationId(String conversationId);
 }

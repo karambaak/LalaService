@@ -22,6 +22,10 @@ public class Response {
     @ManyToOne
     @JoinColumn(name = "specialist_id", referencedColumnName = "id")
     private Specialist specialist;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+    private String conversationId;
     private String response;
 
     @Column(name="date_time")

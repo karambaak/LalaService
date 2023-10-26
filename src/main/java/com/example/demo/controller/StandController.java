@@ -6,9 +6,7 @@ import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/stand")
@@ -19,11 +17,18 @@ public class StandController {
 
     @GetMapping()
     public String getStand(Model model) {
-        ViewerDto v = userService.defineSpecialist();
-        model.addAttribute("specialist", v);
+        ViewerDto v = userService.defineViewer();
+        model.addAttribute("viewer", v);
+
         if (v != null) {
-            model.addAttribute("myPosts", postService.getMySubscriptions(v));
-            model.addAttribute("posts", postService.getOtherPosts(v));
+            if (v.getSpecialistId() != null) {
+                model.addAttribute("myPosts", postService.getMySubscriptions(v));
+                model.addAttribute("posts", postService.getOtherPosts(v));
+                model.addAttribute("myResponses", postService.getSpecialistResponses(v));
+            } else {
+                model.addAttribute("myRequests", postService.getCustomerPosts(v));
+                model.addAttribute("posts", postService.getAll());
+            }
         } else {
             model.addAttribute("posts", postService.getAll());
         }
@@ -33,8 +38,23 @@ public class StandController {
     @GetMapping("/respond/{postId}")
     public String respondPage(@PathVariable Long postId, Model model) {
         model.addAttribute("post", postService.getPostDto(postId));
+        ViewerDto v = userService.defineViewer();
+        model.addAttribute("viewer", v);
+        if (v.getSpecialistId() != null) {
+            model.addAttribute("pastMessages", postService.getSpecialistConversation(postId, v));
+        }
         return "stand/respond";
     }
 
+    @GetMapping("/request/{postId}")
+    public String requestPage(@PathVariable Long postId, Model model) {
+        model.addAttribute("post", postService.getPostDto(postId));
+        ViewerDto v = userService.defineViewer();
+        model.addAttribute("viewer", v);
+        if(v.getSpecialistId() == null) {
+            model.addAttribute("conversations", postService.getCustomerConversations(postId));
+        }
+        return "stand/request";
+    }
 
 }

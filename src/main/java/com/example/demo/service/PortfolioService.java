@@ -1,9 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.PortfolioDto;
-import com.example.demo.dto.ResumeDto;
 import com.example.demo.entities.Portfolio;
-import com.example.demo.entities.Resume;
 import com.example.demo.repository.PortfolioRepository;
 import com.example.demo.repository.SpecialistRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,11 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
 @Service
