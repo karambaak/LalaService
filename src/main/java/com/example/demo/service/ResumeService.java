@@ -94,6 +94,7 @@ public class ResumeService {
     private ResumeDto makeDto(Resume resume){
         return ResumeDto.builder()
                 .id(resume.getId())
+                .header(resume.getName())
                 .specialistId(resume.getSpecialist().getId())
                 .timeOfResume(resume.getTimeOfResume())
                 .resumeDescription(resume.getResumeDescription())
