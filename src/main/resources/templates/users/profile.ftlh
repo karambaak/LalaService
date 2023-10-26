@@ -19,7 +19,10 @@
                 <#if user.photo?has_content>
                     <img src="${user.photo}"
                          class="round-image" alt>
+                <#else>
+                    <img src="default.jpg" class="round-image" alt="default photo">
                 </#if>
+                <#--                <img src="${qrCode}">-->
             </div>
             <div class="personal-info col-6">
                 <#if user.userName?has_content>
@@ -34,10 +37,15 @@
                 <#if user.city?has_content>
                     <p>Ваш город: ${user.city}</p>
                 </#if>
-                <#if specialist?has_content>
-                    <#if specialist.rating??>
-                        <p style="cursor: pointer;">Ваш рейтинг: ${specialist.rating}</p>
-                    </#if>
+                <#if rating?has_content>
+                    <div class="rating">
+                        <span class="star fas fa-star"></span>
+                        <span class="star fas fa-star"></span>
+                        <span class="star fas fa-star"></span>
+                        <span class="star fas fa-star"></span>
+                        <span class="star fas fa-star"></span>
+                        <span class="rating-number" id="rating">${rating}</span>
+                    </div>
                 </#if>
             </div>
         </div>
@@ -62,9 +70,13 @@
                         <#list resumes as resume>
                             <div class="resume">
                                 <a href="#${resume.id}" class="resume-link">
-                                    <p class="resume-name">${resume.header}</p>
-<#--                                    <p class="resume-experience">Опыт работы: ${resume.experience}</p>-->
-<#--                                    <p class="resume-category">Категория: ${resume.category}</p>-->
+                                    <#if resume.header?has_content>
+                                        <p class="resume-name">${resume.header}</p>
+                                        <#else>
+                                        <p class="resume-name">Без заголовок</p>
+                                    </#if>
+                                    <#--                                    <p class="resume-experience">Опыт работы: ${resume.experience}</p>-->
+                                    <#--                                    <p class="resume-category">Категория: ${resume.category}</p>-->
                                     <p class="resume-date">Дата создания: ${resume.timeOfResume}</p>
                                 </a>
                             </div>
@@ -129,7 +141,8 @@
                 <ul>
                     <li><a href="#">Редактировать профиль</a></li>
                     <li><a href="#">Изменить город</a></li>
-                    <li><a href="/logout">Выйти из аккаунта</a> </li>
+                    <li><a href="/favourites">Посмотреть избранные</a></li>
+                    <li><a href="/logout">Выйти из аккаунта</a></li>
                 </ul>
             </div>
         </div>
@@ -156,6 +169,8 @@
             });
         });
 
+        const xCloseButton = document.getElementById("close-button").addEventListener("click", closeModal)
+
         document.getElementById("openModal").addEventListener("click", function () {
             openModal();
         });
@@ -178,5 +193,23 @@
                 closeModal();
             }
         };
+
+
+        let ratingNum = document.getElementById("rating").textContent
+        ratingNum = ratingNum.replace(",", ".");
+
+        const rating = Math.round(parseFloat(ratingNum));
+        const maxRating = 5;
+
+        const ratingContainer = document.querySelector('.rating');
+        const stars = ratingContainer.querySelectorAll('.star');
+
+        for (let i = 0; i < maxRating; i++) {
+            if (i < rating) {
+                stars[i].classList.add('active');
+            } else {
+                stars[i].classList.remove('active');
+            }
+        }
     </script>
     </@main.layout>

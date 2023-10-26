@@ -15,11 +15,12 @@ import java.util.List;
 public class Portfolio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "specialist_id")
     private Specialist specialist;
+
     private String title;
 
     @OneToMany(mappedBy = "portfolio")

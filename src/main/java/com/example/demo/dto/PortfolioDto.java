@@ -10,8 +10,8 @@ import java.sql.Timestamp;
 @Builder
 @Data
 public class PortfolioDto {
-    private long id;
-    private long specialistId;
+    private Long id;
+    private Long specialistId;
 
     @Size(min = 5, max = 100, message = "Title must be between 5 and 100 characters")
     private String title;

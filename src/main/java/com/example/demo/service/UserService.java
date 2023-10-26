@@ -57,9 +57,11 @@ public class UserService {
             repository.saveAndFlush(user);
             if (userType.equalsIgnoreCase("specialist")) {
                 var newUser = repository.findByPhoneNumber(userDto.getPhoneNumber());
-                newUser.ifPresent(value -> specialistRepository.save(Specialist.builder()
-                        .user(value)
-                        .build()));
+                if (newUser.isPresent()) {
+                    specialistRepository.save(Specialist.builder()
+                            .user(newUser.get())
+                            .build());
+                }
             }
 
         } else {
@@ -134,8 +136,12 @@ public class UserService {
     }
 
     public UserDto getUserByAuthentication(Authentication auth) {
-        User user = (User) auth.getPrincipal();
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
         return makeUserDto(repository.findByPhoneNumber(user.getUsername()).orElseThrow(() -> new NoSuchElementException("Auth is null, user not found")));
+    }
+
+    public UserDto getUserByPhone(String phone) {
+        return makeUserDto(repository.findByPhoneNumber(phone).orElseThrow(() -> new NoSuchElementException("Auth is null, user not found")));
     }
 
     private UserDto makeUserDto(User user) {

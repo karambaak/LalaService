@@ -47,8 +47,10 @@ public class Specialist {
 
     @OneToMany(mappedBy = "specialist")
     private List<SubscriptionStand> subscriptions;
-@OneToMany(mappedBy = "specialist")
-private List<Response> responses;
-@OneToMany(mappedBy = "specialist")
+
+    @OneToMany(mappedBy = "specialist")
+    private List<Response> responses;
+
+    @OneToMany(mappedBy = "specialist")
     private List<Ratings> ratings;
 }

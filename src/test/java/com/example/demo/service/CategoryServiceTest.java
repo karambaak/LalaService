@@ -32,8 +32,8 @@ class CategoryServiceTest {
 
     @Test
     void getAllCategoriesShouldReturnListOfCategoriesDto() {
-        Category firstCategory = new Category(1, "Сантехник", "Сантехнические работы", new ArrayList<>(),  new ArrayList<>(),  new ArrayList<>());
-        Category secondCategory = new Category(2, "Плотник", "Работы с деревом", new ArrayList<>(),  new ArrayList<>(),  new ArrayList<>());
+        Category firstCategory = new Category(1L, "Сантехник", "Сантехнические работы", new ArrayList<>(),  new ArrayList<>(),  new ArrayList<>());
+        Category secondCategory = new Category(2L, "Плотник", "Работы с деревом", new ArrayList<>(),  new ArrayList<>(),  new ArrayList<>());
         List<Category> fakeCategories = new ArrayList<>();
         fakeCategories.add(firstCategory);
         fakeCategories.add(secondCategory);

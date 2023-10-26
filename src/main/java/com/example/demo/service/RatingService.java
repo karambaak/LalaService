@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -61,4 +63,15 @@ public class RatingService {
     }
 
 
+    public double getSpecialistRatingById(Long specialistId){
+        List<Ratings> ratings = ratingsRepository.getRatingsBySpecialistId(specialistId);
+
+        double averageRating = ratings.stream()
+                .mapToInt(Ratings::getRating)
+                .average()
+                .orElse(Double.NaN);
+
+
+        return Math.round(averageRating*10.0)/10.0;
+    }
 }

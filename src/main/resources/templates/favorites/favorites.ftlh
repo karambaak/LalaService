@@ -1,36 +1,43 @@
 <#import "../layout.ftlh" as main>
 <@main.layout>
+    <link rel="stylesheet" href="../../static/css/favourites.css">
     <div id="content" class="content">
-        <h1 class="text-center"> Избранное </h1>
+        <h1 class="text-center" style="margin-top: 20px;">Избранные</h1>
 
         <div class="p-5">
             <div class="stand mb-4">
-                <h2>Специалисты</h2>
-                <#list favoritesDto.resumes as resume>
-                    <div class="category">${favoritesDto.companyName}, ${favoritesDto.city}</div>
-                    <ul class="tasks">
-                        <li class="task">
-                            <div class="task-details mt-3 me-2">
-                                <div class="row">
-                                    <div class="col-2 user-photo">
-                                        <!-- Add user photo here -->
-                                        <img src="${resume.userPhoto}" alt="User Photo">
+
+                <div class="row justify-content-center">
+                    <#list favourites as favorite>
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="card-title">
+                                            <a href="#" class="company-link">${favorite.companyName}</a>
+                                        </h5>
+
+                                       <a href="/favourites/delete/${favorite.specilaitsId}">
+                                        <span class="delete-icon" style="color: black;">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </span>
+                                       </a>
                                     </div>
-                                    <div class="col-3 text-center">${resume.userName}</div>
+                                    <p class="card-text">
+                                        <span class="company-city">${favorite.city}</span>
+                                    </p>
                                 </div>
-                                <hr>
-                                <div class="description">
-                                    <i class="fa-solid fa-calendar-days"></i> Когда: ${resume.workRequiredTime}
-                                    <br>
-                                    ${resume.title}
-                                    <br>
-                                    ${resume.description}
-                                </div>
-                                <hr>
                             </div>
-                        </li>
-                    </ul>
-                </#list>
+                        </div>
+                    </#list>
+                    <#if favourites?size == 0>
+                        <div class="empty-favorites text-center" style="background-color: rgba(0, 123, 255, 0.6); border-radius: 10px; padding: 20px;">
+                            <i class="fas fa-info-circle text-light" style="font-size: 48px;"></i>
+                            <h3 class="text-light">Избранные пусты</h3>
+                        </div>
+                    </#if>
+
+                </div>
             </div>
         </div>
     </div>

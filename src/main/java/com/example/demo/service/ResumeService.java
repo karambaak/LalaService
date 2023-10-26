@@ -21,6 +21,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,8 +57,7 @@ public class ResumeService {
                     )
                     .timeOfResume(Timestamp.valueOf(LocalDateTime.now()))
                     .resumeDescription(resumeDto.getResumeDescription())
-                    .category(categoryRepository.findById(
-                                    resumeDto.getCategoryId())
+                    .category(categoryRepository.findById(resumeDto.getCategoryId())
                             .orElseThrow(() -> new NoSuchElementException("Category not found")
                             )
                     )
@@ -70,7 +70,7 @@ public class ResumeService {
     private boolean checkNotAppearResumeInCategory(ResumeDto resumeDto) {
         List<Resume> resumesBySpecialistId = resumeRepository.findAllBySpecialist_Id(resumeDto.getSpecialistId());
         for (Resume r : resumesBySpecialistId) {
-            if (r.getCategory().getId() == resumeDto.getCategoryId()) {
+            if (Objects.equals(r.getCategory().getId(), resumeDto.getCategoryId())) {
                 return false;
             }
         }
@@ -94,6 +94,7 @@ public class ResumeService {
     private ResumeDto makeDto(Resume resume){
         return ResumeDto.builder()
                 .id(resume.getId())
+                .header(resume.getName())
                 .specialistId(resume.getSpecialist().getId())
                 .timeOfResume(resume.getTimeOfResume())
                 .resumeDescription(resume.getResumeDescription())
@@ -101,7 +102,9 @@ public class ResumeService {
     }
     public List<ResumeDto> getResumesByUserId(Long userId){
         User user = userRepository.findById(userId).get();
-        Specialist specialist = specialistRepository.findByUser(user).orElseThrow(() -> new NoSuchElementException("Specialist not found"));
+        Specialist specialist = specialistRepository.findByUser_Id(userId).orElseThrow(
+                () -> new NoSuchElementException("Specialist not found")
+        );
         List<Resume> resumes = resumeRepository.findAllBySpecialist_Id(specialist.getId());
 
         return resumes.stream().map(this::makeDto).collect(Collectors.toList());
