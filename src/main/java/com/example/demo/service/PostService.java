@@ -2,10 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.*;
 import com.example.demo.entities.*;
-import com.example.demo.repository.PostRepository;
-import com.example.demo.repository.ResponseRepository;
-import com.example.demo.repository.SpecialistRepository;
-import com.example.demo.repository.SubscriptionStandRepository;
+import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,6 +21,9 @@ public class PostService {
     private final SubscriptionStandRepository subscriptionStandRepository;
     private final UserService userService;
     private final SpecialistRepository specialistRepository;
+    private final NotificationRepository notificationRepository;
+    private final UserRepository userRepository;
+
 
     public List<StandCategoryDto> getAll() {
         List<Post> list = postRepository.findAll();
@@ -119,21 +119,15 @@ public class PostService {
         return post.map(this::makeDtoFromPost).orElse(null);
     }
 
-    private List<Response> getPostResponses(Post p, Specialist s) {
-        return responseRepository.findAllByPostAndSpecialist(p, s);
-
-    }
-
     public List<PostShortInfoDto> getSpecialistResponses(ViewerDto v) {
         List<Response> list = responseRepository.findAllBySpecialistId(v.getSpecialistId());
         HashSet<Long> set = new HashSet<>();
-        for (Response r :
-                list) {
+        for (Response r : list) {
             set.add(r.getPost().getId());
         }
         List<PostShortInfoDto> result = new ArrayList<>();
-        for (Long l :
-                set) {
+        for (Long l : set) {
+
             var post = postRepository.findById(l);
             if (post.isPresent()) {
                 result.add(PostShortInfoDto.builder()
@@ -155,14 +149,41 @@ public class PostService {
         return list;
     }
 
+    private void deleteUserNotification(User user, List<Notification> notifications) {
+        if (!notifications.isEmpty()) {
+            for (Notification n :
+                    notifications) {
+                if (n.getUser().getId().equals(user.getId())) {
+                    notificationRepository.delete(n);
+                }
+            }
+        }
+    }
+
+
     public HttpStatus processResponse(Long postId, ResponseDto response) {
         var post = postRepository.findById(postId);
         if (post.isEmpty()) return HttpStatus.NOT_FOUND;
         User user = userService.getUserFromSecurityContextHolder();
+        String keyword = new StringBuilder().append(post.get().getTitle()).append(" (")
+                .append(post.get().getPublishedDate()).append(")").toString();
         if (user != null) {
+            List<Notification> notifications = notificationRepository.findByNotificationTextContaining(keyword);
+
             String conversationId = response.getViewer();
             var specialist = specialistRepository.findByUser(user);
+
             if (specialist.isEmpty()) {
+                String specialistId = extractStringAfterDash(conversationId);
+                var s = specialistRepository.findById(Long.parseLong(specialistId));
+                if (s.isEmpty()) return HttpStatus.NOT_FOUND;
+
+                User u = null;
+                var userFromSpecialist = userRepository.findById(s.get().getUser().getId());
+                if (userFromSpecialist.isPresent()) u = userFromSpecialist.get();
+
+                deleteUserNotification(u, notifications);
+
                 responseRepository.save(Response.builder()
                         .post(post.get())
                         .user(user)
@@ -170,7 +191,13 @@ public class PostService {
                         .response(response.getResponse())
                         .dateTime(LocalDateTime.now())
                         .build());
+                notificationRepository.save(Notification.builder().user(u)
+                        .notificationText(String.format("Вы получили новое сообщение от автора запроса: %s (%s).", post.get().getTitle(), post.get().getPublishedDate()))
+                        .notificationDate(LocalDateTime.now()).build());
             } else {
+                User u = post.get().getUser();
+                deleteUserNotification(u, notifications);
+
                 responseRepository.save(Response.builder()
                         .post(post.get())
                         .specialist(specialist.get())
@@ -178,31 +205,25 @@ public class PostService {
                         .response(response.getResponse())
                         .dateTime(LocalDateTime.now())
                         .build());
+                notificationRepository.save(Notification.builder().user(u)
+                        .notificationText(String.format("Вы получили новое сообщение в ответ на запрос: %s (%s).", post.get().getTitle(), post.get().getPublishedDate()))
+                        .notificationDate(LocalDateTime.now()).build());
+
             }
             return HttpStatus.OK;
         }
         return HttpStatus.NOT_FOUND;
     }
 
-//    public List<PostShortInfoDto> getPastResponses(Long postId, ViewerDto v) {
-//        if (v.getUserId() == null) return null;
-//        List<Response> responses = getAllPostResponses(postId);
-//        if (responses.isEmpty()) return null;
-//
-//        if (viewer.getUserType().equalsIgnoreCase("customer")) {
-//
-//        }
-//
-//        if author -> collect menu of specialist applications.author clicks each application, opens conversations. if
-//        author responds, specialist gets a notification.Past notifications (postId, userId match, date comparison)
-//        about the post are deleted from specialist 's notifications.
-//        if specialist -> did I respond before ? yes -> get conversation history.If specialist responds again, send
-//        notification to author.Delete past notifications(postId, specialistId, date comparison) from author
-//        's notifications. do I have messages form author? show them.
-//        which specialist?if I have not responded before,do not load any conversations.
-//        List
-//
-//    }
+    private String extractStringAfterDash(String input) {
+        int index = input.indexOf("-");
+        if (index != -1 && index < input.length() - 1) {
+            return input.substring(index + 1);
+        } else {
+            return "";
+        }
+    }
+
 
     private List<Response> getAllPostResponses(Long postId) {
         var post = postRepository.findById(postId);

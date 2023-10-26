@@ -89,7 +89,6 @@ public class UserService {
         var user = findUserByUsername(username);
         if (user == null) return null;
         return user;
-
     }
 
     public String defineUserType(String userRole) {
@@ -197,7 +196,6 @@ public class UserService {
             } else {
                 return null;
             }
-
         }
         return null;
     }

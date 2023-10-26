@@ -12,4 +12,6 @@ public interface SpecialistRepository extends JpaRepository<Specialist, Long> {
     List<Specialist> searchSpecialistByCompanyNameContainingIgnoreCase(String companyName);
 
     Optional<Specialist> findByUser_Id(Long userId);
+
+    Optional<Specialist> findByUser(User user);
 }
