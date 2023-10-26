@@ -26,7 +26,7 @@ public class SpecialistService {
 
     public SpecialistDto getSpecialistByAuthentication(Authentication auth){
         User user = (User) auth.getPrincipal();
-        return makeDto(repository.findByUser(user).orElseThrow(() -> new NoSuchElementException("Specialist not found")));
+        return makeDto(repository.findByUser_Id(user.getId()).orElseThrow(() -> new NoSuchElementException("Specialist not found")));
     }
 
     private SpecialistDto makeDto(Specialist specialist){

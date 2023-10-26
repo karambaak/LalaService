@@ -22,7 +22,7 @@ public class PostDto {
     private String description;
 
     @Min(value = 0, message = "Response number must be a non-negative integer")
-    private int responseNumber;
+    private Integer responseNumber;
 
     private String workRequiredTime;
     private String publishedDate;

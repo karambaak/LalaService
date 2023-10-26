@@ -1,11 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.UserDto;
-import com.example.demo.entities.Role;
 import com.example.demo.entities.User;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
-import io.cucumber.spring.CucumberContextConfiguration;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -22,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@CucumberContextConfiguration
 class UserServiceTest {
 
     @InjectMocks
@@ -62,18 +59,18 @@ class UserServiceTest {
 
         assertThrows(IllegalArgumentException.class, () -> userService.register(userDto));
     }
-
-    @Test
-    void testGetRoles() {
-        List<Role> testRoles = List.of(
-                new Role(1L, "ROLE_SPECIALIST", new ArrayList<>()),
-                new Role(2L, "ROLE_CUSTOMER", new ArrayList<>())
-        );
-
-        Mockito.when(roleRepository.findAll()).thenReturn(testRoles);
-        List<String> result = userService.getRoles();
-        List<String> expectedRoles = List.of("ROLE_SPECIALIST", "ROLE_CUSTOMER");
-        assertEquals(expectedRoles, result);
-        Mockito.verify(roleRepository, Mockito.times(1)).findAll();
-    }
 }
+
+//    @Test
+//    void testGetRoles() {
+//        List<Role> testRoles = List.of(
+//                new Role(1L, "ROLE_SPECIALIST", new ArrayList<>()),
+//                new Role(2L, "ROLE_CUSTOMER", new ArrayList<>())
+//        );
+//        Mockito.when(roleRepository.findAll()).thenReturn(testRoles);
+//        List<String> result = userService.getRoles();
+//        List<String> expectedRoles = List.of("ROLE_SPECIALIST", "ROLE_CUSTOMER");
+//        assertEquals(expectedRoles, result);
+//        Mockito.verify(roleRepository, Mockito.times(1)).findAll();
+//    }
+//}

@@ -176,3 +176,18 @@
     cursor: pointer;
     font-size: 24px;
 }
+
+.star {
+    margin-top: 10px;
+    font-size: 17px;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.star.active {
+    color: #ffdd00;
+}
+
+.rating-number{
+    margin-left: 5px;
+}

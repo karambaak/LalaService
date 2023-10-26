@@ -13,7 +13,7 @@ import lombok.*;
 public class SubscriptionStand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "specialist_id", referencedColumnName = "id")

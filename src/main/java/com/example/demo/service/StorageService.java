@@ -37,7 +37,7 @@ public class StorageService {
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
         photosRepository.save(Photo.builder()
                 .portfolio(Portfolio.builder()
-                        .id(2)
+                        .id(2L)
                         .build())
                 .photoLink(ROOT + fileName)
                 .build());

@@ -83,11 +83,13 @@ public class UserService {
         return role;
     }
     public User getUserFromSecurityContextHolder() {
+
         String username = getUsernameFromSecurityContextHolder();
         if (username.isEmpty()) return null;
         var user = findUserByUsername(username);
         if (user == null) return null;
         return user;
+
     }
 
     public String defineUserType(String userRole) {
@@ -134,8 +136,12 @@ public class UserService {
     }
 
     public UserDto getUserByAuthentication(Authentication auth) {
-        User user = (User) auth.getPrincipal();
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
         return makeUserDto(repository.findByPhoneNumber(user.getUsername()).orElseThrow(() -> new NoSuchElementException("Auth is null, user not found")));
+    }
+
+    public UserDto getUserByPhone(String phone) {
+        return makeUserDto(repository.findByPhoneNumber(phone).orElseThrow(() -> new NoSuchElementException("Auth is null, user not found")));
     }
 
     private UserDto makeUserDto(User user) {
@@ -191,6 +197,7 @@ public class UserService {
             } else {
                 return null;
             }
+
         }
         return null;
     }

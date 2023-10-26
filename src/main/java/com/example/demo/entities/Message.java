@@ -17,14 +17,18 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @OneToOne
     @JoinColumn(name = "sender_id")
     private User sender;
+
     @OneToOne
     @JoinColumn(name = "receiver_id")
     private User receiver;
+
     @Column(name = "message_text")
     private String messageText;
+
     @Column(name = "date_time")
     private LocalDateTime dateTime;
 }

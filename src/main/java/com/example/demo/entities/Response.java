@@ -16,16 +16,20 @@ public class Response {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
+
     @ManyToOne
     @JoinColumn(name = "specialist_id", referencedColumnName = "id")
     private Specialist specialist;
+
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     private String conversationId;
+
     private String response;
 
     @Column(name="date_time")
