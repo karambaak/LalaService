@@ -18,11 +18,11 @@ public class Message {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "sender_id")
     private User sender;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "receiver_id")
     private User receiver;
 

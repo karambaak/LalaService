@@ -119,8 +119,8 @@ public class PostService {
         return post.map(this::makeDtoFromPost).orElse(null);
     }
 
-    public List<PostShortInfoDto> getSpecialistResponses(ViewerDto v) {
-        List<Response> list = responseRepository.findAllBySpecialistId(v.getSpecialistId());
+    public List<PostShortInfoDto> getSpecialistResponses(Long specialistId) {
+        List<Response> list = responseRepository.findAllBySpecialistId(specialistId);
         HashSet<Long> set = new HashSet<>();
         for (Response r : list) {
             set.add(r.getPost().getId());

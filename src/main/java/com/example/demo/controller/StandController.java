@@ -24,7 +24,7 @@ public class StandController {
             if (v.getSpecialistId() != null) {
                 model.addAttribute("myPosts", postService.getMySubscriptions(v));
                 model.addAttribute("posts", postService.getOtherPosts(v));
-                model.addAttribute("myResponses", postService.getSpecialistResponses(v));
+                model.addAttribute("myResponses", postService.getSpecialistResponses(v.getSpecialistId()));
             } else {
                 model.addAttribute("myRequests", postService.getCustomerPosts(v));
                 model.addAttribute("posts", postService.getAll());

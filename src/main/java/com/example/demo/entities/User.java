@@ -65,11 +65,11 @@ public class User implements UserDetails {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToOne(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Message sentMessage;
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Message> sentMessage;
 
-    @OneToOne(mappedBy = "receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Message receivedMessage;
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Message> receivedMessage;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Specialist specialist;
