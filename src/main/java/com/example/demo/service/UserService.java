@@ -151,6 +151,7 @@ public class UserService {
                 .role(user.getRole().getRole())
                 .phoneNumber(user.getPhoneNumber())
                 .email(user.getEmail())
+                .photo(user.getPhoto())
                 .build();
     }
 

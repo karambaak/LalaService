@@ -29,7 +29,7 @@
                 <i class="fas fa-tasks"></i>
                 <!-- <span>Стенд</span> -->
             </a>
-            <a href="#messages" class="tab">
+            <a href="/msg" class="tab">
                 <i class="fas fa-envelope"></i>
                 <!-- <span>Сообщения</span> -->
             </a>

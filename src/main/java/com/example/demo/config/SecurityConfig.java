@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/auth/login")
                         .loginProcessingUrl("/auth/login")
-                        .defaultSuccessUrl("/")
+                        .defaultSuccessUrl("/profile")
                         .failureUrl("/auth/login?error=true")
                         .permitAll())
                 .logout(logout -> logout
@@ -44,6 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/profile").authenticated()
                         .requestMatchers("/favourites/**").authenticated()
                         .requestMatchers("/fav/**").authenticated()
+                        .requestMatchers("/msg/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .rememberMe(customizer -> customizer
