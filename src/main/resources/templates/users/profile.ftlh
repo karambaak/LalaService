@@ -123,16 +123,16 @@
                             <i class="fas fa-plus"></i>
                         </a>
                     </div>
-                    <#if stands?has_content>
-                        <#list stands as stand>
-                            <div class="resume">
-                                <a href="#${stand.id}" class="resume-link">
-                                    <p class="resume-name">${stand.name}</p>
-                                    <p class="resume-category">Категория: ${stand.category}</p>
-                                    <p class="resume-date">Дата создания: ${stand.createdDate}</p>
-                                </a>
-                            </div>
-                        </#list>
+                    <#if stands??>
+                            <#list stands as stand>
+                                <div class="resume">
+                                    <a href="/stand/request/${stand.id}" class="resume-link">
+                                        <p class="resume-name">${stand.title}</p>
+                                        <p class="resume-category">Категория: ${stand.category}</p>
+                                        <p class="resume-date">Дата создания: ${stand.publishedDate}</p>
+                                    </a>
+                                </div>
+                            </#list>
                     </#if>
                 </div>
             </div>

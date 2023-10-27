@@ -29,7 +29,7 @@ public class StandController {
                 model.addAttribute("posts", postService.getOtherPosts(v));
                 model.addAttribute("myResponses", postService.getSpecialistResponses(v.getSpecialistId()));
             } else {
-                model.addAttribute("myRequests", postService.getCustomerPosts(v));
+                model.addAttribute("myRequests", postService.getCustomerPosts(v.getUserId()));
                 model.addAttribute("posts", postService.getAll());
             }
         } else {
