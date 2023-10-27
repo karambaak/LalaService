@@ -54,7 +54,7 @@
 
                 resultItem.classList.add("search-result");
                 resultUrl.textContent = result.companyName;
-                resultUrl.href = "/vacancies/" + result.id
+                resultUrl.href = "/specialist/" + result.id
 
                 resultItem.appendChild(resultUrl)
                 searchResults.appendChild(resultItem);
