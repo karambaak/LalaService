@@ -118,7 +118,7 @@
             <div class="tab-content" id="resume-content">
                 <div class="resume-list">
                     <div class="resume create-resume">
-                        <a href="#" class="add-resume-link">
+                        <a href="/stand/new" class="add-resume-link">
                             <p class="add-resume-text">Новый запрос </p>
                             <i class="fas fa-plus"></i>
                         </a>

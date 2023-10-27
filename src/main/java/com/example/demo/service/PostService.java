@@ -23,7 +23,7 @@ public class PostService {
     private final SpecialistRepository specialistRepository;
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
-
+    private final CategoryRepository categoryRepository;
 
     public List<StandCategoryDto> getAll() {
         List<Post> list = postRepository.findAll();
@@ -290,5 +290,22 @@ public class PostService {
                     .build());
         }
         return list;
+    }
+
+    public void createNewPost(PostInputDto dto) {
+        User user = userService.getUserFromSecurityContextHolder();
+        if (user != null) {
+            var c = categoryRepository.findById(dto.getCategoryId());
+            if (c.isPresent()) {
+                postRepository.save(Post.builder()
+                        .user(user)
+                        .category(c.get())
+                        .title(dto.getTitle())
+                        .description(dto.getDescription())
+                        .workRequiredTime(dto.getWorkRequiredTime())
+                        .publishedDate(LocalDateTime.now())
+                        .build());
+            }
+        }
     }
 }
