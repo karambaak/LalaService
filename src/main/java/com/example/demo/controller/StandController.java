@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.ViewerDto;
+import com.example.demo.service.CategoryService;
 import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class StandController {
     private final PostService postService;
     private final UserService userService;
+    private final CategoryService categoryService;
 
     @GetMapping()
     public String getStand(Model model) {
@@ -51,10 +54,21 @@ public class StandController {
         model.addAttribute("post", postService.getPostDto(postId));
         ViewerDto v = userService.defineViewer();
         model.addAttribute("viewer", v);
-        if(v.getSpecialistId() == null) {
+        if (v.getSpecialistId() == null) {
             model.addAttribute("conversations", postService.getCustomerConversations(postId));
         }
         return "stand/request";
     }
 
+    @GetMapping("/new")
+    public String createNewPost(Model model) {
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "stand/new";
+    }
+
+    @PostMapping("/new")
+    public String createNewPost(@ModelAttribute PostInputDto dto) {
+        postService.createNewPost(dto);
+        return "redirect:/profile";
+    }
 }
