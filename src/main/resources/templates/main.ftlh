@@ -25,8 +25,7 @@
         searchInput.addEventListener("input", () => {
             const query = searchInput.value.trim();
             if (query !== "") {
-
-                console.log("query for specialist: ", query)
+                searchResults.classList.add("shadow")
                 fetch("/api/search/specialist/" + query)
                     .then(response => response.json())
                     .then(data => {
@@ -36,6 +35,7 @@
                         console.error("Error searching for vacancies:", error);
                     });
             } else {
+                searchResults.classList.remove("shadow")
                 searchResults.innerHTML = "";
             }
         });
