@@ -139,8 +139,8 @@ public class PostService {
         return result;
     }
 
-    public List<PostShortInfoDto> getCustomerPosts(ViewerDto v) {
-        List<Post> posts = postRepository.findAllByUserId(v.getUserId());
+    public List<PostShortInfoDto> getCustomerPosts(Long userId) {
+        List<Post> posts = postRepository.findAllByUserId(userId);
         List<PostShortInfoDto> list = new ArrayList<>();
         for (Post p :
                 posts) {
@@ -307,5 +307,11 @@ public class PostService {
                         .build());
             }
         }
+    }
+
+    public List<PostDto> getCustomerPostDtos(Long userId) {
+        List<Post> posts = postRepository.findAllByUserId(userId);
+        if(posts.isEmpty()) return null;
+        return posts.stream().map(this::makeDtoFromPost).toList();
     }
 }

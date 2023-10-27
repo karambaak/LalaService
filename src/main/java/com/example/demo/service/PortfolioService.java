@@ -23,15 +23,13 @@ public class PortfolioService {
     public Page<PortfolioDto> getAllPortfolios(int start, int end) {
         Pageable pageable = PageRequest.of(start, end);
         Page<Portfolio> portfolios = portfolioRepository.findAll(pageable);
-        Page<PortfolioDto> portfolioDtos = portfolios.map(portfolio -> {
-            return PortfolioDto.builder()
+        return portfolios.map(portfolio ->
+                    PortfolioDto.builder()
                     .id(portfolio.getId())
                     .specialistId(portfolio.getSpecialist().getId())
                     .title(portfolio.getTitle())
-                    .build();
-
-        });
-        return portfolioDtos;
+                    .build()
+        );
     }
 
 
