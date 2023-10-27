@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/profile").authenticated()
                         .requestMatchers("/favourites/**").authenticated()
+                        .requestMatchers("/resume/create").authenticated()
                         .requestMatchers("/fav/**").authenticated()
                         .anyRequest().permitAll()
                 )
