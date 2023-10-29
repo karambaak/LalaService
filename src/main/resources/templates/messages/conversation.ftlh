@@ -6,57 +6,27 @@
                 <i class="fas fa-arrow-left"></i>Назад
             </a>
         </div>
-        <h1 class="text-center"> Запрос пользователя </h1>
-        <div class="task-content">
-            <#if post??>
-                <div class="task-details mt-3 me-2">
-                    <div class="row">
-                        <div class="col-2 user-photo">
-                            <img src="${post.userPhoto}" alt="User Photo">
+        <div class="d-flex flex-column align-items-end me-3 my-3">
+            <#if (messages)??>
+                <#list messages as item>
+                    <#if item.viewer == 'author'>
+                        <div class="message"><#if (item.response)??>${item.response} </#if> <br>
+                            <#if (item.dateTime)??>${item.dateTime}</#if>
                         </div>
-                        <div class="col-3 text-center">${post.userName}</div>
-                    </div>
-                    <hr>
-                    <div class="description">
-                        <i class="fa-solid fa-calendar-days"></i> Когда: ${post.workRequiredTime}
-                        <br>
-                        ${post.title}
-                        <br>
-                        ${post.description}
-                    </div>
-                    <hr>
-                    <div class="response-info">
-                        <div class="responses-count">
-                            <p>Откликнулось специалистов: ${post.responseNumber}</p>
-                            <p>Дата публикации: ${post.publishedDate}</p>
-                        </div>
-
-                    </div>
-                </div>
-            <#else>
-                Данный запрос больше не актуален.
+                    <#else>
+                        <div class="incoming-msg"><#if (item.response)??>${item.response} </#if>
+                            <br> <#if (item.dateTime)??>${item.dateTime}</#if></div>
+                    </#if>
+                </#list>
             </#if>
         </div>
-        <#if (viewer.specialistId)??>
-            <div class="d-flex flex-column align-items-end me-3 my-3">
-                <#if (pastMessages)??>
-                    <#list pastMessages as item>
-                        <#if item.viewer == 'author'>
-                            <div class="message">${item.response} <br> <#if (item.dateTime)??> ${item.dateTime} </#if> </div>
-                        <#else>
-                            <div class="incoming-msg">${item.response} <br> <#if (item.dateTime)??> ${item.dateTime} </#if> </div>
-                        </#if>
-                    </#list>
-                </#if>
-            </div>
 
-        </#if>
 
         <div class="sent-messages d-flex flex-column align-items-end me-3 my-3">
             <!-- Messages will be displayed here -->
         </div>
         <div class="message-container">
-            <form method="post" action="/stand/response/${post.id}" id="message-form"
+            <form id="message-form"
                   class="d-flex flex-column align-items-end me-3">
                 <input type="text" id="message-text" class="msg-input" autofocus required>
                 <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
@@ -182,16 +152,14 @@
                 const message = messageText.value;
                 const csrfToken = document.querySelector('input[name="_csrf"]').value;
 
-                const specialist = ${viewer.specialistId}
-                const postId = ${post.id}
-                const viewer = postId + '-' + specialist;
+                const viewer = '${msgId}';
 
-                const responseText = {
-                    viewer: viewer,
-                    response: message,
-                };
-                console.log(responseText)
-                fetch(`/stand/response/${post.id}`, {
+                let responseText = {
+                    "response": message,
+                    "viewer": viewer
+                }
+
+                fetch(`/msg/new/` + viewer, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -202,7 +170,6 @@
                     .then(response => {
                         const messageElement = document.createElement('div');
                         messageElement.classList.add('message');
-                        const dt = getDateTime();
                         messageElement.textContent = message + '\n' + getDateTime();
                         sentMessages.appendChild(messageElement);
                         messageForm.reset();
@@ -212,6 +179,7 @@
                     });
             });
         });
+
         function getDateTime() {
             const now = new Date();
             const date = ("0" + now.getDate()).slice(-2);

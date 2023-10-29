@@ -12,14 +12,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class MessageDto {
-
-    private Long id;
-    private Long receiverId;
-    private String senderName;
-    private String senderPhoto;
-    @Size(min = 1, max = 255, message = "Message must be between 1 and 255 characters")
-    private String messageText;
-    @Past(message = "Time must be in the past or current")
-    private LocalDateTime dateTime;
-
+    private String response;
+    private String viewer;
 }

@@ -15,7 +15,9 @@
                 <img src="${item.senderPhoto}" alt="user photo">
             </div>
             <div class="text">
-                <b> ${item.senderName} </b> ${item.messageText} ${item.dateTime}
+                <b> ${item.senderName} </b> <#if (item.lastMessageText)??>${item.lastMessageText}</#if>
+                <p class="ms-auto">
+                    <#if (item.lastMessageDateTime)??>${item.lastMessageDateTime}</#if></p>
             </div>
         </a>
         </#list>
@@ -313,7 +315,28 @@
             tablinks1.addEventListener('click', showMessagesTab);
             tablinks2.addEventListener('click', showNotificationsTab);
             tablinks1.click();
+
+
+            const messageCards = document.querySelectorAll('.message-card');
+
+            messageCards.forEach(function(card) {
+                const href = card.getAttribute('href');
+                const msgId = href.split('/').pop();
+
+                if (msgId.startsWith('response-')) {
+                    card.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        window.location.href = `/stand/show/` + msgId;
+                    });
+                } else {
+                    card.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        window.location.href = `/msg/` + msgId;
+                    });
+                }
+            });
         });
+
 
     </script>
 </@main.layout>

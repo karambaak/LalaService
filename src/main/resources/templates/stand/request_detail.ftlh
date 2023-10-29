@@ -37,7 +37,6 @@
                 Данный запрос больше не актуален.
             </#if>
         </div>
-        <#if (viewer.specialistId)??>
             <div class="d-flex flex-column align-items-end me-3 my-3">
                 <#if (pastMessages)??>
                     <#list pastMessages as item>
@@ -50,13 +49,12 @@
                 </#if>
             </div>
 
-        </#if>
 
         <div class="sent-messages d-flex flex-column align-items-end me-3 my-3">
             <!-- Messages will be displayed here -->
         </div>
         <div class="message-container">
-            <form method="post" action="/stand/response/${post.id}" id="message-form"
+            <form method="post" action="/stand/request_detail/${conversationId}" id="message-form"
                   class="d-flex flex-column align-items-end me-3">
                 <input type="text" id="message-text" class="msg-input" autofocus required>
                 <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
@@ -182,16 +180,16 @@
                 const message = messageText.value;
                 const csrfToken = document.querySelector('input[name="_csrf"]').value;
 
-                const specialist = ${viewer.specialistId}
-                const postId = ${post.id}
-                const viewer = postId + '-' + specialist;
+                const currentURL = window.location.href;
+                const parts = currentURL.split("/");
+                const viewer = parts[parts.length - 1];
 
                 const responseText = {
                     viewer: viewer,
                     response: message,
                 };
                 console.log(responseText)
-                fetch(`/stand/response/${post.id}`, {
+                fetch(`/stand/request_detail/` + viewer, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
