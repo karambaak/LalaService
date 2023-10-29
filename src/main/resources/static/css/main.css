@@ -99,3 +99,22 @@
 .content{
     padding: 20px;
 }
+
+
+.searchResults{
+    position: fixed;
+    left: 40px;
+    right: 40px;
+    top: 80px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    text-align: left;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+}
+
+.search-result{
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding-bottom: 10px;
+}
