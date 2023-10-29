@@ -25,6 +25,8 @@ public class PostService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
 
+
+
     public List<StandCategoryDto> getAll() {
         List<Post> list = postRepository.findAll();
         list.sort(Comparator.comparing(post -> post.getCategory().getCategoryName()));
@@ -78,6 +80,11 @@ public class PostService {
 
     private String formatDateTime(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        return dateTime.format(formatter);
+    }
+
+    private String formatDateTimeShort(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd HH:mm");
         return dateTime.format(formatter);
     }
 
@@ -160,8 +167,7 @@ public class PostService {
         }
     }
 
-
-    public HttpStatus processResponse(Long postId, ResponseDto response) {
+    public HttpStatus processResponse(Long postId, MessageDto response) {
         var post = postRepository.findById(postId);
         if (post.isEmpty()) return HttpStatus.NOT_FOUND;
         User user = userService.getUserFromSecurityContextHolder();
@@ -169,7 +175,6 @@ public class PostService {
                 .append(post.get().getPublishedDate()).append(")").toString();
         if (user != null) {
             List<Notification> notifications = notificationRepository.findByNotificationTextContaining(keyword);
-
             String conversationId = response.getViewer();
             var specialist = specialistRepository.findByUser(user);
 
@@ -215,7 +220,7 @@ public class PostService {
         return HttpStatus.NOT_FOUND;
     }
 
-    private String extractStringAfterDash(String input) {
+    public String extractStringAfterDash(String input) {
         int index = input.indexOf("-");
         if (index != -1 && index < input.length() - 1) {
             return input.substring(index + 1);
@@ -224,8 +229,7 @@ public class PostService {
         }
     }
 
-
-    private List<Response> getAllPostResponses(Long postId) {
+    public List<Response> getAllPostResponses(Long postId) {
         var post = postRepository.findById(postId);
         if (post.isEmpty()) return null;
 
@@ -251,13 +255,17 @@ public class PostService {
             list.add(ResponseDto.builder()
                     .response(r.getResponse())
                     .viewer(s)
+                    .dateTime(formatDateTimeShort(r.getDateTime()))
                     .build());
         }
         return list;
     }
 
     public List<ConversationDto> getCustomerConversations(Long postId) {
-        List<Response> responses = responseRepository.findAllByPostId(postId);
+        List<Response> responses = getAllPostResponses(postId);
+        if (responses == null) {
+            return null;
+        }
         responses.sort(Comparator.comparing(Response::getConversationId));
         HashSet<String> uniqueConversationIds = new HashSet<>();
         for (Response r : responses) {
@@ -278,6 +286,7 @@ public class PostService {
                     value.add(ResponseDto.builder()
                             .response(r.getResponse())
                             .viewer(s)
+                            .dateTime(formatDateTimeShort(r.getDateTime()))
                             .build());
                 }
             }
@@ -311,7 +320,32 @@ public class PostService {
 
     public List<PostDto> getCustomerPostDtos(Long userId) {
         List<Post> posts = postRepository.findAllByUserId(userId);
-        if(posts.isEmpty()) return null;
+        if (posts.isEmpty()) return null;
         return posts.stream().map(this::makeDtoFromPost).toList();
     }
+
+    public Post getPostByConversationId(String conversationId) {
+        var response = responseRepository.findAllByConversationId(conversationId);
+        if(response.isEmpty()) return null;
+        Long postId = response.get(0).getPost().getId();
+        var post = postRepository.findById(postId);
+        if (post.isEmpty()) return null;
+        else return post.get();
+    }
+
+    public List<ResponseDto> getCustomerMsgByConversation(String conversationId) {
+        List<Response> responses = responseRepository.findAllByConversationId(conversationId);
+        List<ResponseDto> list = new ArrayList<>();
+        for (Response r : responses) {
+            String s = (r.getSpecialist() == null) ? "author" : "reader";
+            list.add(ResponseDto.builder()
+                    .response(r.getResponse())
+                    .viewer(s)
+                    .dateTime(formatDateTimeShort(r.getDateTime()))
+                    .build()
+            );
+        }
+        return list;
+    }
+
 }

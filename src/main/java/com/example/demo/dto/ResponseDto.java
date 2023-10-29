@@ -10,5 +10,5 @@ import lombok.*;
 public class ResponseDto {
     private String response;
     private String viewer; //author or reader
-
+private String dateTime;
 }

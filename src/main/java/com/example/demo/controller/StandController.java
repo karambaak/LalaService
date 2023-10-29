@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.ViewerDto;
+import com.example.demo.entities.Post;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
@@ -70,5 +71,32 @@ public class StandController {
     public String createNewPost(@ModelAttribute PostInputDto dto) {
         postService.createNewPost(dto);
         return "redirect:/profile";
+    }
+
+    @GetMapping("/show/{conversationId}")
+    public String getConversation(@PathVariable String conversationId) {
+        ViewerDto v = userService.defineViewer();
+        String id = postService.extractStringAfterDash(conversationId);
+        Post p = postService.getPostByConversationId(id);
+        if (v.getSpecialistId() != null) {
+            if (p != null) {
+                Long postId = p.getId();
+                return "redirect:/stand/respond/" + postId;
+            }
+        } else {
+            return "redirect:/stand/request_detail/" + id;
+        }
+        return "redirect:/msg";
+    }
+
+    @GetMapping("/request_detail/{conversationId}")
+    public String customerRequestDetail(@PathVariable String conversationId, Model model) {
+        model.addAttribute("conversationId", conversationId);
+        Post p = postService.getPostByConversationId(conversationId);
+        if(p != null) {
+            model.addAttribute("post", postService.getPostDto(p.getId()));
+        }
+        model.addAttribute("pastMessages", postService.getCustomerMsgByConversation(conversationId));
+        return "stand/request_detail";
     }
 }

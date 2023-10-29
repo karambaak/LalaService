@@ -61,9 +61,9 @@
                         <#if (item.messages)??>
                             <#list (item.messages) as msg>
                                 <#if msg.viewer == 'author'>
-                                    <div class="message ms-auto">${msg.response}</div>
+                                    <div class="message ms-auto">${msg.response} <br> ${msg.dateTime}</div>
                                 <#else>
-                                    <div class="incoming-msg">${msg.response}</div>
+                                    <div class="incoming-msg">${msg.response} <br> ${msg.dateTime}</div>
                                 </#if>
                             </#list>
                             <div class="sent-messages d-flex flex-column align-items-end me-3 my-3">
@@ -107,7 +107,7 @@
         .task-content {
             display: flex;
             align-items: center;
-            margin-bottom: 15%;
+            margin-bottom: 20px;
             padding: 30px;
         }
 
@@ -173,7 +173,7 @@
             background-color: #2552e74a;
             border-radius: 15px;
             width: fit-content;
-            max-width: 500px;
+            max-width: 450px;
             padding: 5px 10px;
 
         }
@@ -199,7 +199,7 @@
             background-color: #66e08497;
             border-radius: 15px;
             width: fit-content;
-            max-width: 500px;
+            max-width: 450px;
             padding: 5px 10px;
             margin-right: auto !important;
         }
@@ -232,7 +232,7 @@
                         .then(data => {
                             const messageElement = document.createElement('div');
                             messageElement.classList.add('message');
-                            messageElement.textContent = response;
+                            messageElement.textContent = response + '\n' + getDateTime();
                             sentMessages.appendChild(messageElement);
                             form.reset();
                         })
@@ -243,6 +243,14 @@
                 });
             });
         });
+        function getDateTime() {
+            const now = new Date();
+            const date = ("0" + now.getDate()).slice(-2);
+            const month = ("0" + (now.getMonth() + 1)).slice(-2);
+            const hour = ("0" + now.getHours()).slice(-2);
+            const minute = ("0" + now.getMinutes()).slice(-2);
 
+            return '\n' + month + '/' + date + ' ' + hour + ':' + minute;
+        }
     </script>
 </@main.layout>

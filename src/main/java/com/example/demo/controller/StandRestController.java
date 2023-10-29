@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.ResponseDto;
+import com.example.demo.dto.MessageDto;
+import com.example.demo.entities.Post;
 import com.example.demo.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,17 @@ public class StandRestController {
     private final PostService postService;
 
     @PostMapping("/response/{postId}")
-    public HttpStatus respond(@PathVariable Long postId, @RequestBody ResponseDto responseText) {
+    public HttpStatus respond(@PathVariable Long postId, @RequestBody MessageDto responseText) {
         return postService.processResponse(postId, responseText);
+    }
+
+    @PostMapping("/request_detail/{conversationId}")
+    public HttpStatus customerRequestDetail(@PathVariable String conversationId, @RequestBody MessageDto responseText) {
+        Post p = postService.getPostByConversationId(conversationId);
+        if (p != null) {
+            responseText.setViewer(conversationId);
+            return postService.processResponse(p.getId(), responseText);
+        }
+        return HttpStatus.NOT_FOUND;
     }
 }

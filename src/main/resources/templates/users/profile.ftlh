@@ -44,7 +44,7 @@
                         <span class="star fas fa-star"></span>
                         <span class="star fas fa-star"></span>
                         <span class="star fas fa-star"></span>
-                        <span class="rating-number" id="rating">${rating}</span>
+                        <span class="rating-number" id="rating"><#if rating??>${rating}</#if></span>
                     </div>
                 </#if>
             </div>
