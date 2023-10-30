@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.ViewerDto;
-import com.example.demo.entities.Post;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
@@ -18,23 +17,25 @@ public class StandController {
     private final PostService postService;
     private final UserService userService;
     private final CategoryService categoryService;
+    private static final String POSTS = "posts";
+    private static final String VIEWER = "viewer";
 
     @GetMapping()
     public String getStand(Model model) {
         ViewerDto v = userService.defineViewer();
-        model.addAttribute("viewer", v);
+        model.addAttribute(VIEWER, v);
 
         if (v != null) {
             if (v.getSpecialistId() != null) {
                 model.addAttribute("myPosts", postService.getMySubscriptions(v));
-                model.addAttribute("posts", postService.getOtherPosts(v));
+                model.addAttribute(POSTS, postService.getOtherPosts(v));
                 model.addAttribute("myResponses", postService.getSpecialistResponses(v.getSpecialistId()));
             } else {
                 model.addAttribute("myRequests", postService.getCustomerPosts(v.getUserId()));
-                model.addAttribute("posts", postService.getAll());
+                model.addAttribute(POSTS, postService.getAll());
             }
         } else {
-            model.addAttribute("posts", postService.getAll());
+            model.addAttribute(POSTS, postService.getAll());
         }
         return "stand/stand";
     }
@@ -43,7 +44,7 @@ public class StandController {
     public String respondPage(@PathVariable Long postId, Model model) {
         model.addAttribute("post", postService.getPostDto(postId));
         ViewerDto v = userService.defineViewer();
-        model.addAttribute("viewer", v);
+        model.addAttribute(VIEWER, v);
         if (v.getSpecialistId() != null) {
             model.addAttribute("pastMessages", postService.getSpecialistConversation(postId, v));
         }
@@ -54,7 +55,7 @@ public class StandController {
     public String requestPage(@PathVariable Long postId, Model model) {
         model.addAttribute("post", postService.getPostDto(postId));
         ViewerDto v = userService.defineViewer();
-        model.addAttribute("viewer", v);
+        model.addAttribute(VIEWER, v);
         if (v.getSpecialistId() == null) {
             model.addAttribute("conversations", postService.getCustomerConversations(postId));
         }
@@ -77,10 +78,9 @@ public class StandController {
     public String getConversation(@PathVariable String conversationId) {
         ViewerDto v = userService.defineViewer();
         String id = postService.extractStringAfterDash(conversationId);
-        Post p = postService.getPostByConversationId(id);
+        Long postId = postService.getPostByConversationId(id);
         if (v.getSpecialistId() != null) {
-            if (p != null) {
-                Long postId = p.getId();
+            if (postId != null) {
                 return "redirect:/stand/respond/" + postId;
             }
         } else {
@@ -92,9 +92,9 @@ public class StandController {
     @GetMapping("/request_detail/{conversationId}")
     public String customerRequestDetail(@PathVariable String conversationId, Model model) {
         model.addAttribute("conversationId", conversationId);
-        Post p = postService.getPostByConversationId(conversationId);
-        if(p != null) {
-            model.addAttribute("post", postService.getPostDto(p.getId()));
+        Long postId = postService.getPostByConversationId(conversationId);
+        if(postId != null) {
+            model.addAttribute("post", postService.getPostDto(postId));
         }
         model.addAttribute("pastMessages", postService.getCustomerMsgByConversation(conversationId));
         return "stand/request_detail";

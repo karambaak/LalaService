@@ -25,7 +25,12 @@ public class Response {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    //состоит из двух цифр и тире (PostId-SpecialistId).
+    // Используется для поиска запросов, на которые откликнулся специалист.
+    // Используется, чтобы выдавать список сообщений под каждым запросом.
     private String conversationId;
+
     private String response;
 
     @Column(name="date_time")

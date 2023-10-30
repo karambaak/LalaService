@@ -7,6 +7,7 @@ import com.example.demo.dto.ResponseDto;
 import com.example.demo.entities.*;
 import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -44,7 +45,7 @@ public class MessageService {
         List<Message> shortList = new ArrayList<>();
         shortList.addAll(iAmReceiver(allMessages, user));
         shortList.addAll(iAmSender(allMessages, user));
-        Collections.sort(shortList, Comparator.comparing(Message::getDateTime).reversed());
+        shortList.sort(Comparator.comparing(Message::getDateTime).reversed());
         Set<Long> uniqueUsers = uniqueIds(shortList, user);
         return filterBundle(shortList, uniqueUsers);
 
@@ -63,8 +64,8 @@ public class MessageService {
                             .lastMessageDateTime(formatDateTime(m.getDateTime()))
                             .build());
                     break;
-                }
-                if (m.getReceiver().getId().equals(l)) {
+
+                } else if (m.getReceiver().getId().equals(l)) {
                     list.add(MessageBundleDto.builder()
                             .id(new StringBuilder().append("msg").append("-").append(m.getReceiver().getId()).toString())
                             .senderPhoto(m.getReceiver().getPhoto())
@@ -74,6 +75,7 @@ public class MessageService {
                             .build());
                     break;
                 }
+
             }
         return list;
     }
@@ -101,7 +103,6 @@ public class MessageService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd HH:mm");
         return dateTime.format(formatter);
     }
-
 
 
     public List<NotificationDto> getAllNotifications() {
@@ -160,7 +161,7 @@ public class MessageService {
 
     private List<MessageBundleDto> customerResponses(List<Response> responses, Set<String> filter) {
         List<MessageBundleDto> list = new ArrayList<>();
-        Collections.sort(responses, Comparator.comparing(Response::getDateTime).reversed());
+        responses.sort(Comparator.comparing(Response::getDateTime).reversed());
         for (String s : filter) {
             for (Response r : responses) {
                 if (r.getConversationId().equalsIgnoreCase(s) && r.getSpecialist() != null) {
@@ -205,7 +206,7 @@ public class MessageService {
         if (specialist.isPresent()) {
             for (Response r : responses) {
                 if (r.getSpecialist() != null && (r.getSpecialist().getId().equals(specialist.get().getId()))) {
-                        set.add(r.getConversationId());
+                    set.add(r.getConversationId());
 
                 }
             }
@@ -225,7 +226,7 @@ public class MessageService {
 
     private List<MessageBundleDto> specialistResponses(List<Response> responses, Set<String> filter) {
         List<MessageBundleDto> list = new ArrayList<>();
-        Collections.sort(responses, Comparator.comparing(Response::getDateTime).reversed());
+        responses.sort(Comparator.comparing(Response::getDateTime).reversed());
         for (String s : filter) {
             for (Response r : responses) {
                 if (r.getConversationId().equalsIgnoreCase(s) && r.getSpecialist() == null) {
@@ -245,7 +246,7 @@ public class MessageService {
 
     public List<ResponseDto> viewMessages(String id) {
         User user = userService.getUserFromSecurityContextHolder();
-        if (user == null) return null;
+        if (user == null) return Collections.emptyList();
         Long value = Long.parseLong(postService.extractStringAfterDash(id));
         List<ResponseDto> list = new ArrayList<>();
         List<Message> messages = messageRepository.findBySenderIdAndReceiverId(value, user.getId());
@@ -264,18 +265,48 @@ public class MessageService {
 
     }
 
-    public void saveMessage(String msgId, MessageDto responseDto) {
+    public HttpStatus saveMessage(String msgId, MessageDto responseDto) {
         User user = userService.getUserFromSecurityContextHolder();
         Long receiverId = Long.parseLong(postService.extractStringAfterDash(msgId));
         var user2 = userRepository.findById(receiverId);
-        if(user2.isPresent()) {
+        if (user2.isPresent()) {
             messageRepository.save(Message.builder()
-                            .sender(user)
-                            .receiver(user2.get())
-                            .messageText(responseDto.getResponse())
+                    .sender(user)
+                    .receiver(user2.get())
+                    .messageText(responseDto.getResponse())
+                    .dateTime(LocalDateTime.now())
+                    .build());
+        } else {
+            return HttpStatus.NOT_FOUND;
+        }
+        return HttpStatus.OK;
+    }
+
+    public HttpStatus saveNewMessage(MessageDto messageDto) {
+        User sender = userService.getUserFromSecurityContextHolder();
+        if (sender != null) {
+            User receiver = null;
+            try {
+               Long id = Long.parseLong(messageDto.getViewer());
+               var user = userRepository.findById(id);
+               if(!user.isEmpty()) receiver = user.get();
+            } catch (NumberFormatException e) {
+                var user = userRepository.findAllByUserNameContainingIgnoreCase(messageDto.getViewer());
+                if(user.size() == 1) {
+                    receiver = user.get(0);
+                } else {
+                    return HttpStatus.NOT_FOUND;
+                }
+            }
+            messageRepository.save(Message.builder()
+                            .sender(sender)
+                            .receiver(receiver)
+                            .messageText(messageDto.getResponse())
                             .dateTime(LocalDateTime.now())
                     .build());
+            return HttpStatus.OK;
         }
+        return HttpStatus.NOT_FOUND;
     }
 }
 

@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.MessageDto;
-import com.example.demo.dto.ResponseDto;
 import com.example.demo.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,10 @@ public class MessageRestController {
     private final MessageService messageService;
     @PostMapping("/new/{msgId}")
     public HttpStatus newMessage(@PathVariable String msgId, @RequestBody MessageDto responseText) {
-        messageService.saveMessage(msgId, responseText);
-        return HttpStatus.OK;
+       return messageService.saveMessage(msgId, responseText);
+    }
+    @PostMapping("/new")
+    public HttpStatus newMsg(@RequestBody MessageDto messageDto) {
+       return messageService.saveNewMessage(messageDto);
     }
 }
