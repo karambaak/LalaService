@@ -20,10 +20,10 @@ public class StandRestController {
 
     @PostMapping("/request_detail/{conversationId}")
     public HttpStatus customerRequestDetail(@PathVariable String conversationId, @RequestBody MessageDto responseText) {
-        Post p = postService.getPostByConversationId(conversationId);
+        Long p = postService.getPostByConversationId(conversationId);
         if (p != null) {
             responseText.setViewer(conversationId);
-            return postService.processResponse(p.getId(), responseText);
+            return postService.processResponse(p, responseText);
         }
         return HttpStatus.NOT_FOUND;
     }

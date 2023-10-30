@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.FindUserNameDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.dto.ViewerDto;
 import com.example.demo.entities.Role;
@@ -19,6 +20,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
@@ -28,12 +30,12 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
     private final UserRepository repository;
     private final SpecialistRepository specialistRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
     private final AuthUserDetailsService service;
+    public static final String SPECIALIST = "specialist";
 
     public List<User> getAllUsers() {
         return repository.findAll();
@@ -55,7 +57,7 @@ public class UserService {
                     .registrationDate(LocalDateTime.now())
                     .build();
             repository.saveAndFlush(user);
-            if (userType.equalsIgnoreCase("specialist")) {
+            if (userType.equalsIgnoreCase(SPECIALIST)) {
                 var newUser = repository.findByPhoneNumber(userDto.getPhoneNumber());
                 newUser.ifPresent(value -> specialistRepository.save(Specialist.builder()
                         .user(value)
@@ -84,12 +86,9 @@ public class UserService {
     }
 
     public User getUserFromSecurityContextHolder() {
-
         String username = getUsernameFromSecurityContextHolder();
         if (username.isEmpty()) return null;
-        var user = findUserByUsername(username);
-        if (user == null) return null;
-        return user;
+        return findUserByUsername(username);
     }
 
     public String defineUserType(String userRole) {
@@ -178,7 +177,7 @@ public class UserService {
         if (user == null) {
             return null;
         } else {
-            if (user.getUserType().equalsIgnoreCase("specialist")) {
+            if (user.getUserType().equalsIgnoreCase(SPECIALIST)) {
                 var specialist = specialistRepository.findByUser(user);
                 if (specialist.isPresent()) {
 
@@ -219,7 +218,27 @@ public class UserService {
 
     public UserDto getSpecialistUserById(Long specialistId) {
         Specialist specialist = specialistRepository.findById(specialistId).orElseThrow(() -> new NoSuchElementException("Specialist not found"));
-        User user = repository.findById(specialist.getUser().getId()).get();
-        return makeUserDto(user);
+        var user = repository.findById(specialist.getUser().getId());
+        if(user.isEmpty()) return null;
+        return makeUserDto(user.get());
+    }
+
+    public List<FindUserNameDto> getUserNameList() {
+        List<User> users = repository.findAll();
+        List<FindUserNameDto> list = new ArrayList<>();
+        for (User u : users) {
+            StringBuilder s = new StringBuilder().append(u.getUserName());
+            if (u.getUserType().equalsIgnoreCase(SPECIALIST)) {
+                var specialist = specialistRepository.findByUser(u);
+                if (specialist.isPresent() && specialist.get().getCompanyName() != null) {
+                    s.append("/").append(specialist.get().getCompanyName());
+                }
+            }
+            list.add(FindUserNameDto.builder()
+                    .id(u.getId())
+                    .userName(s.toString())
+                    .build());
+        }
+        return list;
     }
 }

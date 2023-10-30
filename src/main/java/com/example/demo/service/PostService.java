@@ -228,6 +228,14 @@ public class PostService {
             return "";
         }
     }
+    public String extractStringBeforeDash(String input) {
+        int index = input.indexOf("-");
+        if (index != -1) {
+            return input.substring(0, index);
+        } else {
+            return input;
+        }
+    }
 
     public List<Response> getAllPostResponses(Long postId) {
         var post = postRepository.findById(postId);
@@ -324,13 +332,9 @@ public class PostService {
         return posts.stream().map(this::makeDtoFromPost).toList();
     }
 
-    public Post getPostByConversationId(String conversationId) {
+    public Long getPostByConversationId(String conversationId) {
         var response = responseRepository.findAllByConversationId(conversationId);
-        if(response.isEmpty()) return null;
-        Long postId = response.get(0).getPost().getId();
-        var post = postRepository.findById(postId);
-        if (post.isEmpty()) return null;
-        else return post.get();
+        return Long.parseLong(extractStringBeforeDash(conversationId));
     }
 
     public List<ResponseDto> getCustomerMsgByConversation(String conversationId) {
