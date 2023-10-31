@@ -39,6 +39,14 @@ public class FavouriteController {
         favouriteService.deleteFavourite(user.getId(), specialistId);
         return "redirect:/favourites";
     }
+    @GetMapping("/add/{specialistId}")
+    public String saveFavoriteSpecialist(@PathVariable Long specialistId, Authentication auth){
+        User user = (User) auth.getPrincipal();
+        String userPhoneNumber = auth.getName();
+        Long userId = userService.getUserByPhone(userPhoneNumber).getId();
+        favouriteService.saveFavourite(userId, specialistId);
+        return "favorites/favorites";
+    }
 
 
 

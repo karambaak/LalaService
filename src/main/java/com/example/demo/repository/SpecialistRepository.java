@@ -14,4 +14,5 @@ public interface SpecialistRepository extends JpaRepository<Specialist, Long> {
     Optional<Specialist> findByUser_Id(Long userId);
 
     Optional<Specialist> findByUser(User user);
+
 }
