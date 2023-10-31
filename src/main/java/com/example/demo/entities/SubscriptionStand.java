@@ -15,7 +15,7 @@ public class SubscriptionStand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "specialist_id", referencedColumnName = "id")
     private Specialist specialist;
 

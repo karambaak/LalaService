@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface SubscriptionStandRepository extends JpaRepository<SubscriptionStand, Integer> {
     List<SubscriptionStand> findAllBySpecialistId(Long specialistId);
+    List<SubscriptionStand> findByCategory_Id(Long id);
 }
