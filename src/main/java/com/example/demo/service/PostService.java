@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -311,19 +312,31 @@ public class PostService {
 
     public void createNewPost(PostInputDto dto) {
         User user = userService.getUserFromSecurityContextHolder();
+        Category categoryOfStand = categoryRepository.findById(dto.getCategoryId()).orElseThrow(() -> new NoSuchElementException("Category not found"));
         if (user != null) {
             var c = categoryRepository.findById(dto.getCategoryId());
-            if (c.isPresent()) {
-                postRepository.save(Post.builder()
-                        .user(user)
-                        .category(c.get())
-                        .title(dto.getTitle())
-                        .description(dto.getDescription())
-                        .workRequiredTime(dto.getWorkRequiredTime())
-                        .publishedDate(LocalDateTime.now())
-                        .build());
-            }
+            c.ifPresent(category -> postRepository.save(Post.builder()
+                    .user(user)
+                    .category(category)
+                    .title(dto.getTitle())
+                    .description(dto.getDescription())
+                    .workRequiredTime(dto.getWorkRequiredTime())
+                    .publishedDate(LocalDateTime.now())
+                    .build()));
         }
+        /// TODO: 31.10.2023 Правильная ли логика по добавлению уведомления для Usera????
+        List<SubscriptionStand> subscriptionsOnCategory = subscriptionStandRepository.findByCategory_Id(dto.getCategoryId());
+        for (SubscriptionStand s : subscriptionsOnCategory){
+            notificationRepository.save(makeNotificationToSpecialistBySubscriptionOnCategory(s.getSpecialist(), categoryOfStand));
+        }
+    }
+
+    private Notification makeNotificationToSpecialistBySubscriptionOnCategory(Specialist specialist, Category category){
+        return Notification.builder()
+                .user(specialist.getUser())
+                .notificationText("Создана новая запись на стенде в категории: " + category.getCategoryName())
+                .notificationDate(LocalDateTime.now())
+                .build();
     }
 
     public List<PostDto> getCustomerPostDtos(Long userId) {
