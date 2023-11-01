@@ -3,10 +3,9 @@ package com.example.demo.service;
 import com.example.demo.dto.FindUserNameDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.dto.ViewerDto;
-import com.example.demo.entities.Role;
-import com.example.demo.entities.Specialist;
-import com.example.demo.entities.User;
+import com.example.demo.entities.*;
 import com.example.demo.enums.UserType;
+import com.example.demo.repository.GeolocationRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.SpecialistRepository;
 import com.example.demo.repository.UserRepository;
@@ -30,12 +29,13 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    public static final String SPECIALIST = "specialist";
     private final UserRepository repository;
     private final SpecialistRepository specialistRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
     private final AuthUserDetailsService service;
-    public static final String SPECIALIST = "specialist";
+    private final GeolocationRepository geolocationRepository;
 
     public List<User> getAllUsers() {
         return repository.findAll();
@@ -43,6 +43,9 @@ public class UserService {
 
     public void register(UserDto userDto) {
         var u = repository.findByPhoneNumber(userDto.getPhoneNumber());
+        var geolocation = geolocationRepository.findByCountryAndCity(userDto.getCountry(), userDto.getCity());
+        Geolocation geo = null;
+        if (geolocation.isPresent()) geo = geolocation.get();
         if (u.isEmpty()) {
             Role role = defineUserRole(userDto.getRole());
             String userType = defineUserType(userDto.getRole());
@@ -53,6 +56,7 @@ public class UserService {
                     .userName(userDto.getUserName())
                     .userType(userType)
                     .role(role)
+                    .geolocation(geo)
                     .enabled(Boolean.TRUE)
                     .registrationDate(LocalDateTime.now())
                     .build();
@@ -125,18 +129,38 @@ public class UserService {
         var userAuth = (OAuth2User) auth.getPrincipal();
         String email = userAuth.getAttribute("email");
         var user = repository.getByEmail(email);
+        var geolocation = geolocationRepository.findByCountryAndCity(request.getParameter("country"), request.getParameter("city"));
+        Geolocation geo = null;
+        if (geolocation.isPresent()) geo = geolocation.get();
         if (user.isPresent()) {
             User u = user.get();
             u.setRole(role);
+            u.setGeolocation(geo);
             u.setUserType(userType);
             repository.saveAndFlush(u);
+
+            if (role.getRole().equalsIgnoreCase("ROLE_SPECIALIST")) {
+                specialistRepository.save(Specialist.builder()
+                        .user(u)
+                        .build());
+            }
+            service.loadUserByUsernameEmail(user.get().getEmail());
         }
-        service.loadUserByUsernameEmail(user.get().getEmail());
+
     }
 
     public UserDto getUserByAuthentication(Authentication auth) {
-        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
-        return makeUserDto(repository.findByPhoneNumber(user.getUsername()).orElseThrow(() -> new NoSuchElementException("Auth is null, user not found")));
+        var principal = auth.getPrincipal();
+        if (principal instanceof CustomOAuth2User c) {
+            return makeUserDto(repository.findByEmail((c.getEmail())).orElseThrow(() -> new NoSuchElementException("Auth is null, user email not found")));
+        } else {
+            org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) principal;
+            if(isValidEmail(user.getUsername())) {
+                return makeUserDto(repository.findByEmail(user.getUsername()).orElseThrow(() -> new NoSuchElementException("Auth is null, user email not found")));
+            } else {
+                return makeUserDto(repository.findByPhoneNumber(user.getUsername()).orElseThrow(() -> new NoSuchElementException("Auth is null, user phone number not found")));
+            }
+            }
     }
 
     public UserDto getUserByPhone(String phone) {
@@ -160,9 +184,14 @@ public class UserService {
             if (auth == null || !auth.isAuthenticated()) {
                 return null;
             }
+            var principal = auth.getPrincipal();
+            if (principal instanceof CustomOAuth2User c) {
+                return c.getEmail();
+            } else {
+                org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) principal;
 
-            org.springframework.security.core.userdetails.User u = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
-            return u.getUsername();
+                return user.getUsername();
+            }
         } catch (Exception e) {
 
             return null;
@@ -171,6 +200,7 @@ public class UserService {
 
     public ViewerDto defineViewer() {
         String username = getUsernameFromSecurityContextHolder();
+
         if (username == null) return null;
 
         User user = findUserByUsername(username);
@@ -219,8 +249,7 @@ public class UserService {
     public UserDto getSpecialistUserById(Long specialistId) {
         Specialist specialist = specialistRepository.findById(specialistId).orElseThrow(() -> new NoSuchElementException("Specialist not found"));
         var user = repository.findById(specialist.getUser().getId());
-        if(user.isEmpty()) return null;
-        return makeUserDto(user.get());
+        return user.map(this::makeUserDto).orElse(null);
     }
 
     public List<FindUserNameDto> getUserNameList() {

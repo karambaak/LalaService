@@ -5,8 +5,10 @@ import com.example.demo.entities.Role;
 import com.example.demo.entities.User;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -81,7 +84,7 @@ public class AuthUserDetailsService implements UserDetailsService {
     }
 
 
-    public boolean processOAuthPostLogin(CustomOAuth2User user) {
+    public boolean processOAuthPostLogin(CustomOAuth2User user, HttpServletRequest request) {
         String username = user.getEmail();
         var existUser = userRepository.getByEmail(username);
 
@@ -90,6 +93,7 @@ public class AuthUserDetailsService implements UserDetailsService {
                     .email(username)
                     .userName(user.getName())
                     .password("qwerty")
+                    .photo(user.getPhoto())
                     .enabled(Boolean.TRUE)
                     .registrationDate(LocalDateTime.now())
                     .build();
@@ -97,10 +101,12 @@ public class AuthUserDetailsService implements UserDetailsService {
 
             return true;
         }
-
+        WebAuthenticationDetails details = new WebAuthenticationDetails(request);
         UserDetails userDetails = loadUserByUsernameEmail(username);
         Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
+        ((AbstractAuthenticationToken) auth).setDetails(details);
+
         return false;
     }
 }

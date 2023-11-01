@@ -10,7 +10,6 @@ import com.example.demo.utils.QRCodeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
@@ -27,7 +26,6 @@ public class ProfileControllerImpl implements ProfileController {
 
     @Override
     public String profile(Authentication auth, Model model) {
-        User authUser = (User) auth.getPrincipal();
         UserDto currentUser = userService.getUserByAuthentication(auth);
 
         if (currentUser.getRole().equalsIgnoreCase("ROLE_SPECIALIST")){
