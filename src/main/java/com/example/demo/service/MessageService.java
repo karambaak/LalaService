@@ -6,6 +6,7 @@ import com.example.demo.dto.NotificationDto;
 import com.example.demo.dto.ResponseDto;
 import com.example.demo.entities.*;
 import com.example.demo.repository.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -307,6 +308,11 @@ public class MessageService {
             return HttpStatus.OK;
         }
         return HttpStatus.NOT_FOUND;
+    }
+
+    @Transactional
+    public void deleteNotification(long notificationId, long userId) {
+        notificationRepository.deleteNotificationByIdAndUserId(notificationId, userId);
     }
 }
 

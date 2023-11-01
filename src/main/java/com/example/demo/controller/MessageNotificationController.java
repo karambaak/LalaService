@@ -1,8 +1,14 @@
 package com.example.demo.controller;
 
+
+import com.example.demo.dto.UserDto;
+import com.example.demo.entities.User;
 import com.example.demo.service.MessageService;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +40,14 @@ public class MessageNotificationController {
     public String newMessage(Model model) {
         model.addAttribute("usernameList", userService.getUserNameList());
         return "messages/new";
+    }
+
+    @GetMapping("/delete/{notificationId}")
+    public String deleteFavourites(@PathVariable long notificationId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDto user = userService.getUserByPhone(auth.getName());
+        messageService.deleteNotification(notificationId, user.getId());
+        return "redirect:/msg";
     }
 
 }

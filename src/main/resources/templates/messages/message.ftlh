@@ -37,7 +37,7 @@
                     ${item.notificationText}
                     <br>
                     ${item.notificationDate}
-                    <a href="msg/">
+                    <a href="msg/delete/${item.id}">
                         <span class="delete-icon" style="color: black;"><i class="fas fa-trash-alt"></i></span>
                     </a>
                 </div>
