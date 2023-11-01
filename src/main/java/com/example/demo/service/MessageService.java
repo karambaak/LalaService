@@ -314,5 +314,10 @@ public class MessageService {
     public void deleteNotification(long notificationId, long userId) {
         notificationRepository.deleteNotificationByIdAndUserId(notificationId, userId);
     }
+
+    @Transactional
+    public void deleteMessage(long messageId, long userId) {
+
+    }
 }
 

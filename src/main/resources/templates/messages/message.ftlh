@@ -19,6 +19,7 @@
                         <p class="ms-auto">
                             <#if (item.lastMessageDateTime)??>${item.lastMessageDateTime}</#if></p>
                     </div>
+                        <span  class="delete-icon" style="color: black;"><i style="margin-left: 20px" class="fas fa-trash-alt"></i></span>
                 </a>
             </#list>
         </#if>
