@@ -2,6 +2,7 @@ package com.example.demo.controller.impl;
 
 import com.example.demo.controller.AuthController;
 import com.example.demo.dto.UserDto;
+import com.example.demo.service.GeolocationService;
 import com.example.demo.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -19,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class AuthControllerImpl implements AuthController {
     private final UserService userService;
+    private final GeolocationService geolocationService;
 
     @GetMapping("/register")
     public String register(Model model) {
         model.addAttribute("userDto", new UserDto());
         model.addAttribute("roles", userService.getRoles());
+        model.addAttribute("countries", geolocationService.getCountries());
         return "auth/register";
     }
 
@@ -43,8 +46,8 @@ public class AuthControllerImpl implements AuthController {
 
     @GetMapping("/oauth_2")
     public String pickRole(Model model) {
-
         model.addAttribute("roles", userService.getRoles());
+        model.addAttribute("countries", geolocationService.getCountries());
         return "auth/google_user_role";
     }
 

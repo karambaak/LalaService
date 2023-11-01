@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,7 +63,7 @@ public class FavouriteService {
                 e -> FavoritesDto.builder()
                         .userId(userId)
                         .companyName(e.getSpecialist().getCompanyName())
-                        .city(e.getSpecialist().getGeolocation().getCity())
+                        .city(userRepository.findById(userId).orElseThrow(NoSuchElementException::new).getGeolocation().getCity())
                         .resumes(resumeService.getResumesByUserId(userId))
                         .specilaitsId(e.getSpecialist().getId())
                         .build()

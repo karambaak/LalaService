@@ -77,6 +77,9 @@ public class User implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "theme_id")
     private Theme theme;
+    @ManyToOne
+    @JoinColumn(name = "geolocation_id")
+    private Geolocation geolocation;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -91,6 +94,7 @@ public class User implements UserDetails {
     public String getUsername() {
         return phoneNumber;
     }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

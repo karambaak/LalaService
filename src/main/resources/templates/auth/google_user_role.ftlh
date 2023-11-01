@@ -9,19 +9,46 @@
                             <h1 class="fs-4 card-title fw-bold mb-4">Зарегистрироваться</h1>
                             <form method="post" class="needs-validation" action="/auth/oauth_2" >
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-                                <div class="mb-3">
-                                    <label class="label-text"
-                                           for="role">Выберите роль</label>
+                                <div class="">
+                                    <label class="label-text" for="role" style="display: none">Выберите кто Вы:</label>
                                     <br>
                                     <select id="role" class="form-select" name="role" required>
-                                        <#if roles??>
-                                            <option value="" disabled
-                                                    selected>Выберите роль</option>
-                                            <#list roles as role>
-                                                <option value="${role}">${role}</option>
-                                            </#list>
-                                        </#if>
+                                        <option value="" disabled selected>Выберите кто Вы:</option>
+                                        <#list roles as role>
+                                            <option value="${role}">
+                                                <#if role == 'ROLE_SPECIALIST'>
+                                                    я специалист
+                                                <#else>
+                                                    я ищу специалиста
+                                                </#if>
+                                            </option>
+                                        </#list>
                                     </select>
+                                </div>
+
+                                <div class="mb-3" id="countries">
+                                    <#assign val = -1>
+                                    <#if countries??>
+                                        <select name="country" id="" class="form-select" >
+                                            <#list countries as item>
+                                                <option value="${item.country}">${item.country}
+                                                    <#assign val = item_index>
+                                                </option>
+                                            </#list>
+                                        </select>
+                                    </#if>
+
+                                </div>
+                                <div class=" mb-3" id="cities">
+                                    <#if countries??>
+                                        <select name="city" class="form-select" >
+                                            <#if (val > -1)>
+                                                <#list countries[val].cities as city>
+                                                    <option value="${city}">${city}</option>
+                                                </#list>
+                                            </#if>
+                                        </select>
+                                    </#if>
                                 </div>
                                 <button type="submit" class="btn tab-item"
                                         style="padding-left: 50px; padding-right: 50px; margin-bottom: -20px;">
