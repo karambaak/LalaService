@@ -28,6 +28,11 @@ public class SpecialistService {
         User user = (User) auth.getPrincipal();
         return makeDto(repository.findByUser_Id(user.getId()).orElseThrow(() -> new NoSuchElementException("Specialist not found")));
     }
+    public long getSpecialistIdByUserId(long userId){
+        Specialist specialist=repository.findByUser_Id(userId).orElseThrow(() -> new NoSuchElementException("Specialist not found"));
+        return specialist.getId();
+    }
+
 
     private SpecialistDto makeDto(Specialist specialist){
         return SpecialistDto.builder()
