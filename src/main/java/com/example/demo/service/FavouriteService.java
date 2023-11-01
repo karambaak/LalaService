@@ -56,17 +56,18 @@ public class FavouriteService {
         }
     }
 
-    public List<FavoritesDto> getFavouritesByUserId(long userId) {
+
+    public List<FavoritesDto> getFavourites(long userId) {
         List<Favourite> favourites = favouriteRepository.findFavouriteByUserId(userId);
-        return favourites.stream().map(
-                e -> FavoritesDto.builder()
-                        .userId(userId)
+        return favourites.stream()
+                .map(e -> FavoritesDto.builder()
+                        .userId(e.getUser().getId())
+                        .specilaitsId(e.getSpecialist().getId())
                         .companyName(e.getSpecialist().getCompanyName())
                         .city(e.getSpecialist().getGeolocation().getCity())
-                        .resumes(resumeService.getResumesByUserId(userId))
-                        .specilaitsId(e.getSpecialist().getId())
                         .build()
-        ).collect(Collectors.toList());
+                ).collect(Collectors.toList());
+
     }
 
 

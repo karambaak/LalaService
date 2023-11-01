@@ -6,6 +6,7 @@ import com.example.demo.dto.NotificationDto;
 import com.example.demo.dto.ResponseDto;
 import com.example.demo.entities.*;
 import com.example.demo.repository.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -287,26 +288,31 @@ public class MessageService {
         if (sender != null) {
             User receiver = null;
             try {
-               Long id = Long.parseLong(messageDto.getViewer());
-               var user = userRepository.findById(id);
-               if(!user.isEmpty()) receiver = user.get();
+                Long id = Long.parseLong(messageDto.getViewer());
+                var user = userRepository.findById(id);
+                if (!user.isEmpty()) receiver = user.get();
             } catch (NumberFormatException e) {
                 var user = userRepository.findAllByUserNameContainingIgnoreCase(messageDto.getViewer());
-                if(user.size() == 1) {
+                if (user.size() == 1) {
                     receiver = user.get(0);
                 } else {
                     return HttpStatus.NOT_FOUND;
                 }
             }
             messageRepository.save(Message.builder()
-                            .sender(sender)
-                            .receiver(receiver)
-                            .messageText(messageDto.getResponse())
-                            .dateTime(LocalDateTime.now())
+                    .sender(sender)
+                    .receiver(receiver)
+                    .messageText(messageDto.getResponse())
+                    .dateTime(LocalDateTime.now())
                     .build());
             return HttpStatus.OK;
         }
         return HttpStatus.NOT_FOUND;
+    }
+
+    @Transactional
+    public void deleteNotification(long notificationId, long userId) {
+        notificationRepository.deleteNotificationByIdAndUserId(notificationId, userId);
     }
 }
 
