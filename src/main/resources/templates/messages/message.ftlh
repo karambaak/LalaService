@@ -9,18 +9,18 @@
     <div id="Messages" class="tabcontent">
         <h3 class="my-3">Сообщения</h3>
         <#if messages??>
-        <#list messages as item>
-        <a class="message-card mb-3" href="/msg/${item.id}">
-            <div class="photo mx-4">
-                <img src="${item.senderPhoto}" alt="user photo">
-            </div>
-            <div class="text">
-                <b> ${item.senderName} </b> <#if (item.lastMessageText)??>${item.lastMessageText}</#if>
-                <p class="ms-auto">
-                    <#if (item.lastMessageDateTime)??>${item.lastMessageDateTime}</#if></p>
-            </div>
-        </a>
-        </#list>
+            <#list messages as item>
+                <a class="message-card mb-3" href="/msg/${item.id}">
+                    <div class="photo mx-4">
+                        <img src="${item.senderPhoto}" alt="user photo">
+                    </div>
+                    <div class="text">
+                        <b> ${item.senderName} </b> <#if (item.lastMessageText)??>${item.lastMessageText}</#if>
+                        <p class="ms-auto">
+                            <#if (item.lastMessageDateTime)??>${item.lastMessageDateTime}</#if></p>
+                    </div>
+                </a>
+            </#list>
         </#if>
 
 
@@ -33,11 +33,15 @@
         <h3>Уведомления</h3>
         <#if notifications??>
             <#list notifications as item>
-            <div class="notification-card mb-4" onclick="toggleCardExpansion(this)">
-                ${item.notificationText}
-                <br>
-                ${item.notificationDate}
-            </div>
+                <div class="notification-card mb-4" onclick="toggleCardExpansion(this)">
+                    ${item.notificationText}
+                    <br>
+                    ${item.notificationDate}
+                    <a href="msg/">
+                        <span class="delete-icon" style="color: black;"><i class="fas fa-trash-alt"></i></span>
+                    </a>
+                </div>
+
             </#list>
         </#if>
 
@@ -319,17 +323,17 @@
 
             const messageCards = document.querySelectorAll('.message-card');
 
-            messageCards.forEach(function(card) {
+            messageCards.forEach(function (card) {
                 const href = card.getAttribute('href');
                 const msgId = href.split('/').pop();
 
                 if (msgId.startsWith('response-')) {
-                    card.addEventListener('click', function(event) {
+                    card.addEventListener('click', function (event) {
                         event.preventDefault();
                         window.location.href = `/stand/show/` + msgId;
                     });
                 } else {
-                    card.addEventListener('click', function(event) {
+                    card.addEventListener('click', function (event) {
                         event.preventDefault();
                         window.location.href = `/msg/` + msgId;
                     });
