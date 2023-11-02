@@ -34,22 +34,24 @@ public class ProfileControllerImpl implements ProfileController {
     @Override
     public String profile(Authentication auth, Model model) {
         UserDto currentUser = userService.getUserByAuthentication(auth);
-        Long specialistId = specialistRepository.findByUser_Id(currentUser.getId()).orElseThrow().getId();
+        Long specialistId = null;
 
         if (currentUser.getRole().equalsIgnoreCase("ROLE_SPECIALIST")){
+            specialistId = specialistRepository.findByUser_Id(currentUser.getId()).get().getId();
             model.addAttribute("resumes", resumeService.getResumesByUserId(currentUser.getId()));
             model.addAttribute("rating", ratingService.getSpecialistRatingById(currentUser.getId()));
-
+            String qrCodeText = "http://localhost:8089//favorites/add/" + specialistId;
+            ByteArrayOutputStream qrCodeStream = QRCode.from(qrCodeText).stream();
+            byte[] qrCodeBytes = qrCodeStream.toByteArray();
+            String qrCodeBase64 = Base64.getEncoder().encodeToString(qrCodeBytes);
+            model.addAttribute("qrCodeBase64", qrCodeBase64);
         }
         if (currentUser.getRole().equalsIgnoreCase("ROLE_CUSTOMER")) {
             model.addAttribute("stands", postService.getCustomerPostDtos(currentUser.getId()));
         }
-        String qrCodeText = "http://localhost:8089//favorites/add/" + specialistId;
-        ByteArrayOutputStream qrCodeStream = QRCode.from(qrCodeText).stream();
-        byte[] qrCodeBytes = qrCodeStream.toByteArray();
-        String qrCodeBase64 = Base64.getEncoder().encodeToString(qrCodeBytes);
+
         model.addAttribute("user", currentUser);
-        model.addAttribute("qrCodeBase64", qrCodeBase64);
+
         return "users/profile";
     }
 
