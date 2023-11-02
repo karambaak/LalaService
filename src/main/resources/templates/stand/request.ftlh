@@ -1,12 +1,13 @@
 <#import '../layout.ftlh' as main>
 <@main.layout>
-    <header>
+    <header xmlns="http://www.w3.org/1999/html">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
               crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
                 crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="/static/css/profile.css">
     </header>
     <div class="padding-div">
         <div class="category-header">
@@ -45,57 +46,129 @@
                 Данный запрос больше не актуален.
             </#if>
         </div>
+        <div>
+            <div class="tabs">
+                <button class="tab-item" id="resume-tab">Посмотреть отклики</button>
+                <button class="tab-item" id="portfolio-tab">Выбрать отклик</button>
+            </div>
 
-        <#if conversations??>
-            <#list conversations as item>
-                <#assign varId = item.conversationId>
-                <p>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseExample-${varId}" aria-expanded="false"
-                            aria-controls="collapseExample-${varId}">
-                        Отклик ${item_index + 1}
-                    </button>
-                </p>
-                <div class="collapse" id="collapseExample-${varId}">
-                    <div class="card card-body mb-5">
-                        <#if (item.messages)??>
-                            <#list (item.messages) as msg>
-                                <#if msg.viewer == 'author'>
-                                    <div class="message ms-auto">${msg.response} <br> ${msg.dateTime}</div>
-                                <#else>
-                                    <div class="incoming-msg">${msg.response} <br> ${msg.dateTime}</div>
-                                </#if>
+            <div class="tab-content bottom-margin" id="resume-content">
+                <div class="resume-list">
+                    <#if conversations??>
+                        <#if conversations?has_content>
+                            <#list conversations as item>
+                                <#assign varId = item.conversationId>
+                                <p>
+                                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseExample-${varId}" aria-expanded="false"
+                                            aria-controls="collapseExample-${varId}">
+                                        Отклик ${item_index + 1}
+                                    </button>
+                                </p>
+                                <div class="collapse" id="collapseExample-${varId}">
+                                    <div class="card card-body mb-5">
+                                        <#if (item.messages)??>
+                                            <#list (item.messages) as msg>
+                                                <#if msg.viewer == 'author'>
+                                                    <div class="message ms-auto">${msg.response} <br> ${msg.dateTime}
+                                                    </div>
+                                                <#else>
+                                                    <div class="incoming-msg">${msg.response} <br> ${msg.dateTime}</div>
+                                                </#if>
+                                            </#list>
+                                            <div class="sent-messages d-flex flex-column align-items-end me-3 my-3">
+                                                <!-- Messages will be displayed here -->
+                                            </div>
+
+                                            <div class="message-container">
+                                                <form method="post" action="/stand/response/${post.id}"
+                                                      id="message-form" class="d-flex flex-column align-items-end me-3">
+
+                                                    <input type="text" id="message-text" name="response"
+                                                           class="msg-input" autofocus
+                                                           required>
+                                                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                                                           value="${(_csrf.token)!'--no-token--'}"/>
+                                                    <input type="hidden" name="viewer" value="${item.conversationId}">
+                                                    <input type="hidden" name="formIdentifier"
+                                                           value="${item.conversationId}">
+
+                                                    <button type="submit" class="respond-button">Отправить</button>
+                                                </form>
+                                            </div>
+                                        </#if>
+                                    </div>
+                                </div>
                             </#list>
-                            <div class="sent-messages d-flex flex-column align-items-end me-3 my-3">
-                                <!-- Messages will be displayed here -->
-                            </div>
-
-                            <div class="message-container">
-                                <form method="post" action="/stand/response/${post.id}"
-                                      id="message-form" class="d-flex flex-column align-items-end me-3">
-
-                                    <input type="text" id="message-text" name="response" class="msg-input" autofocus
-                                           required>
-                                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                                           value="${(_csrf.token)!'--no-token--'}"/>
-                                    <input type="hidden" name="viewer" value="${item.conversationId}">
-                                    <input type="hidden" name="formIdentifier" value="${item.conversationId}">
-
-                                    <button type="submit" class="respond-button">Отправить</button>
-                                </form>
-                            </div>
+                        <#else>
+                            <p>На данный запрос еще никто не откликнулся.</p>
                         </#if>
-                    </div>
+                    </#if>
                 </div>
+            </div>
 
-            </#list>
-        </#if>
+            <div class="tab-content bottom-margin" id="portfolio-content">
+                <div class="portfolio-list">
+                    <#if conversations??>
+                        <#if conversations?has_content>
+                            <form action="" method="post" class="text-center p-2">
+                                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                                       value="${(_csrf.token)!'--no-token--'}"/>
+                                <label for="applicantSelect" style="display: none">Выбрать специалиста и удалить
+                                    запрос:</label>
+                                <br>
+                                <select id="applicantSelect" name="conversationId" class="form-select" required>
+                                    <#list conversations as c>
+                                        <option value="${c.conversationId}">Отклик ${c_index + 1}</option>
+                                    </#list>
+                                </select>
+                                <button type="submit" class="btn select-button"> Выбрать</button>
+                            </form>
+                            <p>Когда Вы нажмете "выбрать", данный запрос и все
+                                сообщения, связанные с данным запросом, будут удалены. Специалисты получат
+                                уведомления.</p>
+
+                        <#else>
+                            <p>На данный запрос еще никто не откликнулся.</p>
+                        </#if>
+                    </#if>
+                </div>
+            </div>
+        </div>
 
 
     </div>
     <style>
+        .bottom-margin {
+            margin-bottom: 20px;
+            padding: 30px;
+        }
+
         .padding-div {
             padding: 30px;
+        }
+
+        .select-button {
+            border: 2px solid #2552e7;
+            border-radius: 5px;
+            color: #2552e7;
+            padding: 8px 16px;
+            margin: 20px 0;
+        }
+        .select-button:hover{
+            background-color: #2552e7;
+            color: #fff;
+        }
+
+        .form-select {
+            border: 2px solid #2552e7;
+            width: 60%;
+            border-radius: 5px;
+            height: 37px;
+            background-color: #ffffff;
+            margin-left: auto;
+            margin-right: auto;
+
         }
 
         .category-card span {
@@ -204,6 +277,8 @@
             margin-right: auto !important;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/static/js/profile.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('form').forEach(function (form) {
@@ -243,6 +318,7 @@
                 });
             });
         });
+
         function getDateTime() {
             const now = new Date();
             const date = ("0" + now.getDate()).slice(-2);
