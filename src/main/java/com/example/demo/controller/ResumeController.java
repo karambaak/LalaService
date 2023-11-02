@@ -21,4 +21,7 @@ public interface ResumeController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.SEE_OTHER)
     String createResume(ResumeDto dto) throws OnlyOneResumeInSameCategoryException;
+
+    @GetMapping("/{resumeId}")
+    String getResumeById(@PathVariable Long resumeId, Model model);
 }

@@ -13,7 +13,7 @@
             <#if resumes?has_content>
                 <#list resumes as resume>
                     <div class="resume">
-                        <a href="/resumes/${resume.id}" class="resume-link">
+                        <a href="/resume/${resume.id}" class="resume-link">
                             <p class="resume-name">Resume name</p>
                             <p class="resume-experience">Опыт работы: 4 года</p>
 

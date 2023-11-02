@@ -40,4 +40,14 @@ public class ResumeControllerImpl implements ResumeController {
         service.saveResume(dto);
         return "redirect:/profile";
     }
+
+    @Override
+    public String getResumeById(Long resumeId, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!auth.getName().equals("anonymousUser")) {
+            model.addAttribute("noUser","noUser");
+        }
+        model.addAttribute("resume", service.getResumeById(resumeId));
+        return "resumes/more";
+    }
 }
