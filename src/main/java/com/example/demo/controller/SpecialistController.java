@@ -20,7 +20,7 @@ public class SpecialistController {
 
     @GetMapping("/{specialistId}")
     public String viewSpecialistProfile(@PathVariable Long specialistId, Model model) {
-        model.addAttribute("resumes", resumeService.getResumesByUserId(specialistId));
+        model.addAttribute("resumes", resumeService.getResumesBySpecialistId(specialistId));
         model.addAttribute("user", userService.getSpecialistUserById(specialistId));
         model.addAttribute("rating", ratingService.getSpecialistRatingById(specialistId));
 

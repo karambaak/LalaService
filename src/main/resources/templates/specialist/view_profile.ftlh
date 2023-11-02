@@ -1,6 +1,6 @@
 <#import "../layout.ftlh" as main>
 <@main.layout>
-<link rel="stylesheet" href="../../static/css/profile.css">
+<link rel="stylesheet" href="/static/css/profile.css">
 <div id="content" class="content">
     <div class="col">
         <div id="menu-toggle" class="menu-toggle">
@@ -34,7 +34,7 @@
                     <p>${user.phoneNumber}</p>
                 </#if>
                 <#if user.city?has_content>
-                    <p>Ваш город: ${user.city}</p>
+                    <p>Город: ${user.city}</p>
                 </#if>
                 <#if rating?has_content>
                     <div class="rating">
@@ -74,7 +74,7 @@
                         </div>
                     </#list>
                 <#else>
-                    <p>У этого специалиста нету резюме</p>
+                    <p>У этого специалиста нет резюме</p>
                 </#if>
             </div>
         </div>
@@ -92,7 +92,7 @@
                         </div>
                     </#list>
                 <#else>
-                    <p>У этого специалиста нету портфолио</p>
+                    <p>У этого специалиста нет портфолио</p>
                 </#if>
             </div>
         </div>

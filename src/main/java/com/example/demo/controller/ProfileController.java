@@ -10,4 +10,5 @@ public interface ProfileController {
 
     @GetMapping("/profile")
     String profile(Authentication auth, Model model);
+
 }
