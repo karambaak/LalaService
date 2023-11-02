@@ -24,7 +24,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -111,15 +110,19 @@ public class ResumeService {
     }
 
     public List<ResumeDto> getResumesByUserId(Long userId) {
-        User user = userRepository.findById(userId).get();
         Specialist specialist = specialistRepository.findByUser_Id(userId).orElseThrow(
                 () -> new NoSuchElementException("Specialist not found")
         );
         List<Resume> resumes = resumeRepository.findAllBySpecialist_Id(specialist.getId());
 
-        return resumes.stream().map(this::makeDto).collect(Collectors.toList());
+        return resumes.stream().map(this::makeDto).toList();
     }
 
+    public List<ResumeDto> getResumesBySpecialistId(Long specialistId) {
+        List<Resume> resumes = resumeRepository.findAllBySpecialist_Id(specialistId);
+
+        return resumes.stream().map(this::makeDto).toList();
+    }
 
     public List<ResumeDto> getResumesSpecialistId(Long specialistId) {
         Specialist specialist = specialistRepository.findByUser_Id(specialistId).orElseThrow(
@@ -127,7 +130,7 @@ public class ResumeService {
         );
         List<Resume> resumes = resumeRepository.findAllBySpecialist_Id(specialist.getId());
 
-        return resumes.stream().map(this::makeDto).collect(Collectors.toList());
+        return resumes.stream().map(this::makeDto).toList();
     }
 
 }

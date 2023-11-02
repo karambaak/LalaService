@@ -21,7 +21,7 @@
                 <i class="fas fa-home"></i>
                 <!-- <span>Главный экран</span> -->
             </a>
-            <a href="#visit" class="tab" id="home">
+            <a href="/contact" class="tab" id="home">
                 <i class="fas fa-id-card"></i>
                 <!-- <span>Визитница</span> -->
             </a>

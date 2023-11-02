@@ -52,4 +52,5 @@ public class ProfileControllerImpl implements ProfileController {
         model.addAttribute("qrCodeBase64", qrCodeBase64);
         return "users/profile";
     }
+
 }

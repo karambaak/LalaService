@@ -72,6 +72,18 @@ public class FavouriteService {
                 ).collect(Collectors.toList());
 
     }
+    public List<FavoritesDto> getFavourites(long userId) {
+        List<Favourite> favourites = favouriteRepository.findFavouriteByUserId(userId);
+        return favourites.stream()
+                .map(e -> FavoritesDto.builder()
+                        .userId(e.getUser().getId())
+                        .specilaitsId(e.getSpecialist().getId())
+                        .companyName(e.getSpecialist().getCompanyName())
+                        .city(userRepository.findById(userId).get().getGeolocation().getCity())
+                        .build()
+                ).collect(Collectors.toList());
+
+    }
 
 
 }

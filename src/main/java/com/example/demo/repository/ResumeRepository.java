@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import com.example.demo.entities.Category;
 import com.example.demo.entities.Resume;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,4 +16,5 @@ public interface ResumeRepository extends JpaRepository<Resume,Integer> {
 
     List<Resume> findByCategoryId(Long categoryId);
 
+    List<Resume> findAllByCategory(Category category);
 }
