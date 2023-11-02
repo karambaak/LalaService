@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.FavoritesDto;
 import com.example.demo.dto.UserDto;
+import com.example.demo.entities.Favourite;
 import com.example.demo.service.FavouriteService;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,8 @@ public class FavouriteController {
     public String getFavourites(Authentication auth, Model model) {
         User authUser = (User) auth.getPrincipal();
         UserDto user = userService.getUserByPhone(authUser.getUsername());
-        List<FavoritesDto> favoritesDtoList = favouriteService.getFavouritesByUserId(user.getId());
-        model.addAttribute("favourites", favoritesDtoList);
+        List<FavoritesDto> lists=favouriteService.getFavourites(user.getId());
+        model.addAttribute("favourites", lists);
         return "favorites/favorites";
 
     }
