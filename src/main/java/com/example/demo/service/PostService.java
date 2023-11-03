@@ -27,6 +27,8 @@ public class PostService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private static final String AUTHOR = "author";
+    private static final String READER = "reader";
 
     public List<StandCategoryDto> getAll() {
         List<Post> list = postRepository.findAll();
@@ -369,6 +371,29 @@ public class PostService {
         }
         return list;
     }
+private String makeKeyword(Post post) {
+        return new StringBuilder().append(post.getTitle()).append(" (")
+                .append(post.getPublishedDate()).append(")").toString();
+}
+    @Transactional
+    public void selectSpecialist(String conversationId) {
+        List<Response> responses = responseRepository.findAllByConversationId(conversationId);
+        Post post = responses.get(0).getPost();
+        String keyword = makeKeyword(post);
+        String successText = String.format("Пользователь выбрал Ваш отклик, чтобы воспользоваться Вашими услугами. Если возникнут вопросы, Вы можете отправить сообщение %s в разделе 'Сообщения'.", post.getUser().getUserName());
+        String declineText = "К сожалению, пользователь не выбрал Ваш отклик. Данный запрос был удален из стенда:";
+
+        var user = userService.getUserFromSecurityContextHolder();
+        Long specialistId = Long.parseLong(extractStringAfterDash(conversationId));
+        var specialistSuccess = specialistRepository.findById(specialistId);
+        if (specialistSuccess.isPresent()) {
+            sendNotification(successText, specialistSuccess.get().getUser(), keyword);
+            responseRepository.deleteAllByConversationId(conversationId);
+        }
+
+        String userText = String.format("Вы выбрали отклик от специалиста %s. Если возникнут вопросы, Вы можете отправить сообщение %s в разделе 'Сообщения'.", specialistSuccess.get().getCompanyName(), specialistSuccess.get().getCompanyName());
+        sendNotification(userText, user, keyword);
+
 
     private String makeKeyword(Post post) {
         return new StringBuilder().append(post.getTitle()).append(" (")
@@ -405,7 +430,6 @@ public class PostService {
                 var specialistDecline = specialistRepository.findById(l);
                 sendNotification(declineText, specialistDecline.get().getUser(), keyword);
                 responseRepository.deleteAllByConversationId(conversationId);
-
             }
         }
         postRepository.delete(post);

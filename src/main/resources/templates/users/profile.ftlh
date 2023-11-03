@@ -56,6 +56,9 @@
                     </div>
                 </#if>
             </div>
+            <#if qrCodeBase64?has_content>
+                <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code" class="qrCode">
+            </#if>
         </div>
     </div>
 

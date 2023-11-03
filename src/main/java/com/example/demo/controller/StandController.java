@@ -110,4 +110,5 @@ public class StandController {
         postService.deletePost(postId);
         return "redirect:/profile";
     }
+
 }
