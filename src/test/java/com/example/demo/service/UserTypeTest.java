@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.repository.GeolocationRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.SpecialistRepository;
 import com.example.demo.repository.UserRepository;
@@ -17,8 +18,9 @@ class UserTypeTest {
 
     PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
     AuthUserDetailsService authUserDetailsService = mock(AuthUserDetailsService.class);
+    GeolocationRepository geolocationRepository = mock(GeolocationRepository.class);
 
-    UserService userService = new UserService(userRepository, specialistRepository, roleRepository, passwordEncoder, authUserDetailsService);
+    UserService userService = new UserService(userRepository, specialistRepository, roleRepository, passwordEncoder, authUserDetailsService, geolocationRepository);
 
     @Test
     void insertRoleSpecialistShouldReturnUserTypeSpecialist() {
