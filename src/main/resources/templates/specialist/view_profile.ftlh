@@ -49,6 +49,7 @@
             </div>
         </div>
     </div>
+    <a href="/rating/new/${user.id}">Оставить отзыв</a>
 
     <div>
         <div class="tabs">
