@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.*;
 import com.example.demo.entities.*;
 import com.example.demo.repository.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,8 +25,8 @@ public class PostService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-
-
+private static final String AUTHOR = "author";
+private static final String READER = "reader";
 
     public List<StandCategoryDto> getAll() {
         List<Post> list = postRepository.findAll();
@@ -168,14 +168,20 @@ public class PostService {
         }
     }
 
+    private void sendNotification(String text, User user, String searchWord) {
+        List<Notification> notifications = notificationRepository.findByNotificationTextContaining(searchWord);
+        deleteUserNotification(user, notifications);
+        notificationRepository.save(Notification.builder().user(user)
+                .notificationText(new StringBuilder().append(text).append(" ").append(searchWord).append(".").toString())
+                .notificationDate(LocalDateTime.now()).build());
+    }
+
     public HttpStatus processResponse(Long postId, MessageDto response) {
         var post = postRepository.findById(postId);
         if (post.isEmpty()) return HttpStatus.NOT_FOUND;
         User user = userService.getUserFromSecurityContextHolder();
-        String keyword = new StringBuilder().append(post.get().getTitle()).append(" (")
-                .append(post.get().getPublishedDate()).append(")").toString();
+        String keyword = makeKeyword(post.get());
         if (user != null) {
-            List<Notification> notifications = notificationRepository.findByNotificationTextContaining(keyword);
             String conversationId = response.getViewer();
             var specialist = specialistRepository.findByUser(user);
 
@@ -188,8 +194,6 @@ public class PostService {
                 var userFromSpecialist = userRepository.findById(s.get().getUser().getId());
                 if (userFromSpecialist.isPresent()) u = userFromSpecialist.get();
 
-                deleteUserNotification(u, notifications);
-
                 responseRepository.save(Response.builder()
                         .post(post.get())
                         .user(user)
@@ -197,12 +201,10 @@ public class PostService {
                         .response(response.getResponse())
                         .dateTime(LocalDateTime.now())
                         .build());
-                notificationRepository.save(Notification.builder().user(u)
-                        .notificationText(String.format("Вы получили новое сообщение от автора запроса: %s (%s).", post.get().getTitle(), post.get().getPublishedDate()))
-                        .notificationDate(LocalDateTime.now()).build());
+                sendNotification("Вы получили новое сообщение от автора запроса:", u, keyword);
+
             } else {
                 User u = post.get().getUser();
-                deleteUserNotification(u, notifications);
 
                 responseRepository.save(Response.builder()
                         .post(post.get())
@@ -211,10 +213,7 @@ public class PostService {
                         .response(response.getResponse())
                         .dateTime(LocalDateTime.now())
                         .build());
-                notificationRepository.save(Notification.builder().user(u)
-                        .notificationText(String.format("Вы получили новое сообщение в ответ на запрос: %s (%s).", post.get().getTitle(), post.get().getPublishedDate()))
-                        .notificationDate(LocalDateTime.now()).build());
-
+                sendNotification("Вы получили новое сообщение в ответ на запрос:", u, keyword);
             }
             return HttpStatus.OK;
         }
@@ -229,6 +228,7 @@ public class PostService {
             return "";
         }
     }
+
     public String extractStringBeforeDash(String input) {
         int index = input.indexOf("-");
         if (index != -1) {
@@ -260,7 +260,7 @@ public class PostService {
         List<ResponseDto> list = new ArrayList<>();
         for (Response r :
                 conversationList) {
-            String s = (r.getSpecialist() == null) ? "reader" : "author";
+            String s = (r.getSpecialist() == null) ? READER : AUTHOR;
             list.add(ResponseDto.builder()
                     .response(r.getResponse())
                     .viewer(s)
@@ -289,7 +289,7 @@ public class PostService {
             for (Map.Entry<String, List<ResponseDto>> entry : conversationDtoList.entrySet()) {
                 String key = entry.getKey();
                 List<ResponseDto> value = entry.getValue();
-                String s = (r.getSpecialist() == null) ? "author" : "reader";
+                String s = (r.getSpecialist() == null) ? AUTHOR : READER;
 
                 if (r.getConversationId().equalsIgnoreCase(key)) {
                     value.add(ResponseDto.builder()
@@ -312,10 +312,9 @@ public class PostService {
 
     public void createNewPost(PostInputDto dto) {
         User user = userService.getUserFromSecurityContextHolder();
-        Category categoryOfStand = categoryRepository.findById(dto.getCategoryId()).orElseThrow(() -> new NoSuchElementException("Category not found"));
         if (user != null) {
             var c = categoryRepository.findById(dto.getCategoryId());
-            c.ifPresent(category -> postRepository.save(Post.builder()
+            c.ifPresent(category -> postRepository.saveAndFlush(Post.builder()
                     .user(user)
                     .category(category)
                     .title(dto.getTitle())
@@ -323,15 +322,22 @@ public class PostService {
                     .workRequiredTime(dto.getWorkRequiredTime())
                     .publishedDate(LocalDateTime.now())
                     .build()));
+
+            var newPost = postRepository.findByTitleAndWorkRequiredTime(dto.getTitle(), dto.getWorkRequiredTime());
+            if (newPost.isPresent()) {
+                String keyword = makeKeyword(newPost.get());
+                String text = new StringBuilder().append("Создана новая запись на стенде в категории ").append(c.get().getCategoryName()).append(":").toString();
+                List<SubscriptionStand> subscriptionsOnCategory = subscriptionStandRepository.findByCategory_Id(dto.getCategoryId());
+                for (SubscriptionStand s : subscriptionsOnCategory) {
+                    sendNotification(text, s.getSpecialist().getUser(), keyword);
+                }
+            }
         }
-        /// TODO: 31.10.2023 Правильная ли логика по добавлению уведомления для Usera????
-        List<SubscriptionStand> subscriptionsOnCategory = subscriptionStandRepository.findByCategory_Id(dto.getCategoryId());
-        for (SubscriptionStand s : subscriptionsOnCategory){
-            notificationRepository.save(makeNotificationToSpecialistBySubscriptionOnCategory(s.getSpecialist(), categoryOfStand));
-        }
+
+
     }
 
-    private Notification makeNotificationToSpecialistBySubscriptionOnCategory(Specialist specialist, Category category){
+    private Notification makeNotificationToSpecialistBySubscriptionOnCategory(Specialist specialist, Category category) {
         return Notification.builder()
                 .user(specialist.getUser())
                 .notificationText("Создана новая запись на стенде в категории: " + category.getCategoryName())
@@ -346,7 +352,6 @@ public class PostService {
     }
 
     public Long getPostByConversationId(String conversationId) {
-        var response = responseRepository.findAllByConversationId(conversationId);
         return Long.parseLong(extractStringBeforeDash(conversationId));
     }
 
@@ -354,7 +359,7 @@ public class PostService {
         List<Response> responses = responseRepository.findAllByConversationId(conversationId);
         List<ResponseDto> list = new ArrayList<>();
         for (Response r : responses) {
-            String s = (r.getSpecialist() == null) ? "author" : "reader";
+            String s = (r.getSpecialist() == null) ? AUTHOR : READER;
             list.add(ResponseDto.builder()
                     .response(r.getResponse())
                     .viewer(s)
@@ -364,5 +369,44 @@ public class PostService {
         }
         return list;
     }
+private String makeKeyword(Post post) {
+        return new StringBuilder().append(post.getTitle()).append(" (")
+                .append(post.getPublishedDate()).append(")").toString();
+}
+    @Transactional
+    public void selectSpecialist(String conversationId) {
+        List<Response> responses = responseRepository.findAllByConversationId(conversationId);
+        Post post = responses.get(0).getPost();
+        String keyword = makeKeyword(post);
+        String successText = String.format("Пользователь выбрал Ваш отклик, чтобы воспользоваться Вашими услугами. Если возникнут вопросы, Вы можете отправить сообщение %s в разделе 'Сообщения'.", post.getUser().getUserName());
+        String declineText = "К сожалению, пользователь не выбрал Ваш отклик. Данный запрос был удален из стенда:";
 
+        var user = userService.getUserFromSecurityContextHolder();
+        Long specialistId = Long.parseLong(extractStringAfterDash(conversationId));
+        var specialistSuccess = specialistRepository.findById(specialistId);
+        if (specialistSuccess.isPresent()) {
+            sendNotification(successText, specialistSuccess.get().getUser(), keyword);
+            responseRepository.deleteAllByConversationId(conversationId);
+        }
+
+        String userText = String.format("Вы выбрали отклик от специалиста %s. Если возникнут вопросы, Вы можете отправить сообщение %s в разделе 'Сообщения'.", specialistSuccess.get().getCompanyName(), specialistSuccess.get().getCompanyName());
+        sendNotification(userText, user, keyword);
+
+        List<Response> responseList = responseRepository.findAllByPostId(post.getId());
+        Set<Long> specialistIds = new HashSet<>();
+        for (Response r : responseList) {
+            if(r.getSpecialist() != null) specialistIds.add(r.getSpecialist().getId());
+        }
+        specialistIds.remove(specialistId);
+        if(!specialistIds.isEmpty()) {
+            for (Long l :specialistIds) {
+                var specialistDecline = specialistRepository.findById(l);
+                    sendNotification(declineText, specialistDecline.get().getUser(), keyword);
+                    responseRepository.deleteAllByConversationId(conversationId);
+
+            }
+        }
+        postRepository.delete(post);
+
+    }
 }

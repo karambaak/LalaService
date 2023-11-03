@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/stand")
 @RequiredArgsConstructor
 public class StandController {
+    private static final String POSTS = "posts";
+    private static final String VIEWER = "viewer";
     private final PostService postService;
     private final UserService userService;
     private final CategoryService categoryService;
-    private static final String POSTS = "posts";
-    private static final String VIEWER = "viewer";
 
     @GetMapping()
     public String getStand(Model model) {
@@ -93,10 +93,16 @@ public class StandController {
     public String customerRequestDetail(@PathVariable String conversationId, Model model) {
         model.addAttribute("conversationId", conversationId);
         Long postId = postService.getPostByConversationId(conversationId);
-        if(postId != null) {
+        if (postId != null) {
             model.addAttribute("post", postService.getPostDto(postId));
         }
         model.addAttribute("pastMessages", postService.getCustomerMsgByConversation(conversationId));
         return "stand/request_detail";
+    }
+
+    @PostMapping("/select")
+    public String select(@RequestParam(name = "conversationId") String conversationId) {
+        postService.selectSpecialist(conversationId);
+        return "redirect:/stand";
     }
 }

@@ -111,7 +111,7 @@
                 <div class="portfolio-list">
                     <#if conversations??>
                         <#if conversations?has_content>
-                            <form action="" method="post" class="text-center p-2">
+                            <form action="/stand/select" method="post" class="text-center p-2">
                                 <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                        value="${(_csrf.token)!'--no-token--'}"/>
                                 <label for="applicantSelect" style="display: none">Выбрать специалиста и удалить
@@ -281,41 +281,41 @@
     <script src="/static/js/profile.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('form').forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    event.preventDefault();
+            document.querySelectorAll('#message-form').forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        event.preventDefault();
 
-                    var formData = new FormData(this);
-                    var formIdentifier = formData.get('formIdentifier');
-                    const viewer = formData.get('viewer');
-                    const response = formData.get('response');
-                    const csrfToken = document.querySelector('input[name="_csrf"]').value;
-                    const formBody = {
-                        "response": response,
-                        "viewer": viewer
-                    }
-                    const sentMessages = this.closest('.card-body').querySelector('.sent-messages')
+                        var formData = new FormData(this);
+                        var formIdentifier = formData.get('formIdentifier');
+                        const viewer = formData.get('viewer');
+                        const response = formData.get('response');
+                        const csrfToken = document.querySelector('input[name="_csrf"]').value;
+                        const formBody = {
+                            "response": response,
+                            "viewer": viewer
+                        }
+                        const sentMessages = this.closest('.card-body').querySelector('.sent-messages')
 
-                    fetch(this.action, {
-                        method: this.method,
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken
-                        },
-                        body: JSON.stringify(formBody)
-                    })
-                        .then(data => {
-                            const messageElement = document.createElement('div');
-                            messageElement.classList.add('message');
-                            messageElement.textContent = response + '\n' + getDateTime();
-                            sentMessages.appendChild(messageElement);
-                            form.reset();
+                        fetch(this.action, {
+                            method: this.method,
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken
+                            },
+                            body: JSON.stringify(formBody)
                         })
+                            .then(data => {
+                                const messageElement = document.createElement('div');
+                                messageElement.classList.add('message');
+                                messageElement.textContent = response + '\n' + getDateTime();
+                                sentMessages.appendChild(messageElement);
+                                form.reset();
+                            })
 
-                        .catch(function (error) {
-                            console.error('Error:', error);
-                        });
-                });
+                            .catch(function (error) {
+                                console.error('Error:', error);
+                            });
+                    });
             });
         });
 
