@@ -105,4 +105,10 @@ public class StandController {
         postService.selectSpecialist(conversationId);
         return "redirect:/stand";
     }
+    @GetMapping("/delete/{postId}")
+    public String deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId);
+        return "redirect:/profile";
+    }
+
 }

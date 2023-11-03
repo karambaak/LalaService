@@ -191,3 +191,38 @@
 .rating-number{
     margin-left: 5px;
 }
+
+.post {
+    position: relative;
+
+}
+
+.post-menu {
+    position: absolute;
+    display: inline-block;
+    vertical-align: middle;
+    top: 25px;
+    right: 20px;
+    z-index: 1;
+}
+
+.menu-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.dots {
+    font-size: 36px;
+    line-height: 1;
+    color: #ccc;
+    padding: 15px;
+
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    z-index: 2;
+}
