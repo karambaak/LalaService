@@ -87,7 +87,7 @@ public class ResumeService {
 
     public void deleteResume(long specialistId, long resumeId) {
         if (resumeRepository.findResumeBySpecialistIdAndId(specialistId, resumeId)) {
-            resumeRepository.deleteById((int) resumeId);
+            resumeRepository.deleteById(resumeId);
         } else {
             log.warn("Value does not exist or you do not have access to this value");
             throw new IllegalArgumentException("Value does not exist or you do not have access to this value");
@@ -133,4 +133,8 @@ public class ResumeService {
         return resumes.stream().map(this::makeDto).toList();
     }
 
+    public ResumeDto getResumeById(Long resumeId) {
+        Resume resume = resumeRepository.findById(resumeId).orElseThrow(() -> new NoSuchElementException("resume not found"));
+        return makeDto(resume);
+    }
 }

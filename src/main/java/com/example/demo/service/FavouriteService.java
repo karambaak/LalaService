@@ -57,18 +57,7 @@ public class FavouriteService {
         }
     }
 
-    public List<FavoritesDto> getFavouritesByUserId(long userId) {
-        List<Favourite> favourites = favouriteRepository.findFavouriteByUserId(userId);
-        return favourites.stream().map(
-                e -> FavoritesDto.builder()
-                        .userId(userId)
-                        .companyName(e.getSpecialist().getCompanyName())
-                        .city(userRepository.findById(userId).orElseThrow(NoSuchElementException::new).getGeolocation().getCity())
-                        .resumes(resumeService.getResumesByUserId(userId))
-                        .specilaitsId(e.getSpecialist().getId())
-                        .build()
-        ).collect(Collectors.toList());
-    }
+
     public List<FavoritesDto> getFavourites(long userId) {
         List<Favourite> favourites = favouriteRepository.findFavouriteByUserId(userId);
         return favourites.stream()
@@ -76,10 +65,11 @@ public class FavouriteService {
                         .userId(e.getUser().getId())
                         .specilaitsId(e.getSpecialist().getId())
                         .companyName(e.getSpecialist().getCompanyName())
-                        .city(userRepository.findById(userId).get().getGeolocation().getCity())
+                        .city(userRepository.findById(userId).orElseThrow(NoSuchElementException::new).getGeolocation().getCity())
+                        .resumes(resumeService.getResumesByUserId(userId))
+                        .specilaitsId(e.getSpecialist().getId())
                         .build()
                 ).collect(Collectors.toList());
-
     }
 
 
