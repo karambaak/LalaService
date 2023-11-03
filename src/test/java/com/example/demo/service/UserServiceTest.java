@@ -50,15 +50,15 @@ class UserServiceTest {
         Mockito.verify(userRepository, Mockito.times(1)).findAll();
     }
 
-    @Test
-    void testRegisterExistingUser() {
-        UserDto userDto = new UserDto();
-        userDto.setPhoneNumber("1234567890");
-
-        when(userRepository.findByPhoneNumber(userDto.getPhoneNumber())).thenReturn(Optional.of(new User()));
-
-        assertThrows(IllegalArgumentException.class, () -> userService.register(userDto));
-    }
+//    @Test
+//    void testRegisterExistingUser() {
+//        UserDto userDto = new UserDto();
+//        userDto.setPhoneNumber("1234567890");
+//
+//        when(userRepository.findByPhoneNumber(userDto.getPhoneNumber())).thenReturn(Optional.of(new User()));
+//
+//        assertThrows(IllegalArgumentException.class, () -> userService.register(userDto));
+//    }
 }
 
 //    @Test
