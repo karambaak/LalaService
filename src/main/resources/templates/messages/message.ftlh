@@ -238,6 +238,7 @@
             position: relative;
             height: auto;
             min-height: 80vh;
+            margin-bottom: 30px;
         }
 
         .message-card {

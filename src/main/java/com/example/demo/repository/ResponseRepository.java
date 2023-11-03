@@ -19,4 +19,5 @@ public interface ResponseRepository extends JpaRepository<Response, Long> {
 
     List<Response> findAllByUser(User user);
 
+    void deleteAllByConversationId(String conversationId);
 }
