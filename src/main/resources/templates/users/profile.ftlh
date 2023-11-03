@@ -1,6 +1,11 @@
 <#import "../layout.ftlh" as main>
 <@main.layout>
-<link rel="stylesheet" href="../../static/css/profile.css">
+<link rel="stylesheet" href="/static/css/profile.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+</script>
 <div id="content" class="content">
     <div class="col">
         <div id="menu-toggle" class="menu-toggle">
@@ -17,14 +22,14 @@
         <div class="profile-header row">
             <div class="profile-image-block col-4">
                 <#if user.photo?has_content>
-                    <img src="${user.photo}"
-                         class="round-image" alt>
+                <img src="${user.photo}"
+                     class="round-image" alt>
                 <#else>
-                    <img src="../../static/default.jpg" class="round-image" alt="default photo">
+                <img src="../../static/default.jpg" class="round-image" alt="default photo">
                 </#if>
-<#if qrCodeBase64??>
-    <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code">
-</#if>
+                <#if qrCodeBase64??>
+                <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code">
+                </#if>
 
             </div>
             <div class="personal-info col-6">
@@ -109,7 +114,7 @@
                             </div>
                         </#list>
                     <#else>
-                        <p>У вас еще нету созданных портфолио</p>
+                        <p>У вас еще нет созданных портфолио</p>
                     </#if>
                 </div>
             </div>
@@ -127,15 +132,27 @@
                         </a>
                     </div>
                     <#if stands??>
-                            <#list stands as stand>
-                                <div class="resume">
-                                    <a href="/stand/request/${stand.id}" class="resume-link">
-                                        <p class="resume-name">${stand.title}</p>
-                                        <p class="resume-category">Категория: ${stand.category}</p>
-                                        <p class="resume-date">Дата создания: ${stand.publishedDate}</p>
-                                    </a>
+                    <#list stands as stand>
+                    <div class="resume">
+                        <div class="post">
+                            <div class="post-menu">
+                                <button type="button" class="menu-button" data-bs-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
+                                <span class="dots"><i class="fas fa-ellipsis-v"></i>
+                                </span>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="/stand/delete/${stand.id}">Удалить</a>
                                 </div>
-                            </#list>
+                            </div>
+                            <a href="/stand/request/${stand.id}" class="resume-link">
+                                <p class="resume-name">${stand.title}</p>
+                                <p class="resume-category">Категория: ${stand.category}</p>
+                                <p class="resume-date">Дата создания: ${stand.publishedDate}</p>
+                            </a>
+                        </div>
+                    </div>
+                    </#list>
                     </#if>
                 </div>
             </div>

@@ -17,6 +17,8 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class PostService {
+    private static final String AUTHOR = "author";
+    private static final String READER = "reader";
     private final PostRepository postRepository;
     private final ResponseRepository responseRepository;
     private final SubscriptionStandRepository subscriptionStandRepository;
@@ -25,8 +27,6 @@ public class PostService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-private static final String AUTHOR = "author";
-private static final String READER = "reader";
 
     public List<StandCategoryDto> getAll() {
         List<Post> list = postRepository.findAll();
@@ -369,10 +369,12 @@ private static final String READER = "reader";
         }
         return list;
     }
-private String makeKeyword(Post post) {
+
+    private String makeKeyword(Post post) {
         return new StringBuilder().append(post.getTitle()).append(" (")
                 .append(post.getPublishedDate()).append(")").toString();
-}
+    }
+
     @Transactional
     public void selectSpecialist(String conversationId) {
         List<Response> responses = responseRepository.findAllByConversationId(conversationId);
@@ -395,18 +397,51 @@ private String makeKeyword(Post post) {
         List<Response> responseList = responseRepository.findAllByPostId(post.getId());
         Set<Long> specialistIds = new HashSet<>();
         for (Response r : responseList) {
-            if(r.getSpecialist() != null) specialistIds.add(r.getSpecialist().getId());
+            if (r.getSpecialist() != null) specialistIds.add(r.getSpecialist().getId());
         }
         specialistIds.remove(specialistId);
-        if(!specialistIds.isEmpty()) {
-            for (Long l :specialistIds) {
+        if (!specialistIds.isEmpty()) {
+            for (Long l : specialistIds) {
                 var specialistDecline = specialistRepository.findById(l);
-                    sendNotification(declineText, specialistDecline.get().getUser(), keyword);
-                    responseRepository.deleteAllByConversationId(conversationId);
+                sendNotification(declineText, specialistDecline.get().getUser(), keyword);
+                responseRepository.deleteAllByConversationId(conversationId);
 
             }
         }
         postRepository.delete(post);
 
+    }
+
+    @Transactional
+    public void deletePost(Long postId) {
+        var post = postRepository.findById(postId);
+        if (post.isPresent()) {
+            postRepository.deleteById(postId);
+        }
+        String keyword = makeKeyword(post.get());
+
+        List<Response> responses = responseRepository.findAllByPostId(postId);
+        if(responses.size() > 0) {
+            Set<Long> specialistIds = new HashSet<>();
+            for (Response r : responses) {
+                if (r.getSpecialist() != null) specialistIds.add(r.getSpecialist().getId());
+            }
+            String notificationText = "Пользователь удалил запрос, на который Вы откликнулись:";
+            for (Long l:
+                 specialistIds) {
+                for (Response r:
+                     responses) {
+                    if(l.equals(r.getSpecialist().getId())) {
+                        sendNotification(notificationText, r.getSpecialist().getUser(), keyword);
+                    }
+                }
+            }
+
+        }
+        List<Notification> notifications = notificationRepository.findByNotificationTextContaining(keyword);
+        for (Notification n:
+                notifications) {
+            notificationRepository.delete(n);
+        }
     }
 }
