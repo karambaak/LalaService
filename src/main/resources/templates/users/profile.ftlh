@@ -22,9 +22,9 @@
                 <#else>
                     <img src="../../static/default.jpg" class="round-image" alt="default photo">
                 </#if>
-<#if qrCodeBase64??>
-    <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code">
-</#if>
+                <#if qrCodeBase64??>
+                    <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code">
+                </#if>
 
             </div>
             <div class="personal-info col-6">
@@ -127,15 +127,15 @@
                         </a>
                     </div>
                     <#if stands??>
-                            <#list stands as stand>
-                                <div class="resume">
-                                    <a href="/stand/request/${stand.id}" class="resume-link">
-                                        <p class="resume-name">${stand.title}</p>
-                                        <p class="resume-category">Категория: ${stand.category}</p>
-                                        <p class="resume-date">Дата создания: ${stand.publishedDate}</p>
-                                    </a>
-                                </div>
-                            </#list>
+                        <#list stands as stand>
+                            <div class="resume">
+                                <a href="/stand/request/${stand.id}" class="resume-link">
+                                    <p class="resume-name">${stand.title}</p>
+                                    <p class="resume-category">Категория: ${stand.category}</p>
+                                    <p class="resume-date">Дата создания: ${stand.publishedDate}</p>
+                                </a>
+                            </div>
+                        </#list>
                     </#if>
                 </div>
             </div>
@@ -150,6 +150,10 @@
                     <li><a href="#">Изменить город</a></li>
                     <li><a href="/favourites">Посмотреть избранные</a></li>
                     <li><a href="/logout">Выйти из аккаунта</a></li>
+
+                    <#if user.role = "ROLE_SPECIALIST" >
+                        <li><a href="#">Редактировать тариф</a></li>
+                    </#if>
                 </ul>
             </div>
         </div>
