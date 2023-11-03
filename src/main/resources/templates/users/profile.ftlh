@@ -22,7 +22,6 @@
                 <#else>
                     <img src="../../static/default.jpg" class="round-image" alt="default photo">
                 </#if>
-
             </div>
             <div class="personal-info col-6">
                 <#if user.userName?has_content>
@@ -56,6 +55,29 @@
 
     <div>
         <#if user.role = "ROLE_SPECIALIST">
+            <div class="tabs">
+                <div class="share-buttons">
+                    <button class="share-button facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </button>
+                    <button class="share-button twitter">
+                        <i class="fab fa-twitter"></i>
+                    </button>
+                    <button class="share-button linkedin">
+                        <i class="fab fa-linkedin-in"></i>
+                    </button>
+                    <button class="share-button pinterest">
+                        <i class="fab fa-pinterest"></i>
+                    </button>
+                    <button class="share-button reddit">
+                        <i class="fab fa-reddit-alien"></i>
+                    </button>
+                    <button class="share-button whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                    </button>
+                </div>
+            </div>
+
             <div class="tabs">
                 <button class="tab-item" id="resume-tab">Резюме</button>
                 <button class="tab-item" id="portfolio-tab">Портфолио</button>
