@@ -77,9 +77,6 @@
                     <button class="share-button pinterest">
                         <i class="fab fa-pinterest"></i>
                     </button>
-                    <button class="share-button reddit">
-                        <i class="fab fa-reddit-alien"></i>
-                    </button>
                     <button class="share-button whatsapp">
                         <i class="fab fa-whatsapp"></i>
                     </button>
