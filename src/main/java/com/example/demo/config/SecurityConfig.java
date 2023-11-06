@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/stand/respond/**").hasAuthority("ROLE_SPECIALIST")
                         .requestMatchers("/stand/request/**").hasAuthority("ROLE_CUSTOMER")
                         .requestMatchers("/stand/select").hasAuthority("ROLE_CUSTOMER")
+                        .requestMatchers("/api/**").fullyAuthenticated()
                         .anyRequest().permitAll()
                 )
                 .rememberMe(customizer -> customizer
