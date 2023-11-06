@@ -88,9 +88,6 @@ shareButtons.forEach(button => {
             case 'pinterest':
                 shareUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}`;
                 break;
-            case 'reddit':
-                shareUrl = `https://reddit.com/submit?url=${encodeURIComponent(url)}`;
-                break;
             case 'whatsapp':
                 shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(url)}`;
                 break;
