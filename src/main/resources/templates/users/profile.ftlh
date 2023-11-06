@@ -27,9 +27,9 @@
                 <#else>
                 <img src="../../static/default.jpg" class="round-image" alt="default photo">
                 </#if>
-                <#if qrCodeBase64??>
-                <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code">
-                </#if>
+<#--                <#if qrCodeBase64??>-->
+<#--                <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code">-->
+<#--                </#if>-->
             </div>
             <div class="personal-info col-6">
                 <#if user.userName?has_content>
