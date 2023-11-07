@@ -2,7 +2,9 @@ package com.example.demo.controller.impl;
 
 import com.example.demo.controller.ProfileController;
 import com.example.demo.dto.UserDto;
+import com.example.demo.entities.User;
 import com.example.demo.repository.SpecialistRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.PostService;
 import com.example.demo.service.RatingService;
 import com.example.demo.service.ResumeService;
@@ -18,14 +20,15 @@ import org.springframework.ui.Model;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
 public class ProfileControllerImpl implements ProfileController {
+    private final UserRepository userRepository;
     private final UserService userService;
     private final ResumeService resumeService;
-    private final QRCodeServiceImpl qrCodeService;
     private final RatingService ratingService;
     private final PostService postService;
     private final SpecialistRepository specialistRepository;
@@ -34,13 +37,12 @@ public class ProfileControllerImpl implements ProfileController {
     @Override
     public String profile(Authentication auth, Model model) {
         UserDto currentUser = userService.getUserByAuthentication(auth);
-        Long specialistId = null;
 
         if (currentUser.getRole().equalsIgnoreCase("ROLE_SPECIALIST")){
-            specialistId = specialistRepository.findByUser_Id(currentUser.getId()).get().getId();
+            Long specialistId = specialistRepository.findByUser_Id(currentUser.getId()).orElseThrow(() -> new NoSuchElementException("Specialist not found")).getId();
             model.addAttribute("resumes", resumeService.getResumesByUserId(currentUser.getId()));
             model.addAttribute("rating", ratingService.getSpecialistRatingById(currentUser.getId()));
-            String qrCodeText = "http://localhost:8089//favorites/add/" + specialistId;
+            String qrCodeText = "http://localhost:8089/profile" + specialistId;
             ByteArrayOutputStream qrCodeStream = QRCode.from(qrCodeText).stream();
             byte[] qrCodeBytes = qrCodeStream.toByteArray();
             String qrCodeBase64 = Base64.getEncoder().encodeToString(qrCodeBytes);
@@ -49,10 +51,28 @@ public class ProfileControllerImpl implements ProfileController {
         if (currentUser.getRole().equalsIgnoreCase("ROLE_CUSTOMER")) {
             model.addAttribute("stands", postService.getCustomerPostDtos(currentUser.getId()));
         }
-
         model.addAttribute("user", currentUser);
-
         return "users/profile";
     }
+
+    @Override
+    public String getProfileByUserId(Long userId, Model model, Authentication auth) {
+       UserDto currentUser = userService.getUserByAuthentication(auth);
+        if (Objects.equals(currentUser.getId(), userId)){
+            return "redirect:/profile";
+        }
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User not found"));
+        String userRole = user.getRole().getRole();
+        if (userRole.equalsIgnoreCase("ROLE_SPECIALIST")){
+            model.addAttribute("resumes", resumeService.getResumesByUserId(user.getId()));
+            model.addAttribute("rating", ratingService.getSpecialistRatingById(user.getSpecialist().getId()));
+        }
+        if (userRole.equalsIgnoreCase("ROLE_CUSTOMER")){
+            model.addAttribute("stands", postService.getCustomerPostDtos(user.getId()));
+        }
+        model.addAttribute("user", user);
+        return "users/profileForAnother";
+    }
+
 
 }
