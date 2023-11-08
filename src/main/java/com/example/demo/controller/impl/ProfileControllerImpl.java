@@ -66,6 +66,7 @@ public class ProfileControllerImpl implements ProfileController {
         if (userRole.equalsIgnoreCase("ROLE_SPECIALIST")){
             model.addAttribute("resumes", resumeService.getResumesByUserId(user.getId()));
             model.addAttribute("rating", ratingService.getSpecialistRatingById(user.getSpecialist().getId()));
+            model.addAttribute("specialistId", user.getSpecialist().getId());
         }
         if (userRole.equalsIgnoreCase("ROLE_CUSTOMER")){
             model.addAttribute("stands", postService.getCustomerPostDtos(user.getId()));

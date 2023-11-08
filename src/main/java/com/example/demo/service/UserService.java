@@ -175,6 +175,8 @@ public class UserService {
                 .phoneNumber(user.getPhoneNumber())
                 .email(user.getEmail())
                 .photo(user.getPhoto())
+                .country(user.getGeolocation().getCountry())
+                .city(user.getGeolocation().getCity())
                 .build();
     }
 

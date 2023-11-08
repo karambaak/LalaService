@@ -16,7 +16,7 @@ public class Favourite {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "specialist_id")
     private Specialist specialist;
 

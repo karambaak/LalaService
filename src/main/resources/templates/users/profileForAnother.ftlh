@@ -66,9 +66,11 @@
                     <button class="share-button whatsapp">
                         <i class="fab fa-whatsapp"></i>
                     </button>
+                    <#if user.role.role = "ROLE_SPECIALIST">
+                        <a href="/favourites/add/${specialistId}" type="button" class="btn btn-outline-success">Добавить в избранное</a>
+                    </#if>
                 </div>
             </div>
-
             <div class="tabs">
                 <button class="tab-item" id="resume-tab">Резюме</button>
                 <button class="tab-item" id="portfolio-tab">Портфолио</button>
