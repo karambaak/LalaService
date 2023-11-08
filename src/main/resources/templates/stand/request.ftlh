@@ -10,133 +10,65 @@
         <link rel="stylesheet" href="/static/css/profile.css">
     </header>
     <div class="padding-div">
-        <div class="category-header">
-            <a href="javascript:history.go(-1);" class="back-button">
-                <i class="fas fa-arrow-left"></i>Назад
-            </a>
-        </div>
-        <h1 class="text-center"> Запрос пользователя </h1>
-        <div class="task-content">
-            <#if post??>
-                <div class="task-details mt-3 me-2">
-                    <div class="row">
-                        <div class="col-2 user-photo">
-                            <img src="${post.userPhoto}" alt="User Photo">
-                        </div>
-                        <div class="col-3 text-center">${post.userName}</div>
+    <div class="category-header">
+        <a href="javascript:history.go(-1);" class="back-button">
+            <i class="fas fa-arrow-left"></i>Назад
+        </a>
+    </div>
+    <h1 class="text-center"> Запрос пользователя </h1>
+    <div class="task-content">
+        <#if post??>
+            <div class="task-details mt-3 me-2">
+                <div class="row">
+                    <div class="col-2 user-photo">
+                        <img src="${post.userPhoto}" alt="User Photo">
                     </div>
-                    <hr>
-                    <div class="description">
-                        <i class="fa-solid fa-calendar-days"></i> Когда: ${post.workRequiredTime}
-                        <br>
-                        ${post.title}
-                        <br>
-                        ${post.description}
-                    </div>
-                    <hr>
-                    <div class="response-info">
-                        <div class="responses-count">
-                            <p>Откликнулось специалистов: ${post.responseNumber}</p>
-                            <p>Дата публикации: ${post.publishedDate}</p>
-                        </div>
-
-                    </div>
+                    <div class="col-3 text-center">${post.userName}</div>
                 </div>
-            <#else>
-                Данный запрос больше не актуален.
-            </#if>
-        </div>
-        <div>
-            <div class="tabs">
-                <button class="tab-item" id="resume-tab">Посмотреть отклики</button>
-                <button class="tab-item" id="portfolio-tab">Выбрать отклик</button>
+                <hr>
+                <div class="description">
+                    <i class="fa-solid fa-calendar-days"></i> Когда: ${post.workRequiredTime}
+                    <br>
+                    ${post.title}
+                    <br>
+                    ${post.description}
+                </div>
+                <hr>
+                <div class="response-info">
+                    <div class="responses-count">
+                        <p>Откликнулось специалистов: ${post.responseNumber}</p>
+                        <p>Дата публикации: ${post.publishedDate}</p>
+                    </div>
+
+                </div>
             </div>
+        <#else>
+            Данный запрос больше не актуален.
+        </#if>
+    </div>
+    <div>
 
-            <div class="tab-content bottom-margin" id="resume-content">
-                <div class="resume-list">
-                    <#if conversations??>
-                        <#if conversations?has_content>
-                            <#list conversations as item>
-                                <#assign varId = item.conversationId>
-                                <p>
-                                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collapseExample-${varId}" aria-expanded="false"
-                                            aria-controls="collapseExample-${varId}">
-                                        Отклик ${item_index + 1}
-                                    </button>
-                                </p>
-                                <div class="collapse" id="collapseExample-${varId}">
-                                    <div class="card card-body mb-5">
-                                        <#if (item.messages)??>
-                                            <#list (item.messages) as msg>
-                                                <#if msg.viewer == 'author'>
-                                                    <div class="message ms-auto">${msg.response} <br> ${msg.dateTime}
-                                                    </div>
-                                                <#else>
-                                                    <div class="incoming-msg">${msg.response} <br> ${msg.dateTime}</div>
-                                                </#if>
-                                            </#list>
-                                            <div class="sent-messages d-flex flex-column align-items-end me-3 my-3">
-                                                <!-- Messages will be displayed here -->
-                                            </div>
+        <div class="tab-content bottom-margin" id="resume-content">
+            <h2 class="text-center">Откликнувшиеся специалисты</h2>
+            <div class="resume-list">
+                <#if conversations??>
+                    <#if conversations?has_content>
+                        <#list conversations as item>
+                            <#assign varId = item.conversationId>
+                            <div class="message-card" href=""><a href="/profile/${item.userId}"
+                                                                 class="link-profile-stand">${item.username}</a>
+                                <a class="stand-button chatb"
+                                   href="/stand/request_detail/${item.conversationId}">Чат</a>
+                                <a class="stand-button selectb" href="/stand/select/${item.conversationId}">Выбрать</a>
+                            </div>
 
-                                            <div class="message-container">
-                                                <form method="post" action="/stand/response/${post.id}"
-                                                      id="message-form" class="d-flex flex-column align-items-end me-3">
-
-                                                    <input type="text" id="message-text" name="response"
-                                                           class="msg-input" autofocus
-                                                           required>
-                                                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                                                           value="${(_csrf.token)!'--no-token--'}"/>
-                                                    <input type="hidden" name="viewer" value="${item.conversationId}">
-                                                    <input type="hidden" name="formIdentifier"
-                                                           value="${item.conversationId}">
-
-                                                    <button type="submit" class="respond-button">Отправить</button>
-                                                </form>
-                                            </div>
-                                        </#if>
-                                    </div>
-                                </div>
-                            </#list>
-                        <#else>
-                            <p>На данный запрос еще никто не откликнулся.</p>
-                        </#if>
+                        </#list>
+                    <#else>
+                        <p>На данный запрос еще никто не откликнулся.</p>
                     </#if>
-                </div>
-            </div>
-
-            <div class="tab-content bottom-margin" id="portfolio-content">
-                <div class="portfolio-list">
-                    <#if conversations??>
-                        <#if conversations?has_content>
-                            <form action="/stand/select" method="post" class="text-center p-2">
-                                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                                       value="${(_csrf.token)!'--no-token--'}"/>
-                                <label for="applicantSelect" style="display: none">Выбрать специалиста и удалить
-                                    запрос:</label>
-                                <br>
-                                <select id="applicantSelect" name="conversationId" class="form-select" required>
-                                    <#list conversations as c>
-                                        <option value="${c.conversationId}">Отклик ${c_index + 1}</option>
-                                    </#list>
-                                </select>
-                                <button type="submit" class="btn select-button"> Выбрать</button>
-                            </form>
-                            <p>Когда Вы нажмете "выбрать", данный запрос и все
-                                сообщения, связанные с данным запросом, будут удалены. Специалисты получат
-                                уведомления.</p>
-
-                        <#else>
-                            <p>На данный запрос еще никто не откликнулся.</p>
-                        </#if>
-                    </#if>
-                </div>
+                </#if>
             </div>
         </div>
-
-
     </div>
     <style>
         .bottom-margin {
@@ -146,29 +78,6 @@
 
         .padding-div {
             padding: 30px;
-        }
-
-        .select-button {
-            border: 2px solid #2552e7;
-            border-radius: 5px;
-            color: #2552e7;
-            padding: 8px 16px;
-            margin: 20px 0;
-        }
-        .select-button:hover{
-            background-color: #2552e7;
-            color: #fff;
-        }
-
-        .form-select {
-            border: 2px solid #2552e7;
-            width: 60%;
-            border-radius: 5px;
-            height: 37px;
-            background-color: #ffffff;
-            margin-left: auto;
-            margin-right: auto;
-
         }
 
         .category-card span {
@@ -191,18 +100,15 @@
             width: 100%;
         }
 
-
         .user-photo img {
             margin-right: 10px;
             width: 50px;
             height: 50px;
             object-fit: cover;
         }
-
         .description {
             margin-top: 10px;
         }
-
         .response-info {
             display: flex;
             justify-content: space-between;
@@ -210,47 +116,10 @@
             margin-top: 10px;
             flex-wrap: wrap;
         }
-
         .responses-count {
             color: #747373;
             margin-bottom: 20px;
         }
-
-        .msg-input {
-            width: 80%;
-            border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 -5px 15px rgb(224, 220, 220);
-            height: 100px;
-            margin: 30px 0 10px;
-        }
-
-        .respond-button {
-            padding: 15px 20px;
-            color: #2552e7;
-            border: 2px solid #2552e7;
-            background-color: #fff;
-            cursor: pointer;
-            border-radius: 15px;
-            text-decoration: none;
-            width: 25%;
-        }
-
-        .respond-button:hover {
-            background-color: #2552e7;
-            color: #fff;
-        }
-
-        .message {
-            margin: 5px 15px 5px;
-            background-color: #2552e74a;
-            border-radius: 15px;
-            width: fit-content;
-            max-width: 450px;
-            padding: 5px 10px;
-
-        }
-
         .back-button {
             text-decoration: none;
             color: #2552e7;
@@ -260,73 +129,51 @@
             margin-right: 40px;
             margin-left: 10px;
         }
-
-        .incoming-messages {
-            margin: 20px 0;
+        .message-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0.0, 0.0, 0.2, 0.2);
+            margin: 10px;
             display: flex;
-            flex-direction: column;
+            height: 90px;
+            flex-direction: row;
+            padding: 20px 30px;
+            position: relative;
+        }
+        .stand-button {
+            background-color: #fff;
+            padding: 10px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            position: absolute;
+            top: 25px;
+        }
+        .chatb {
+            border: 2px solid #2552e7;
+            color: #2552e7;
+            right: 35%;
+
+        }
+        .chatb:hover {
+            background-color: #2552e7;
+            color: #fff;
         }
 
-        .incoming-msg {
-            margin: 5px 15px 5px;
-            background-color: #66e08497;
-            border-radius: 15px;
-            width: fit-content;
-            max-width: 450px;
-            padding: 5px 10px;
-            margin-right: auto !important;
+        .selectb {
+            border: 2px solid green;
+            color: green;
+            right: 5%;
+        }
+        .selectb:hover {
+            background-color: green;
+            color: #fff;
+        }
+        .link-profile-stand {
+            color: black;
+            text-decoration: none;
+            padding-top: 13px;
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/static/js/profile.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('#message-form').forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
-                        event.preventDefault();
-
-                        var formData = new FormData(this);
-                        var formIdentifier = formData.get('formIdentifier');
-                        const viewer = formData.get('viewer');
-                        const response = formData.get('response');
-                        const csrfToken = document.querySelector('input[name="_csrf"]').value;
-                        const formBody = {
-                            "response": response,
-                            "viewer": viewer
-                        }
-                        const sentMessages = this.closest('.card-body').querySelector('.sent-messages')
-
-                        fetch(this.action, {
-                            method: this.method,
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': csrfToken
-                            },
-                            body: JSON.stringify(formBody)
-                        })
-                            .then(data => {
-                                const messageElement = document.createElement('div');
-                                messageElement.classList.add('message');
-                                messageElement.textContent = response + '\n' + getDateTime();
-                                sentMessages.appendChild(messageElement);
-                                form.reset();
-                            })
-
-                            .catch(function (error) {
-                                console.error('Error:', error);
-                            });
-                    });
-            });
-        });
-
-        function getDateTime() {
-            const now = new Date();
-            const date = ("0" + now.getDate()).slice(-2);
-            const month = ("0" + (now.getMonth() + 1)).slice(-2);
-            const hour = ("0" + now.getHours()).slice(-2);
-            const minute = ("0" + now.getMinutes()).slice(-2);
-
-            return '\n' + month + '/' + date + ' ' + hour + ':' + minute;
-        }
-    </script>
 </@main.layout>

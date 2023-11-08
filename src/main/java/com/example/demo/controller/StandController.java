@@ -100,8 +100,8 @@ public class StandController {
         return "stand/request_detail";
     }
 
-    @PostMapping("/select")
-    public String select(@RequestParam(name = "conversationId") String conversationId) {
+    @GetMapping("/select/{conversationId}")
+    public String select(@PathVariable String conversationId) {
         postService.selectSpecialist(conversationId);
         return "redirect:/stand";
     }
