@@ -27,4 +27,8 @@ public class PortFolioController {
         portfolioService.deletePortfolio(specialistService.getSpecialistIdByUserId(user.getId()), portfolioId);
         return "redirect:/msg";
     }
+    @GetMapping("/new")
+    public String createNew() {
+        return "specialist/new_portfolio";
+    }
 }

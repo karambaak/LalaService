@@ -25,7 +25,7 @@
                 <img src="${user.photo}"
                      class="round-image" alt>
                 <#else>
-                <img src="../../static/default.jpg" class="round-image" alt="default photo">
+                <img src="/static/default.jpg" class="round-image" alt="default photo">
                 </#if>
                 <#if qrCodeBase64??>
                 <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code">
@@ -123,7 +123,7 @@
             <div class="tab-content" id="portfolio-content">
                 <div class="portfolio-list">
                     <div class="resume create-resume">
-                        <a href="#" class="add-resume-link">
+                        <a href="/portfolio/new" class="add-resume-link">
                             <p class="add-resume-text">Добавить портфолио</p>
                             <i class="fas fa-plus"></i>
                         </a>
@@ -197,5 +197,5 @@
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="../../static/js/profile.js"></script>
+    <script src="/static/js/profile.js"></script>
     </@main.layout>
