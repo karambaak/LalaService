@@ -28,6 +28,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
 
+
     public List<StandCategoryDto> getAll() {
         List<Post> list = postRepository.findAll();
         list.sort(Comparator.comparing(post -> post.getCategory().getCategoryName()));
@@ -369,10 +370,12 @@ public class PostService {
         }
         return list;
     }
+
     private String makeKeyword(Post post) {
-            return new StringBuilder().append(post.getTitle()).append(" (")
-                    .append(post.getPublishedDate()).append(")").toString();
+        return new StringBuilder().append(post.getTitle()).append(" (")
+                .append(post.getPublishedDate()).append(")").toString();
     }
+
 
     @Transactional
     public void selectSpecialist(String conversationId) {
@@ -419,26 +422,29 @@ public class PostService {
         String keyword = makeKeyword(post.get());
 
         List<Response> responses = responseRepository.findAllByPostId(postId);
-        if(responses.size() > 0) {
+        if (!responses.isEmpty()) {
             Set<Long> specialistIds = new HashSet<>();
             for (Response r : responses) {
                 if (r.getSpecialist() != null) specialistIds.add(r.getSpecialist().getId());
             }
             String notificationText = "Пользователь удалил запрос, на который Вы откликнулись:";
-            for (Long l:
-                 specialistIds) {
-                for (Response r:
-                     responses) {
-                    if(l.equals(r.getSpecialist().getId())) {
+            for (Long l :
+                    specialistIds) {
+                for (Response r :
+                        responses) {
+                    if (l.equals(r.getSpecialist().getId())) {
                         sendNotification(notificationText, r.getSpecialist().getUser(), keyword);
                     }
                 }
             }
-
+            deleteNotificationsByKeyword(keyword);
         }
+
+    }
+
+    private void deleteNotificationsByKeyword(String keyword) {
         List<Notification> notifications = notificationRepository.findByNotificationTextContaining(keyword);
-        for (Notification n:
-                notifications) {
+        for (Notification n : notifications) {
             notificationRepository.delete(n);
         }
     }
