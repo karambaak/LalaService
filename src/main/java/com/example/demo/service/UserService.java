@@ -155,12 +155,12 @@ public class UserService {
             return makeUserDto(repository.findByEmail((c.getEmail())).orElseThrow(() -> new NoSuchElementException("Auth is null, user email not found")));
         } else {
             org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) principal;
-            if(isValidEmail(user.getUsername())) {
+            if (isValidEmail(user.getUsername())) {
                 return makeUserDto(repository.findByEmail(user.getUsername()).orElseThrow(() -> new NoSuchElementException("Auth is null, user email not found")));
             } else {
                 return makeUserDto(repository.findByPhoneNumber(user.getUsername()).orElseThrow(() -> new NoSuchElementException("Auth is null, user phone number not found")));
             }
-            }
+        }
     }
 
     public UserDto getUserByPhone(String phone) {
@@ -269,5 +269,11 @@ public class UserService {
                     .build());
         }
         return list;
+    }
+
+    public void editProfile(User user, long geolocationId) {
+        Geolocation geolocation = geolocationRepository.findById(geolocationId).orElseThrow(() -> new NoSuchElementException("No such location!"));
+        repository.updateUserInformationWithGeolocation(user.getId(), user.getUserName(), user.getPhoneNumber(),
+                user.getEmail(), geolocation);
     }
 }
