@@ -141,7 +141,6 @@
         }
     </style>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
             const messageForm = document.getElementById('message-form');
             const messageText = document.getElementById('message-text');
             const sentMessages = document.querySelector('.sent-messages');

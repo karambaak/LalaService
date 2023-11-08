@@ -36,7 +36,7 @@ public class AuthControllerImpl implements AuthController {
             userService.register(userDto);
             return "redirect:/auth/login";
         }
-        return "auth/register";
+        return "redirect:/auth/register";
     }
 
     @GetMapping("/login")

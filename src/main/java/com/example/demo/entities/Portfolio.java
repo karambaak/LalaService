@@ -3,6 +3,7 @@ package com.example.demo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -22,7 +23,7 @@ public class Portfolio {
     private Specialist specialist;
 
     private String title;
-
+private LocalDateTime timeOfPortfolio;
     @OneToMany(mappedBy = "portfolio")
     private List<Photo> photos;
 
