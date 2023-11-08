@@ -27,6 +27,7 @@ public class PostService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final SpecialistService specialistService;
 
 
     public List<StandCategoryDto> getAll() {
@@ -286,6 +287,8 @@ public class PostService {
         for (String s : uniqueConversationIds) {
             conversationDtoList.put(s, new ArrayList<>());
         }
+        Long userId = responses.get(0).getSpecialist().getUser().getId();
+        String username = specialistService.findSpecialistName(responses.get(0).getSpecialist());
         for (Response r : responses) {
             for (Map.Entry<String, List<ResponseDto>> entry : conversationDtoList.entrySet()) {
                 String key = entry.getKey();
@@ -301,10 +304,13 @@ public class PostService {
                 }
             }
         }
+
         List<ConversationDto> list = new ArrayList<>();
         for (Map.Entry<String, List<ResponseDto>> entry : conversationDtoList.entrySet()) {
             list.add(ConversationDto.builder()
                     .conversationId(entry.getKey())
+                            .userId(userId)
+                            .username(username)
                     .messages(entry.getValue())
                     .build());
         }
