@@ -6,6 +6,7 @@ import com.example.demo.entities.Favourite;
 import com.example.demo.service.FavouriteService;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
@@ -27,7 +28,7 @@ public class FavouriteController {
     public String getFavourites(Authentication auth, Model model) {
         User authUser = (User) auth.getPrincipal();
         UserDto user = userService.getUserByPhone(authUser.getUsername());
-        List<FavoritesDto> lists=favouriteService.getFavourites(user.getId());
+        List<FavoritesDto> lists = favouriteService.getFavourites(user.getId());
         model.addAttribute("favourites", lists);
         return "favorites/favorites";
 
@@ -41,12 +42,12 @@ public class FavouriteController {
         return "redirect:/favourites";
     }
     @GetMapping("/add/{specialistId}")
+    @ResponseStatus(HttpStatus.SEE_OTHER)
     public String saveFavoriteSpecialist(@PathVariable Long specialistId, Authentication auth){
-        User user = (User) auth.getPrincipal();
         String userPhoneNumber = auth.getName();
         Long userId = userService.getUserByPhone(userPhoneNumber).getId();
         favouriteService.saveFavourite(userId, specialistId);
-        return "favorites/favorites";
+        return "redirect:/favourites";
     }
 
 

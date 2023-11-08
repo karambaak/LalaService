@@ -5,7 +5,6 @@ import com.example.demo.entities.Favourite;
 import com.example.demo.entities.Specialist;
 import com.example.demo.entities.User;
 import com.example.demo.repository.FavouriteRepository;
-import com.example.demo.repository.ResumeRepository;
 import com.example.demo.repository.SpecialistRepository;
 import com.example.demo.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,27 +26,21 @@ public class FavouriteService {
     private final SpecialistRepository specialistRepository;
     private final ResumeService resumeService;
 
-    public void saveFavourite(long userId, long specialistId) {
-        User user = userRepository.findById(userId).orElse(null);
-        Specialist specialist = specialistRepository.findById(specialistId).orElse(null);
 
-        if (user != null && specialist != null) {
-            if (!favouriteRepository.existsByUserIdAndSpecialistId(userId, specialistId)) {
-                Favourite favourite = Favourite.builder()
-                        .user(user)
-                        .specialist(specialist)
-                        .build();
-                favouriteRepository.save(favourite);
-            }
-        } else {
-            log.warn("User or Specialist does not exist");
-            throw new IllegalArgumentException("User or Specialist does not exist");
+    public void saveFavourite(Long userId, Long specialistId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User not found"));
+        Specialist specialist = specialistRepository.findById(specialistId).orElseThrow(() -> new NoSuchElementException("Specialist not found"));
+        Optional<Favourite> favourite = favouriteRepository.findByUserAndSpecialist(user, specialist);
+        if (favourite.isEmpty()){
+            favouriteRepository.save(Favourite.builder()
+                    .user(user)
+                    .specialist(specialist)
+                    .build());
         }
     }
 
     @Transactional
     public void deleteFavourite(long userId, long specialistId) {
-
         User user = userRepository.findById(userId).orElse(null);
         Specialist specialist = specialistRepository.findById(specialistId).orElse(null);
         if (user != null && specialist != null) {
@@ -58,18 +52,17 @@ public class FavouriteService {
     }
 
 
-    public List<FavoritesDto> getFavourites(long userId) {
+    public List<FavoritesDto> getFavourites(Long userId) {
         List<Favourite> favourites = favouriteRepository.findFavouriteByUserId(userId);
         return favourites.stream()
                 .map(e -> FavoritesDto.builder()
                         .userId(e.getUser().getId())
-                        .specilaitsId(e.getSpecialist().getId())
+                        .specialistId(e.getSpecialist().getId())
                         .companyName(e.getSpecialist().getCompanyName())
-                        .city(userRepository.findById(userId).orElseThrow(NoSuchElementException::new).getGeolocation().getCity())
-                        .resumes(resumeService.getResumesByUserId(userId))
-                        .specilaitsId(e.getSpecialist().getId())
+                        .city((e.getSpecialist().getUser().getGeolocation() != null ? e.getSpecialist().getUser().getGeolocation().getCity() : "Неопределено"))
+                        .resumes(resumeService.getResumesByUserId(e.getSpecialist().getUser().getId()))
                         .build()
-                ).collect(Collectors.toList());
+                ).toList();
     }
 
 

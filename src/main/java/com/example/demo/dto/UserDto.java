@@ -10,7 +10,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class UserDto {
     private Long id;
-
     @NotBlank(message = "User name is required")
     @Pattern(regexp = "^[a-zA-Z0-9_-]{3,20}$",
             message = "Username must be 3-20 characters long and can only contain letters, numbers, hyphens, and underscores.")

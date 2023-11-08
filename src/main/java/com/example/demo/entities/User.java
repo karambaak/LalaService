@@ -77,7 +77,8 @@ public class User implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "theme_id")
     private Theme theme;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "geolocation_id")
     private Geolocation geolocation;
 
