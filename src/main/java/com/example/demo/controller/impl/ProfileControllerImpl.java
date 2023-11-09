@@ -38,7 +38,7 @@ public class ProfileControllerImpl implements ProfileController {
     public String profile(Authentication auth, Model model) {
         UserDto currentUser = userService.getUserByAuthentication(auth);
 
-        if (currentUser.getRole().equalsIgnoreCase("ROLE_SPECIALIST")){
+        if (currentUser.getRole().equalsIgnoreCase("ROLE_SPECIALIST")) {
             Long specialistId = specialistRepository.findByUser_Id(currentUser.getId()).orElseThrow(() -> new NoSuchElementException("Specialist not found")).getId();
             model.addAttribute("resumes", resumeService.getResumesByUserId(currentUser.getId()));
             model.addAttribute("rating", ratingService.getSpecialistRatingById(currentUser.getId()));
@@ -57,22 +57,39 @@ public class ProfileControllerImpl implements ProfileController {
 
     @Override
     public String getProfileByUserId(Long userId, Model model, Authentication auth) {
-       UserDto currentUser = userService.getUserByAuthentication(auth);
-        if (Objects.equals(currentUser.getId(), userId)){
+        UserDto currentUser = userService.getUserByAuthentication(auth);
+        if (Objects.equals(currentUser.getId(), userId)) {
             return "redirect:/profile";
         }
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User not found"));
         String userRole = user.getRole().getRole();
-        if (userRole.equalsIgnoreCase("ROLE_SPECIALIST")){
+        if (userRole.equalsIgnoreCase("ROLE_SPECIALIST")) {
             model.addAttribute("resumes", resumeService.getResumesByUserId(user.getId()));
             model.addAttribute("rating", ratingService.getSpecialistRatingById(user.getSpecialist().getId()));
             model.addAttribute("specialistId", user.getSpecialist().getId());
         }
-        if (userRole.equalsIgnoreCase("ROLE_CUSTOMER")){
+        if (userRole.equalsIgnoreCase("ROLE_CUSTOMER")) {
             model.addAttribute("stands", postService.getCustomerPostDtos(user.getId()));
         }
         model.addAttribute("user", user);
         return "users/profileForAnother";
+    }
+
+    @Override
+    public String getProfile(Model model, Authentication auth) {
+        UserDto currentUser = userService.getUserByAuthentication(auth);
+        model.addAttribute("user", currentUser);
+        return "users/edit";
+    }
+
+    @Override
+    public String updateProfile(Model model, Authentication auth, String userName, long geolocationId, String email) {
+        UserDto currentUser = userService.getUserByAuthentication(auth);
+        User user = userRepository.findById(currentUser.getId()).orElseThrow(() -> new NoSuchElementException("User not found"));
+        user.setUserName(userName);
+        user.setEmail(email);
+        userService.editProfile(user, geolocationId);
+        return "redirect:/profile";
     }
 
 
