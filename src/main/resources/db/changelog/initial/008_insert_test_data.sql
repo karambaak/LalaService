@@ -1,3 +1,37 @@
+INSERT INTO GEOLOCATION (country, city)
+VALUES
+    ('Кыргызстан', 'Бишкек'),
+    ('Кыргызстан', 'Ош'),
+    ('Кыргызстан', 'Айдаркан'),
+    ('Кыргызстан', 'Балыкчы'),
+    ('Кыргызстан', 'Баткен'),
+    ('Кыргызстан', 'Жалал-Абад'),
+    ('Кыргызстан', 'Кадамжай'),
+    ('Кыргызстан', 'Кайыңды'),
+    ('Кыргызстан', 'Кант'),
+    ('Кыргызстан', 'Кара-Балта'),
+    ('Кыргызстан', 'Кара-Көл'),
+    ('Кыргызстан', 'Кара-Суу'),
+    ('Кыргызстан', 'Каракол'),
+    ('Кыргызстан', 'Кемин'),
+    ('Кыргызстан', 'Кербен'),
+    ('Кыргызстан', 'Кок-Жаңгак'),
+    ('Кыргызстан', 'Кочкор-Ата'),
+    ('Кыргызстан', 'Кызыл-Кыя'),
+    ('Кыргызстан', 'Майлуу-Суу'),
+    ('Кыргызстан', 'Нарын'),
+    ('Кыргызстан', 'Ноокат'),
+    ('Кыргызстан', 'Орловка'),
+    ('Кыргызстан', 'Өзгөн'),
+    ('Кыргызстан', 'Раззаков'),
+    ('Кыргызстан', 'Сүлүктү'),
+    ('Кыргызстан', 'Талас'),
+    ('Кыргызстан', 'Таш-Көмүр'),
+    ('Кыргызстан', 'Токмок'),
+    ('Кыргызстан', 'Токтогул'),
+    ('Кыргызстан', 'Чолпон-Ата'),
+    ('Кыргызстан', 'Шопоков');
+
 insert into ROLES(ROLE) values ( 'ROLE_SPECIALIST' ), ('ROLE_CUSTOMER');
 
 insert into THEMES (THEME_NAME) values ( 'light'), ('dark');
@@ -24,11 +58,11 @@ VALUES ( 'Компьютеры', 'Ремонт и обсуживание' ),
 insert into TARIFFS (TARIFF_NAME, COST, AVAILABILITY)
 VALUES ( 'бесплатный', 0, true );
 
-insert into USERS (PHONE_NUMBER, USER_NAME, USER_TYPE, EMAIL, PASSWORD, ENABLED, ROLE_ID, THEME_ID, REGISTRATION_DATE)
+insert into USERS (PHONE_NUMBER, USER_NAME, USER_TYPE, EMAIL, PASSWORD, ENABLED, ROLE_ID, THEME_ID, REGISTRATION_DATE, geolocation_id)
 VALUES ('123', 'Alex', 'SPECIALIST', '', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true,
         (SELECT id FROM roles WHERE role LIKE '%SPECIALIST'), (select id from THEMES where THEME_NAME = 'light'),
-        '2023-10-15 15:30:00'),
+        '2023-10-15 15:30:00', (select id from GEOLOCATION where CITY = 'Бишкек')),
        ('1234', 'Qwe', 'CUSTOMER', '', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true,
         (SELECT id FROM roles WHERE role LIKE '%CUSTOMER'), (select id from THEMES where THEME_NAME = 'light'),
-       '2023-10-15 15:30:00');
+       '2023-10-15 15:30:00', (select id from GEOLOCATION where CITY = 'Бишкек'));
 
