@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Builder
 @Data
@@ -18,4 +19,6 @@ public class PortfolioDto {
 
     @Past(message = "Time of Portfolio must be in the past or current")
     private Timestamp timeOfPortfolio;
+
+    private List<PhotoDto> photos;
 }

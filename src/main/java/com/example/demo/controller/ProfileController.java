@@ -23,7 +23,7 @@ public interface ProfileController {
     @PostMapping("/profile/edit")
     String updateProfile(Model model, Authentication auth,
                          @RequestParam(name = "username") String userName,
-                         @RequestParam(name = "city") long geolocationId,
+                         @RequestParam(name = "city") Long geolocationId,
                          @RequestParam(name = "email") String email
 
     );
