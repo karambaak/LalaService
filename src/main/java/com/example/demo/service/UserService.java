@@ -5,10 +5,7 @@ import com.example.demo.dto.UserDto;
 import com.example.demo.dto.ViewerDto;
 import com.example.demo.entities.*;
 import com.example.demo.enums.UserType;
-import com.example.demo.repository.GeolocationRepository;
-import com.example.demo.repository.RoleRepository;
-import com.example.demo.repository.SpecialistRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,6 +32,8 @@ public class UserService {
     private final PasswordEncoder encoder;
     private final AuthUserDetailsService service;
     private final GeolocationRepository geolocationRepository;
+
+    private final UpdateCountsRepository updateCountsRepository;
 
     public List<User> getAllUsers() {
         return repository.findAll();
@@ -155,12 +153,12 @@ public class UserService {
             return makeUserDto(repository.findByEmail((c.getEmail())).orElseThrow(() -> new NoSuchElementException("Auth is null, user email not found")));
         } else {
             org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) principal;
-            if(isValidEmail(user.getUsername())) {
+            if (isValidEmail(user.getUsername())) {
                 return makeUserDto(repository.findByEmail(user.getUsername()).orElseThrow(() -> new NoSuchElementException("Auth is null, user email not found")));
             } else {
                 return makeUserDto(repository.findByPhoneNumber(user.getUsername()).orElseThrow(() -> new NoSuchElementException("Auth is null, user phone number not found")));
             }
-            }
+        }
     }
 
     public UserDto getUserByPhone(String phone) {
@@ -272,4 +270,29 @@ public class UserService {
         }
         return list;
     }
+
+    public void editProfile(User user, long geolocationId) {
+        Geolocation geolocation = geolocationRepository.findById(geolocationId).orElseThrow(() -> new NoSuchElementException("No such location!"));
+        if (!updateCountsRepository.existsByUserId(user.getId())) {
+            updateCountsRepository.save(UpdateCounts.builder()
+                    .userId(user.getId())
+                    .updateTime(new Timestamp(System.currentTimeMillis()))
+                    .count(1)
+                    .build());
+            repository.updateUserInformationWithGeolocation(user.getId(), user.getUserName(), user.getPhoneNumber(),
+                    user.getEmail(), geolocation);
+
+        } else {
+            int currentCount = updateCountsRepository.findByUserId(user.getId()).
+                    orElseThrow(() -> new NoSuchElementException("No such count!")).getCount();
+            if (currentCount < 5) {
+                currentCount++;
+                updateCountsRepository.setCountForUser(user.getId(), currentCount);
+                repository.updateUserInformationWithGeolocation(user.getId(), user.getUserName(), user.getPhoneNumber(),
+                        user.getEmail(), geolocation);
+            }
+        }
+    }
+
+
 }

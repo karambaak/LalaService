@@ -185,8 +185,7 @@
             <div id="side-menu" class="side-menu">
                 <div class="close-button" id="close-button">X</div>
                 <ul>
-                    <li><a href="#">Редактировать профиль</a></li>
-                    <li><a href="#">Изменить город</a></li>
+                    <li><a href="profile/edit">Редактировать профиль</a></li>
                     <li><a href="/favourites">Посмотреть избранные</a></li>
                     <li><a href="/logout">Выйти из аккаунта</a></li>
                 </ul>
