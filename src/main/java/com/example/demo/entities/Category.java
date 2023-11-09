@@ -30,4 +30,5 @@ public class Category {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "category")
     private List<Resume> resumes;
 
+
 }
