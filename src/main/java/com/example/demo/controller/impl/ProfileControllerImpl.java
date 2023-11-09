@@ -9,7 +9,6 @@ import com.example.demo.service.PostService;
 import com.example.demo.service.RatingService;
 import com.example.demo.service.ResumeService;
 import com.example.demo.service.UserService;
-import com.example.demo.utils.QRCodeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.glxn.qrgen.javase.QRCode;
@@ -57,9 +56,11 @@ public class ProfileControllerImpl implements ProfileController {
 
     @Override
     public String getProfileByUserId(Long userId, Model model, Authentication auth) {
-       UserDto currentUser = userService.getUserByAuthentication(auth);
-        if (Objects.equals(currentUser.getId(), userId)){
-            return "redirect:/profile";
+        if (auth != null) {
+            UserDto currentUser = userService.getUserByAuthentication(auth);
+            if (Objects.equals(currentUser.getId(), userId)) {
+                return "redirect:/profile";
+            }
         }
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User not found"));
         String userRole = user.getRole().getRole();
