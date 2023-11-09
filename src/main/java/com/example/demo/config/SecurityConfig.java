@@ -42,7 +42,7 @@ public class SecurityConfig {
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .permitAll())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/profile").authenticated()
+                        .requestMatchers("/profile/**").authenticated()
                         .requestMatchers("/favourites/**").authenticated()
                         .requestMatchers("/resume/create").authenticated()
                         .requestMatchers("/fav/**").authenticated()
