@@ -18,7 +18,7 @@ public interface ProfileController {
     String getProfileByUserId(@PathVariable Long userId, Model model, Authentication auth);
 
     @GetMapping("/profile/edit")
-    String getProfile(Model model, Authentication auth);
+    String getProfileEdit(Model model, Authentication auth);
 
     @PostMapping("/profile/edit")
     String updateProfile(Model model, Authentication auth,
