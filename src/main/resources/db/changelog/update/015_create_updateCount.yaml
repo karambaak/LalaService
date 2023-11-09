@@ -21,6 +21,9 @@ databaseChangeLog:
               - column:
                   name: count
                   type: int
+              - column:
+                  name: update_time
+                  type: timestamp
         - addForeignKeyConstraint:
             baseTableName: updateCounts
             baseColumnNames: user_id

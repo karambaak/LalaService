@@ -2,13 +2,12 @@ package com.example.demo.controller.impl;
 
 import com.example.demo.controller.ProfileController;
 import com.example.demo.dto.UserDto;
+import com.example.demo.entities.UpdateCounts;
 import com.example.demo.entities.User;
 import com.example.demo.repository.SpecialistRepository;
+import com.example.demo.repository.UpdateCountsRepository;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.PostService;
-import com.example.demo.service.RatingService;
-import com.example.demo.service.ResumeService;
-import com.example.demo.service.UserService;
+import com.example.demo.service.*;
 import com.example.demo.utils.QRCodeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +31,8 @@ public class ProfileControllerImpl implements ProfileController {
     private final RatingService ratingService;
     private final PostService postService;
     private final SpecialistRepository specialistRepository;
+    private final UpdateCountsRepository updateCountsRepository;
+    private final UpdateCountsService updateCountsService;
 
 
     @Override
@@ -76,8 +77,19 @@ public class ProfileControllerImpl implements ProfileController {
     }
 
     @Override
-    public String getProfile(Model model, Authentication auth) {
+    public String getProfileEdit(Model model, Authentication auth) {
         UserDto currentUser = userService.getUserByAuthentication(auth);
+        if (updateCountsRepository.existsByUserId(currentUser.getId())) {
+            UpdateCounts currentCount = updateCountsRepository.findByUserId(currentUser.getId()).
+                    orElseThrow(() -> new NoSuchElementException("No such count!"));
+            if (currentCount.getCount() == 5) {
+                if (updateCountsService.hasThirtyDaysPassed(currentCount.getUpdateTime())) {
+                    updateCountsService.deleteCount(currentCount.getId());
+                } else {
+                    model.addAttribute("restricted", "restricted");
+                }
+            }
+        }
         model.addAttribute("user", currentUser);
         return "users/edit";
     }
