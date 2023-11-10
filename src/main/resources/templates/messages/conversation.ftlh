@@ -1,38 +1,40 @@
 <#import '../layout.ftlh' as main>
 <@main.layout>
-    <div class="padding-div">
-        <div class="category-header">
-            <a href="javascript:history.go(-1);" class="back-button">
-                <i class="fas fa-arrow-left"></i>Назад
-            </a>
-        </div>
-        <div class="d-flex flex-column align-items-end me-3 my-3">
-            <#if (messages)??>
-                <#list messages as item>
-                    <#if item.viewer == 'author'>
-                        <div class="message"><#if (item.response)??>${item.response} </#if> <br>
-                            <#if (item.dateTime)??>${item.dateTime}</#if>
-                        </div>
-                    <#else>
-                        <div class="incoming-msg"><#if (item.response)??>${item.response} </#if>
-                            <br> <#if (item.dateTime)??>${item.dateTime}</#if></div>
-                    </#if>
-                </#list>
-            </#if>
-        </div>
+    <div class="content">
+        <div class="padding-div">
+            <div class="category-header">
+                <a href="javascript:history.go(-1);" class="back-button">
+                    <i class="fas fa-arrow-left"></i>Назад
+                </a>
+            </div>
+            <div class="d-flex flex-column align-items-end me-3 my-3">
+                <#if (messages)??>
+                    <#list messages as item>
+                        <#if item.viewer == 'author'>
+                            <div class="message"><#if (item.response)??>${item.response} </#if> <br>
+                                <#if (item.dateTime)??>${item.dateTime}</#if>
+                            </div>
+                        <#else>
+                            <div class="incoming-msg"><#if (item.response)??>${item.response} </#if>
+                                <br> <#if (item.dateTime)??>${item.dateTime}</#if></div>
+                        </#if>
+                    </#list>
+                </#if>
+            </div>
 
 
-        <div class="sent-messages d-flex flex-column align-items-end me-3 my-3">
-            <!-- Messages will be displayed here -->
-        </div>
-        <div class="message-container">
-            <form id="message-form"
-                  class="d-flex flex-column align-items-end me-3">
-                <input type="text" id="message-text" class="msg-input" autofocus required>
-                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                       value="${(_csrf.token)!'--no-token--'}"/>
-                <button type="submit" class="respond-button">Отправить</button>
-            </form>
+            <div class="sent-messages d-flex flex-column align-items-end me-3 my-3">
+                <!-- Messages will be displayed here -->
+            </div>
+            <div class="message-container">
+                <form id="message-form"
+                      class="d-flex flex-column align-items-end me-3">
+                    <input type="text" id="message-text" class="msg-input" autofocus required>
+                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                           value="${(_csrf.token)!'--no-token--'}"/>
+                    <button type="submit" class="respond-button">Отправить</button>
+                </form>
+            </div>
         </div>
     </div>
     <style>
@@ -141,43 +143,44 @@
         }
     </style>
     <script>
-            const messageForm = document.getElementById('message-form');
-            const messageText = document.getElementById('message-text');
-            const sentMessages = document.querySelector('.sent-messages');
+        const messageForm = document.getElementById('message-form');
+        const messageText = document.getElementById('message-text');
+        const sentMessages = document.querySelector('.sent-messages');
 
-            messageForm.addEventListener('submit', function (e) {
-                e.preventDefault();
+        messageForm.addEventListener('submit', function (e) {
+            e.preventDefault();
 
-                const message = messageText.value;
-                const csrfToken = document.querySelector('input[name="_csrf"]').value;
+            const message = messageText.value;
+            const csrfToken = document.querySelector('input[name="_csrf"]').value;
 
-                const viewer = '${msgId}';
+            const viewer = '${msgId}';
 
-                let responseText = {
-                    "response": message,
-                    "viewer": viewer
-                }
+            let responseText = {
+                "response": message,
+                "viewer": viewer
+            }
 
-                fetch(`/msg/new/` + viewer, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    body: JSON.stringify(responseText)
+            fetch(`/msg/new/` + viewer, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify(responseText)
+            })
+                .then(response => {
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message');
+                    messageElement.textContent = message + '\n' + getDateTime();
+                    sentMessages.appendChild(messageElement);
+                    messageForm.reset();
                 })
-                    .then(response => {
-                        const messageElement = document.createElement('div');
-                        messageElement.classList.add('message');
-                        messageElement.textContent = message + '\n' + getDateTime();
-                        sentMessages.appendChild(messageElement);
-                        messageForm.reset();
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            });
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         });
+        })
+        ;
 
         function getDateTime() {
             const now = new Date();

@@ -1,51 +1,54 @@
 <#import "../layout.ftlh" as main>
 
 <@main.layout>
-    <div class="msg">
-        <button class="tablinks-1">Сообщения</button>
-        <button class="tablinks-2">Уведомления</button>
-    </div>
+    <div class="content">
+        <div class="msg">
+            <button class="tablinks-1">Сообщения</button>
+            <button class="tablinks-2">Уведомления</button>
+        </div>
 
-    <div id="Messages" class="tabcontent">
-        <h3 class="my-3">Сообщения</h3>
-        <#if messages??>
-            <#list messages as item>
-                <a class="message-card mb-3" href="/msg/${item.id}">
-                    <div class="photo mx-4">
-                        <img src="${item.senderPhoto}" alt="user photo">
-                    </div>
-                    <div class="text">
-                        <b> ${item.senderName} </b> <#if (item.lastMessageText)??>${item.lastMessageText}</#if>
-                        <p class="ms-auto">
-                            <#if (item.lastMessageDateTime)??>${item.lastMessageDateTime}</#if></p>
-                    </div>
-                        <span  class="delete-icon" style="color: black;"><i style="margin-left: 20px" class="fas fa-trash-alt"></i></span>
-                </a>
-            </#list>
-        </#if>
-
-
-        <a href="/msg/new" class="btn fixed-button"><i class="fas fa-pen"></i>
-        </a>
-
-    </div>
-
-    <div id="Notifications" class="tabcontent">
-        <h3>Уведомления</h3>
-        <#if notifications??>
-            <#list notifications as item>
-                <div class="notification-card mb-4" onclick="toggleCardExpansion(this)">
-                    ${item.notificationText}
-                    <br>
-                    ${item.notificationDate}
-                    <a href="msg/delete/${item.id}">
-                        <span class="delete-icon" style="color: black;"><i class="fas fa-trash-alt"></i></span>
+        <div id="Messages" class="tabcontent">
+            <h3 class="my-3">Сообщения</h3>
+            <#if messages??>
+                <#list messages as item>
+                    <a class="message-card mb-3" href="/msg/${item.id}">
+                        <div class="photo mx-4">
+                            <img src="${item.senderPhoto}" alt="user photo">
+                        </div>
+                        <div class="text">
+                            <b> ${item.senderName} </b> <#if (item.lastMessageText)??>${item.lastMessageText}</#if>
+                            <p class="ms-auto">
+                                <#if (item.lastMessageDateTime)??>${item.lastMessageDateTime}</#if></p>
+                        </div>
+                        <span class="delete-icon" style="color: black;"><i style="margin-left: 20px"
+                                                                           class="fas fa-trash-alt"></i></span>
                     </a>
-                </div>
+                </#list>
+            </#if>
 
-            </#list>
-        </#if>
 
+            <a href="/msg/new" class="btn fixed-button"><i class="fas fa-pen"></i>
+            </a>
+
+        </div>
+
+        <div id="Notifications" class="tabcontent">
+            <h3>Уведомления</h3>
+            <#if notifications??>
+                <#list notifications as item>
+                    <div class="notification-card mb-4" onclick="toggleCardExpansion(this)">
+                        ${item.notificationText}
+                        <br>
+                        ${item.notificationDate}
+                        <a href="msg/delete/${item.id}">
+                            <span class="delete-icon" style="color: black;"><i class="fas fa-trash-alt"></i></span>
+                        </a>
+                    </div>
+
+                </#list>
+            </#if>
+
+        </div>
     </div>
     <style>
         body {

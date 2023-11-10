@@ -28,6 +28,11 @@ public class RatingService {
         org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
         User user = userRepository.findByPhoneNumber(userDetails.getUsername()).orElse(null);
         Specialist specialist = specialistRepository.findById(dto.getSpecialistId()).orElse(null);
+
+        if (dto.getRatingValue() <= 0){
+            throw new IllegalArgumentException("Rating must be not null");
+        }
+
         if (user != null && specialist != null) {
             Ratings ratings = Ratings.builder()
                     .user(user)

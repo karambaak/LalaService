@@ -51,6 +51,7 @@ const maxRating = 5;
 
 const ratingContainer = document.querySelector('.rating');
 const stars = ratingContainer.querySelectorAll('.star');
+const successNotification = document.getElementById("notification");
 
 for (let i = 0; i < maxRating; i++) {
     if (i < rating) {
@@ -97,3 +98,72 @@ shareButtons.forEach(button => {
         window.open(shareUrl, '_blank');
     });
 });
+
+document.getElementById("openModalRating").addEventListener("click", function () {
+    openModalRating();
+});
+
+document.getElementById("close-button").addEventListener("click", function () {
+    document.getElementById("side-menu").classList.remove("active");
+});
+
+function openModalRating() {
+    document.getElementById("modalRating").style.display = "block";
+}
+
+function closeModalRating() {
+    document.getElementById("modalRating").style.display = "none";
+}
+
+window.onclick = function (event) {
+    var modal = document.getElementById("modalRating");
+    if (event.target === modal) {
+        closeModalRating();
+    }
+};
+
+function submitReview() {
+    const specialistId = document.getElementById("specialistId")
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+    const csrfToken = document.querySelector('meta[name="_csrf_token"]').getAttribute('content');
+
+    var rating = $("input[name='fst']:checked").val();
+    var review = $("#review-input");
+    console.log("specialist Id: ", specialistId)
+
+    var url = "/api/rating/new/" + specialistId.value;
+
+    var data = {
+        ratingValue: rating,
+        reviewText: review.val()
+    };
+
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        headers: {[csrfHeader]: csrfToken},
+        success: function (response) {
+            successNotification.textContent = "Спасибо за ваш отзыв"
+            closeModalRating()
+            review.value = ""
+            showSuccessNotification();
+            console.log("Отзыв успешно отправлен:", response);
+        },
+        error: function (error) {
+            successNotification.textContent = "Ошибка при отправлени отзыва"
+            closeModalRating()
+            review.value = ""
+            showSuccessNotification();
+            console.error("Ошибка при отправке отзыва:", error);
+        }
+    });
+}
+
+function showSuccessNotification() {
+    successNotification.classList.add("show");
+    setTimeout(() => {
+        successNotification.classList.remove("show");
+    }, 4000);
+}
