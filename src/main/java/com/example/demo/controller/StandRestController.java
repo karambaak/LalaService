@@ -1,10 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.MessageDto;
+import com.example.demo.dto.ResponseDto;
 import com.example.demo.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/stand")
@@ -26,4 +30,19 @@ public class StandRestController {
         }
         return HttpStatus.NOT_FOUND;
     }
+    @PostMapping("/find_new/specialist_customer")
+    public ResponseEntity<?> updateMessagesForSpecialist(@RequestBody MessageDto messageDto) {
+        String conversationId = messageDto.getViewer();
+        String localDateTime = messageDto.getResponse();
+        List<ResponseDto> list = postService.updateMessagesForSpecialist(localDateTime, conversationId);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+    @PostMapping("/find_new/customer_specialist")
+    public ResponseEntity<?> updateMessagesForCustomer(@RequestBody MessageDto messageDto) {
+        String conversationId = messageDto.getViewer();
+        String localDateTime = messageDto.getResponse();
+        List<ResponseDto> list = postService.updateMessagesForCustomer(localDateTime, conversationId);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
 }
