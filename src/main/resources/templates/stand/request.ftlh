@@ -148,6 +148,18 @@
             position: absolute;
             top: 25px;
         }
+        @media (max-width: 600px) {
+            .message-card {
+                flex-direction: column;
+                align-items: center;
+                height: auto;
+            }
+
+            .stand-button {
+                position: static;
+                margin-top: 10px;
+            }
+        }
         .chatb {
             border: 2px solid #2552e7;
             color: #2552e7;
