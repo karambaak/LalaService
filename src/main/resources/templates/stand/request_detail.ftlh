@@ -37,17 +37,19 @@
                 Данный запрос больше не актуален.
             </#if>
         </div>
-            <div class="d-flex flex-column align-items-end me-3 my-3">
-                <#if (pastMessages)??>
-                    <#list pastMessages as item>
-                        <#if item.viewer == 'author'>
-                            <div class="message">${item.response} <br> <#if (item.dateTime)??> ${item.dateTime} </#if> </div>
-                        <#else>
-                            <div class="incoming-msg">${item.response} <br> <#if (item.dateTime)??> ${item.dateTime} </#if> </div>
-                        </#if>
-                    </#list>
-                </#if>
-            </div>
+        <div class="d-flex flex-column align-items-end me-3 my-3">
+            <#if (pastMessages)??>
+                <#list pastMessages as item>
+                    <#if item.viewer == 'author'>
+                        <div class="message">${item.response} <br> <#if (item.dateTime)??> ${item.dateTime} </#if>
+                        </div>
+                    <#else>
+                        <div class="incoming-msg">${item.response} <br> <#if (item.dateTime)??> ${item.dateTime} </#if>
+                        </div>
+                    </#if>
+                </#list>
+            </#if>
+        </div>
 
 
         <div class="sent-messages d-flex flex-column align-items-end me-3 my-3">
@@ -66,6 +68,10 @@
     <style>
         .padding-div {
             padding: 30px;
+        }
+
+        .message-container {
+            margin-bottom: 40px;
         }
 
         .category-card span {
@@ -133,6 +139,14 @@
             width: 25%;
         }
 
+        @media (max-width: 600px) {
+            .respond-button {
+                width: auto;
+                margin-right: auto;
+                margin-left: auto;
+            }
+        }
+
         .respond-button:hover {
             background-color: #2552e7;
             color: #fff;
@@ -169,21 +183,20 @@
         }
     </style>
     <script>
+        const currentURL = window.location.href;
+        const parts = currentURL.split("/");
+        const viewer = parts[parts.length - 1];
+        const csrfToken = document.querySelector('input[name="_csrf"]').value;
+        const sentMessages = document.querySelector('.sent-messages');
+        const postedMessages = new Set();
+
         document.addEventListener('DOMContentLoaded', function () {
             const messageForm = document.getElementById('message-form');
             const messageText = document.getElementById('message-text');
-            const sentMessages = document.querySelector('.sent-messages');
 
             messageForm.addEventListener('submit', function (e) {
                 e.preventDefault();
-
                 const message = messageText.value;
-                const csrfToken = document.querySelector('input[name="_csrf"]').value;
-
-                const currentURL = window.location.href;
-                const parts = currentURL.split("/");
-                const viewer = parts[parts.length - 1];
-
                 const responseText = {
                     viewer: viewer,
                     response: message,
@@ -201,7 +214,7 @@
                         const messageElement = document.createElement('div');
                         messageElement.classList.add('message');
                         const dt = getDateTime();
-                        messageElement.textContent = message + '\n' + getDateTime();
+                        messageElement.innerText = message + '\n' + getDateTime();
                         sentMessages.appendChild(messageElement);
                         messageForm.reset();
                     })
@@ -210,6 +223,7 @@
                     });
             });
         });
+
         function getDateTime() {
             const now = new Date();
             const date = ("0" + now.getDate()).slice(-2);
@@ -220,5 +234,55 @@
             return '\n' + month + '/' + date + ' ' + hour + ':' + minute;
         }
 
+        const now = new Date();
+
+
+        let preciseNow = new Date(Math.floor(now.getTime() / 1000) * 1000);
+        const time = preciseNow.toISOString()
+
+        function fetchNewMessages(preciseNow) {
+
+            fetch(`/stand/find_new/customer_specialist`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    'viewer': viewer,
+                    'response': time
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        console.log(data);
+                        data.forEach(message => {
+                            const responseMessage = message.response;
+                            const responseDateTime = message.dateTime;
+                            const messageIdentifier = responseMessage + '-' + responseDateTime;
+
+                            if (!postedMessages.has(messageIdentifier)) {
+                                const messageElement = document.createElement('div');
+                                messageElement.classList.add('incoming-msg');
+
+                                messageElement.innerText = responseMessage + '\n' + responseDateTime;
+                                sentMessages.appendChild(messageElement);
+
+                                postedMessages.add(messageIdentifier);
+                            }
+                        });
+                        preciseNow = Math.max(...data.map(message => message.dateTime));
+                    }
+                    setTimeout(() => fetchNewMessages(preciseNow), 5000); // Fetch every 5 seconds (adjust as needed)
+                })
+                .catch(error => {
+                    console.error('Error fetching new messages:', error);
+                    setTimeout(() => fetchNewMessages(preciseNow), 5000); // Fetch every 5 seconds (adjust as needed)
+                });
+        }
+
+        let preciseNow2 = new Date(Math.floor(now.getTime() / 1000) * 1000);
+        fetchNewMessages(preciseNow2);
     </script>
 </@main.layout>

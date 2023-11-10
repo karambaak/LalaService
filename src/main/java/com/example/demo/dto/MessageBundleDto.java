@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class MessageBundleDto {
-    private String id;
+    private String id; //msg-Long Id (Идентификатор собеседника)
     private String senderPhoto;
     private String senderName;
     private String lastMessageText;

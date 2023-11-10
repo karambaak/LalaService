@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -309,8 +311,8 @@ public class PostService {
         for (Map.Entry<String, List<ResponseDto>> entry : conversationDtoList.entrySet()) {
             list.add(ConversationDto.builder()
                     .conversationId(entry.getKey())
-                            .userId(userId)
-                            .username(username)
+                    .userId(userId)
+                    .username(username)
                     .messages(entry.getValue())
                     .build());
         }
@@ -320,25 +322,31 @@ public class PostService {
     public void createNewPost(PostInputDto dto) {
         User user = userService.getUserFromSecurityContextHolder();
         if (user != null) {
-            var c = categoryRepository.findById(dto.getCategoryId());
-            c.ifPresent(category -> postRepository.saveAndFlush(Post.builder()
-                    .user(user)
-                    .category(category)
-                    .title(dto.getTitle())
-                    .description(dto.getDescription())
-                    .workRequiredTime(dto.getWorkRequiredTime())
-                    .publishedDate(LocalDateTime.now())
-                    .build()));
+            var maybeCategory = categoryRepository.findById(dto.getCategoryId());
+            if(maybeCategory.isPresent()){
+                Category c = maybeCategory.get();
+                postRepository.saveAndFlush(Post.builder()
+                        .user(user)
+                        .category(c)
+                        .title(dto.getTitle())
+                        .description(dto.getDescription())
+                        .workRequiredTime(dto.getWorkRequiredTime())
+                        .publishedDate(LocalDateTime.now())
+                        .build());
 
-            var newPost = postRepository.findByTitleAndWorkRequiredTime(dto.getTitle(), dto.getWorkRequiredTime());
-            if (newPost.isPresent()) {
-                String keyword = makeKeyword(newPost.get());
-                String text = new StringBuilder().append("Создана новая запись на стенде в категории ").append(c.get().getCategoryName()).append(":").toString();
-                List<SubscriptionStand> subscriptionsOnCategory = subscriptionStandRepository.findByCategory_Id(dto.getCategoryId());
-                for (SubscriptionStand s : subscriptionsOnCategory) {
-                    sendNotification(text, s.getSpecialist().getUser(), keyword);
+                var newPost = postRepository.findByTitleAndWorkRequiredTime(dto.getTitle(), dto.getWorkRequiredTime());
+                if (newPost.isPresent()) {
+                    String keyword = makeKeyword(newPost.get());
+                    String text = new StringBuilder().append("Создана новая запись на стенде в категории ").append(c.getCategoryName()).append(":").toString();
+                    List<SubscriptionStand> subscriptionsOnCategory = subscriptionStandRepository.findByCategory_Id(dto.getCategoryId());
+                    for (SubscriptionStand s : subscriptionsOnCategory) {
+                        sendNotification(text, s.getSpecialist().getUser(), keyword);
+                    }
                 }
             }
+
+
+
         }
 
 
@@ -418,7 +426,6 @@ public class PostService {
         postRepository.delete(post);
 
     }
-
     @Transactional
     public void deletePost(Long postId) {
         var post = postRepository.findById(postId);
@@ -450,8 +457,51 @@ public class PostService {
 
     private void deleteNotificationsByKeyword(String keyword) {
         List<Notification> notifications = notificationRepository.findByNotificationTextContaining(keyword);
-        for (Notification n : notifications) {
-            notificationRepository.delete(n);
+        notificationRepository.deleteAll(notifications);
+    }
+
+    public List<ResponseDto> updateMessagesForSpecialist(String localDateTime, String conversationId) {
+        List<Response> responsesNew = getNew(localDateTime, conversationId);
+        List<ResponseDto> list = new ArrayList<>();
+        for (Response r :
+                responsesNew) {
+            if (r.getUser() != null) list.add(ResponseDto.builder()
+                    .response(r.getResponse())
+                    .viewer(READER)
+                    .dateTime(formatDateTimeShort(r.getDateTime()))
+                    .build());
         }
+        return list;
+    }
+
+    private List<Response> getNew(String localDateTime, String conversationId) {
+        List<Response> responses = responseRepository.findAllByConversationId(conversationId);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        LocalDateTime ldt = LocalDateTime.parse(localDateTime, formatter);
+
+        List<Response> list = new ArrayList<>();
+        for (Response r:responses) {
+            ZoneId zoneId = ZoneId.of("Asia/Bishkek");
+            ZonedDateTime responseDateTime = r.getDateTime().atZone(zoneId);
+            ZonedDateTime requestDateTime = ldt.atZone(zoneId).plusHours(6);
+            if (requestDateTime.isBefore(responseDateTime)) {
+                list.add(r);
+            }
+        }
+        return list;
+    }
+
+    public List<ResponseDto> updateMessagesForCustomer(String localDateTime, String conversationId) {
+        List<Response> responsesNew = getNew(localDateTime, conversationId);
+        List<ResponseDto> list = new ArrayList<>();
+        for (Response r :
+                responsesNew) {
+            if (r.getSpecialist() != null) list.add(ResponseDto.builder()
+                    .response(r.getResponse())
+                    .viewer(READER)
+                    .dateTime(formatDateTimeShort(r.getDateTime()))
+                    .build());
+        }
+        return list;
     }
 }

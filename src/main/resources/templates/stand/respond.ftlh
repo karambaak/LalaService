@@ -42,9 +42,11 @@
                 <#if (pastMessages)??>
                     <#list pastMessages as item>
                         <#if item.viewer == 'author'>
-                            <div class="message">${item.response} <br> <#if (item.dateTime)??> ${item.dateTime} </#if> </div>
+                            <div class="message">${item.response} <br> <#if (item.dateTime)??> ${item.dateTime} </#if>
+                            </div>
                         <#else>
-                            <div class="incoming-msg">${item.response} <br> <#if (item.dateTime)??> ${item.dateTime} </#if> </div>
+                            <div class="incoming-msg">${item.response}
+                                <br> <#if (item.dateTime)??> ${item.dateTime} </#if> </div>
                         </#if>
                     </#list>
                 </#if>
@@ -66,6 +68,9 @@
         </div>
     </div>
     <style>
+        .message-container {
+            margin-bottom: 40px;
+        }
         .padding-div {
             padding: 30px;
         }
@@ -135,6 +140,14 @@
             width: 25%;
         }
 
+        @media (max-width: 600px) {
+            .respond-button {
+                width: auto;
+                margin-right: auto;
+                margin-left: auto;
+            }
+        }
+
         .respond-button:hover {
             background-color: #2552e7;
             color: #fff;
@@ -171,20 +184,21 @@
         }
     </style>
     <script>
+        const specialist = ${viewer.specialistId}
+        const postId = ${post.id}
+        const viewer = postId + '-' + specialist;
+        const csrfToken = document.querySelector('input[name="_csrf"]').value;
+        const sentMessages = document.querySelector('.sent-messages');
+        const postedMessages = new Set();
+
         document.addEventListener('DOMContentLoaded', function () {
             const messageForm = document.getElementById('message-form');
             const messageText = document.getElementById('message-text');
-            const sentMessages = document.querySelector('.sent-messages');
 
             messageForm.addEventListener('submit', function (e) {
                 e.preventDefault();
 
                 const message = messageText.value;
-                const csrfToken = document.querySelector('input[name="_csrf"]').value;
-
-                const specialist = ${viewer.specialistId}
-                const postId = ${post.id}
-                const viewer = postId + '-' + specialist;
 
                 const responseText = {
                     viewer: viewer,
@@ -203,7 +217,7 @@
                         const messageElement = document.createElement('div');
                         messageElement.classList.add('message');
                         const dt = getDateTime();
-                        messageElement.textContent = message + '\n' + getDateTime();
+                        messageElement.innerText = message + '\n' + getDateTime();
                         sentMessages.appendChild(messageElement);
                         messageForm.reset();
                     })
@@ -212,6 +226,7 @@
                     });
             });
         });
+
         function getDateTime() {
             const now = new Date();
             const date = ("0" + now.getDate()).slice(-2);
@@ -221,6 +236,57 @@
 
             return '\n' + month + '/' + date + ' ' + hour + ':' + minute;
         }
+
+        const now = new Date();
+
+
+        let preciseNow = new Date(Math.floor(now.getTime() / 1000) * 1000);
+        const time = preciseNow.toISOString()
+
+        function fetchNewMessages(preciseNow) {
+
+            fetch(`/stand/find_new/specialist_customer`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    'viewer': viewer,
+                    'response': time
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        console.log(data);
+                        data.forEach(message => {
+                            const responseMessage = message.response;
+                            const responseDateTime = message.dateTime;
+                            const messageIdentifier = responseMessage + '-' + responseDateTime;
+
+                            if (!postedMessages.has(messageIdentifier)) {
+                                const messageElement = document.createElement('div');
+                                messageElement.classList.add('incoming-msg');
+
+                                messageElement.innerText = responseMessage + '\n' + responseDateTime;
+                                sentMessages.appendChild(messageElement);
+
+                                postedMessages.add(messageIdentifier);
+                            }
+                        });
+                        preciseNow = Math.max(...data.map(message => message.dateTime));
+                    }
+                    setTimeout(() => fetchNewMessages(preciseNow), 5000); // Fetch every 5 seconds (adjust as needed)
+                })
+                .catch(error => {
+                    console.error('Error fetching new messages:', error);
+                    setTimeout(() => fetchNewMessages(preciseNow), 5000); // Fetch every 5 seconds (adjust as needed)
+                });
+        }
+
+        let preciseNow2 = new Date(Math.floor(now.getTime() / 1000) * 1000);
+        fetchNewMessages(preciseNow2);
 
     </script>
 </@main.layout>
