@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/fav/**").authenticated()
                         .requestMatchers("/msg/**").authenticated()
                         .requestMatchers("/stand/respond/**").hasAuthority("ROLE_SPECIALIST")
+                        .requestMatchers("/tariff/**").hasAuthority("ROLE_SPECIALIST")
                         .requestMatchers("/stand/request/**").hasAuthority("ROLE_CUSTOMER")
                         .requestMatchers("/stand/select").hasAuthority("ROLE_CUSTOMER")
                         .requestMatchers("/api/**").fullyAuthenticated()
