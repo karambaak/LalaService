@@ -1,44 +1,43 @@
 <#import '../layout.ftlh' as main>
 <@main.layout>
-    <div class="padding-div">
-        <div class="category-header">
-            <a href="javascript:history.go(-1);" class="back-button">
-                <i class="fas fa-arrow-left"></i>Назад
-            </a>
-        </div>
-        <div class="d-flex flex-column align-items-end me-3 my-3">
-            <#if (messages)??>
-                <#list messages as item>
-                    <#if item.viewer == 'author'>
-                        <div class="message"><#if (item.response)??>${item.response} </#if> <br>
-                            <#if (item.dateTime)??>${item.dateTime}</#if>
-                        </div>
-                    <#else>
-                        <div class="incoming-msg"><#if (item.response)??>${item.response} </#if>
-                            <br> <#if (item.dateTime)??>${item.dateTime}</#if></div>
-                    </#if>
-                </#list>
-            </#if>
-        </div>
+    <div class="content">
+        <div class="padding-div">
+            <div class="category-header">
+                <a href="javascript:history.go(-1);" class="back-button">
+                    <i class="fas fa-arrow-left"></i>Назад
+                </a>
+            </div>
+            <div class="d-flex flex-column align-items-end me-3 my-3">
+                <#if (messages)??>
+                    <#list messages as item>
+                        <#if item.viewer == 'author'>
+                            <div class="message"><#if (item.response)??>${item.response} </#if> <br>
+                                <#if (item.dateTime)??>${item.dateTime}</#if>
+                            </div>
+                        <#else>
+                            <div class="incoming-msg"><#if (item.response)??>${item.response} </#if>
+                                <br> <#if (item.dateTime)??>${item.dateTime}</#if></div>
+                        </#if>
+                    </#list>
+                </#if>
+            </div>
 
 
-        <div class="sent-messages d-flex flex-column align-items-end me-3 my-3">
-            <!-- Messages will be displayed here -->
-        </div>
-        <div class="message-container">
-            <form id="message-form"
-                  class="d-flex flex-column align-items-end me-3">
-                <input type="text" id="message-text" class="msg-input" autofocus required>
-                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                       value="${(_csrf.token)!'--no-token--'}"/>
-                <button type="submit" class="respond-button">Отправить</button>
-            </form>
+            <div class="sent-messages d-flex flex-column align-items-end me-3 my-3">
+                <!-- Messages will be displayed here -->
+            </div>
+            <div class="message-container">
+                <form id="message-form"
+                      class="d-flex flex-column align-items-end me-3">
+                    <input type="text" id="message-text" class="msg-input" autofocus required>
+                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                           value="${(_csrf.token)!'--no-token--'}"/>
+                    <button type="submit" class="respond-button">Отправить</button>
+                </form>
+            </div>
         </div>
     </div>
     <style>
-        .message-container{
-            margin-bottom: 40px;
-        }
         .padding-div {
             padding: 30px;
         }

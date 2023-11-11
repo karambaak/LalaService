@@ -1,10 +1,11 @@
 <#import "../layout.ftlh" as main>
 
 <@main.layout>
-    <div class="msg">
-        <button class="tablinks-1">Сообщения</button>
-        <button class="tablinks-2">Уведомления</button>
-    </div>
+    <div class="content">
+        <div class="msg">
+            <button class="tablinks-1">Сообщения</button>
+            <button class="tablinks-2">Уведомления</button>
+        </div>
 
     <div id="Messages" class="tabcontent">
         <h3 class="my-3">Сообщения</h3>
@@ -45,9 +46,10 @@
                     </a>
                 </div>
 
-            </#list>
-        </#if>
+                </#list>
+            </#if>
 
+        </div>
     </div>
     <style>
         body {
@@ -177,6 +179,7 @@
         .expanded {
             max-height: none;
         }
+
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -223,5 +226,7 @@
                 }
             });
         });
+
+
     </script>
 </@main.layout>

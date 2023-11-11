@@ -26,6 +26,8 @@ databaseChangeLog:
               - column:
                   name: rating
                   type: integer
+                  constraints:
+                    nullable: false
               - column:
                   name: review_text
                   type: varchar(255)
