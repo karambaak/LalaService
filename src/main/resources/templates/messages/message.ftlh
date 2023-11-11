@@ -54,24 +54,6 @@
             </a>
 
         </div>
-
-        <div id="Notifications" class="tabcontent">
-            <h3>Уведомления</h3>
-            <#if notifications??>
-                <#list notifications as item>
-                    <div class="notification-card mb-4" onclick="toggleCardExpansion(this)">
-                        ${item.notificationText}
-                        <br>
-                        ${item.notificationDate}
-                        <a href="msg/delete/${item.id}">
-                            <span class="delete-icon" style="color: black;"><i class="fas fa-trash-alt"></i></span>
-                        </a>
-                    </div>
-
-                </#list>
-            </#if>
-
-        </div>
     </div>
     <style>
         body {
