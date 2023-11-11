@@ -43,11 +43,14 @@
                     ${item.notificationDate}
                     <a href="msg/delete/${item.id}">
                         <span class="delete-icon" style="color: black;"><i class="fas fa-trash-alt"></i></span>
-                    </a>
-                </div>
 
+                    </a>
                 </#list>
             </#if>
+
+
+            <a href="/msg/new" class="btn fixed-button"><i class="fas fa-pen"></i>
+            </a>
 
         </div>
     </div>
@@ -179,7 +182,6 @@
         .expanded {
             max-height: none;
         }
-
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -226,7 +228,5 @@
                 }
             });
         });
-
-
     </script>
 </@main.layout>
