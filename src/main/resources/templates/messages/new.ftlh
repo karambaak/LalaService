@@ -1,42 +1,44 @@
 <#import '../layout.ftlh' as main>
 <@main.layout>
-    <div class="new-msg">
-        <div class="email-app">
-            <p class="text-center">Новое сообщение</p>
-            <form>
-                <div class="form-row mb-3">
-                    <label for="to" class="my-3">Кому:</label>
-                    <div class="">
-                        <input type="text" class="form-control" id="to" placeholder="Имя пользователя">
-                        <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                               value="${(_csrf.token)!'--no-token--'}" />
-                        <div id="toError" class="error-message"></div> <!-- New element for error message -->
-
-                    </div>
-                </div>
-            </form>
-            <div class="list-names">
-                <#if usernameList??>
-                    <#list usernameList as item>
-                        <div class="user-item" data-id="${item.id}">
-                            <div class="textbox">
-                                ${item.userName}
-                            </div>
+    <div class="content">
+        <div class="new-msg">
+            <div class="email-app">
+                <p class="text-center">Новое сообщение</p>
+                <form>
+                    <div class="form-row mb-3">
+                        <label for="to" class="my-3">Кому:</label>
+                        <div class="">
+                            <input type="text" class="form-control" id="to" placeholder="Имя пользователя">
+                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                                   value="${(_csrf.token)!'--no-token--'}"/>
+                            <div id="toError" class="error-message"></div> <!-- New element for error message -->
 
                         </div>
-                    </#list>
-                </#if>
-            </div>
-            <div class="row">
-                <div class="">
-                    <div class="form-group mt-4">
+                    </div>
+                </form>
+                <div class="list-names">
+                    <#if usernameList??>
+                        <#list usernameList as item>
+                            <div class="user-item" data-id="${item.id}">
+                                <div class="textbox">
+                                    ${item.userName}
+                                </div>
+
+                            </div>
+                        </#list>
+                    </#if>
+                </div>
+                <div class="row">
+                    <div class="">
+                        <div class="form-group mt-4">
                         <textarea class="form-control" id="message" name="body" rows="12"
                                   placeholder="Введите Ваше сообщение"></textarea>
-                        <div id="messageError" class="error-message"></div>
-</div>
-                    <div class="form-group">
-                        <button type="button" class="button-msg" id="send">Отправить</button>
-                        <a href="javascript:history.go(-1);" class="button-msg" id="cancel">Отмена</a>
+                            <div id="messageError" class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="button-msg" id="send">Отправить</button>
+                            <a href="javascript:history.go(-1);" class="button-msg" id="cancel">Отмена</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -47,7 +49,7 @@
             const toInput = document.getElementById('to');
             const listNames = document.querySelector('.list-names');
             let userId;
-            toInput.addEventListener('input', function() {
+            toInput.addEventListener('input', function () {
                 const userInput = this.value.toLowerCase();
                 const userItems = listNames.querySelectorAll('.user-item');
 
@@ -68,11 +70,11 @@
                 }
             });
 
-            listNames.addEventListener('click', function(e) {
+            listNames.addEventListener('click', function (e) {
                 const userItem = e.target.closest('.user-item');
 
                 if (userItem) {
-                     userId = userItem.dataset.id;
+                    userId = userItem.dataset.id;
                     toInput.value = userItem.textContent.trim();
                     console.log('Selected user ID:', userId);
 
@@ -120,6 +122,7 @@
         .list-names {
             display: none;
         }
+
         .error-message {
             color: red;
             font-size: 12px;
@@ -134,6 +137,7 @@
             margin-right: auto;
             width: 500px;
         }
+
         .textbox {
             border: 1px solid #2552e7;
             padding: 5px;
