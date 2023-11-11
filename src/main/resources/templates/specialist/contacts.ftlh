@@ -40,7 +40,8 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            margin-right: 10px;
+            margin-right: auto;
+            margin-left: auto;
             flex-grow: 1;
         }
 
@@ -60,7 +61,7 @@
     <div class="p-5">
         <div class="search-bar">
             <input type="text" class="search-input" id="search" placeholder="Поиск...">
-            <button class="search-button"><i class="fas fa-search"></i></button>
+<#--            <button class="search-button"><i class="fas fa-search"></i></button>-->
         </div>
         <div>
             <#if searchResults??>

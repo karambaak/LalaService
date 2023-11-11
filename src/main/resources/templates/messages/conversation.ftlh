@@ -152,7 +152,6 @@
         }
     </style>
     <script>
-
         const viewer = '${msgId}';
         const csrfToken = document.querySelector('input[name="_csrf"]').value;
         const sentMessages = document.querySelector('.sent-messages');
