@@ -11,15 +11,17 @@
         <#if messages??>
             <#list messages as item>
                 <a class="message-card mb-3" href="/msg/${item.id}">
-                    <div class="photo mx-4">
+                    <div class="photo">
                         <img src="${item.senderPhoto}" alt="user photo">
                     </div>
                     <div class="text">
-                        <b> ${item.senderName} </b> <#if (item.lastMessageText)??>${item.lastMessageText}</#if>
+                        <b> ${item.senderName} </b>
+                        <#if (item.lastMessageText)??>${item.lastMessageText}</#if>
                         <p class="ms-auto">
-                            <#if (item.lastMessageDateTime)??>${item.lastMessageDateTime}</#if></p>
+                            <#if (item.lastMessageDateTime)??>${item.lastMessageDateTime}</#if>
+                        </p>
                     </div>
-                        <span  class="delete-icon" style="color: black;"><i style="margin-left: 20px" class="fas fa-trash-alt"></i></span>
+                    <span class="delete-icon" style="color: black;"><i class="fas fa-trash-alt"></i></span>
                 </a>
             </#list>
         </#if>
@@ -34,7 +36,7 @@
         <h3>Уведомления</h3>
         <#if notifications??>
             <#list notifications as item>
-                <div class="notification-card mb-4" onclick="toggleCardExpansion(this)">
+                <div class="notification-card" onclick="toggleCardExpansion(this)">
                     ${item.notificationText}
                     <br>
                     ${item.notificationDate}
@@ -56,145 +58,7 @@
             padding: 0;
         }
 
-        /* Убираем округление навбара и добавляем тень только на верхней части */
-        .tab-container {
-            background-color: rgb(255, 255, 255);
-            border-top-left-radius: 18px;
-            /* Только верхнее левое округление */
-            border-top-right-radius: 18px;
-            /* Только верхнее правое округление */
-            box-shadow: 0px 5px 15px rgba(0.0, 0.0, 0.1, 0.4);
-            /* Тень только в верхней части */
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1;
-        }
 
-
-        .tab-bar {
-            background-color: #ffffff;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-        }
-
-        .tab {
-            color: #2552e7;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 5px;
-            cursor: pointer;
-        }
-
-        .tab i {
-            font-size: 24px;
-        }
-
-        .content {
-            padding: 20px;
-        }
-
-        .searchBox {
-            display: flex;
-            justify-content: center;
-            background: #ffffff;
-            max-width: 80%;
-            width: 100%;
-            margin: 0 auto;
-            height: 40px;
-            border-radius: 20px;
-            padding: 10px;
-            box-shadow: 0px 0px 15px rgba(0.0, 0.0, 0.1, 0.1);
-        }
-
-        .searchInput {
-            border: none;
-            background: none;
-            outline: none;
-            padding: 0;
-            color: rgb(0, 0, 0);
-            font-size: 16px;
-            transition: 0.4s;
-            line-height: 40px;
-            padding-left: 10px;
-            opacity: 60%;
-            width: 100%;
-        }
-
-        .category-container {
-            margin-top: 50px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-start;
-        }
-
-        .category-card {
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.2, 0.2);
-            margin: 10px;
-            flex-basis: calc(33.33% - 20px);
-            /* Три карточки в ряду на больших экранах */
-            max-width: 100px;
-            /* Три карточки в ряду на маленьких экранах */
-            text-align: center;
-            display: flex;
-            height: 90px;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .category-card:hover {
-            background-color: #2552e7;
-            color: white;
-        }
-
-        @media screen and (min-width: 769px) {
-            .category-container {
-                justify-content: center;
-            }
-
-            .tab-container {
-                background-color: white;
-                border-radius: 15px;
-                box-shadow: 0px -5px 15px rgba(0.0, 0.0, 0.1, 0.2);
-                overflow: hidden;
-                margin: 0;
-                padding: 0;
-                position: fixed;
-                bottom: 0;
-                left: 50%;
-                transform: translateX(-50%);
-                margin-bottom: 30px;
-                width: 100%;
-                max-width: 600px;
-            }
-
-            .searchBox {
-                max-width: 50%;
-            }
-        }
-
-        .category-card i {
-            font-size: 18px;
-            /* Увеличьте размер иконки */
-            color: #2552e7;
-            /* Цвет иконки */
-            margin-bottom: 10px;
-        }
-
-        .category-card span {
-            margin-top: 10px;
-            font-size: 12px;
-            font-weight: 600;
-        }
 
         /* Style the tabs */
         .msg {
@@ -254,13 +118,30 @@
             padding: 20px 30px;
         }
 
+        @media only screen and (max-width: 600px) {
+            .message-card {
+                padding: 20px 10px;
+                height: 150px;
+            }
+
+            .notification-card {
+                padding: 20px 10px;
+                height: 150px !important;
+            }
+
+            .text {
+                white-space: normal !important;
+            }
+
+        }
+
         .fixed-button {
             position: absolute;
             background-color: #2552e7;
             color: white;
             padding: 15px 20px;
-            bottom: 50px;
-            right: 40px;
+            bottom: 70px;
+            right: 50px;
             border-radius: 5px;
         }
 
@@ -272,6 +153,7 @@
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+            margin: 0 10px;
         }
 
         .photo img {
@@ -289,13 +171,12 @@
             padding: 20px 30px;
             overflow: hidden;
             transition: height 0.3s ease;
-            max-height: 90px;
+            height: 90px;
         }
 
         .expanded {
             max-height: none;
         }
-
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -342,7 +223,5 @@
                 }
             });
         });
-
-
     </script>
 </@main.layout>
