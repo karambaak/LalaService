@@ -3,7 +3,7 @@
     <div class="container-login">
         <div class="row form-item">
 
-            <div class="card shadow-lg" style="border-radius: 15px; margin-top: 100px">
+            <div class="card shadow-lg" style="border-radius: 15px; margin-top: 10px">
                 <div class="card-body p-5">
                     <h1 class="">Зарегистрироваться</h1>
                     <form method="post" class="needs-validation" action="/auth/register">
@@ -109,9 +109,7 @@
         }
 
         .container-login {
-            padding: 40px;
             display: flex;
-            align-items: center;
             justify-content: center;
 
         }
@@ -136,10 +134,10 @@
             font-size: 20px;
         }
 
-        .card-footer {
-            padding: 20px 0;
-            margin: 20px 0;
-        }
+        /*.card-footer {*/
+        /*    padding: 20px 0;*/
+        /*    margin: 20px 0;*/
+        /*}*/
 
         .google-button {
             margin-bottom: 40px;

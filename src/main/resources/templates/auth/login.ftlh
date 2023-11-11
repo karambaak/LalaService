@@ -4,7 +4,7 @@
     <div class="container-login">
         <div class="row form-item">
 
-            <div class="card shadow-lg" style="border-radius: 15px; margin-top: 100px">
+            <div class="card shadow-lg" style="border-radius: 15px; margin-top: 10px">
                 <div class="card-body p-5">
                     <h1 class="">Войти</h1>
                         <form method="post" class="needs-validation" action="/auth/login" id="/login-form">
@@ -87,7 +87,6 @@
             font-weight: bold;
             border-radius: 5px;
             padding: 10px 20px;
-            margin: 15px;
             text-decoration: none;
             font-size: 16px;
         }
@@ -97,9 +96,7 @@
             color: #ffffff;
         }
         .container-login {
-            padding: 40px;
             display: flex;
-            align-items: center;
             justify-content: center;
 
         }
@@ -119,10 +116,6 @@
             justify-content: left;
             height: 25px;
             font-size: 20px;
-        }
-        .card-footer {
-            padding: 20px 0;
-            margin: 20px 0;
         }
         .google-button {
             margin-bottom: 40px;
