@@ -38,6 +38,9 @@
         </div>
     </div>
     <style>
+        .message-container{
+            margin-bottom: 40px;
+        }
         .padding-div {
             padding: 30px;
         }
@@ -111,7 +114,13 @@
             background-color: #2552e7;
             color: #fff;
         }
-
+        @media (max-width: 600px) {
+            .respond-button {
+                width: auto;
+                margin-right: auto;
+                margin-left: auto;
+            }
+        }
         .message {
             margin: 5px 15px 5px;
             background-color: #2552e74a;
@@ -143,44 +152,46 @@
         }
     </style>
     <script>
-        const messageForm = document.getElementById('message-form');
-        const messageText = document.getElementById('message-text');
+
+        const viewer = '${msgId}';
+        const csrfToken = document.querySelector('input[name="_csrf"]').value;
         const sentMessages = document.querySelector('.sent-messages');
+        const postedMessages = new Set();
 
-        messageForm.addEventListener('submit', function (e) {
-            e.preventDefault();
+            const messageForm = document.getElementById('message-form');
+            const messageText = document.getElementById('message-text');
 
-            const message = messageText.value;
-            const csrfToken = document.querySelector('input[name="_csrf"]').value;
+            messageForm.addEventListener('submit', function (e) {
+                e.preventDefault();
 
-            const viewer = '${msgId}';
+                const message = messageText.value;
+                const csrfToken = document.querySelector('input[name="_csrf"]').value;
 
-            let responseText = {
-                "response": message,
-                "viewer": viewer
-            }
+                let responseText = {
+                    "response": message,
+                    "viewer": viewer
+                }
 
-            fetch(`/msg/new/` + viewer, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: JSON.stringify(responseText)
-            })
-                .then(response => {
-                    const messageElement = document.createElement('div');
-                    messageElement.classList.add('message');
-                    messageElement.textContent = message + '\n' + getDateTime();
-                    sentMessages.appendChild(messageElement);
-                    messageForm.reset();
+                fetch(`/msg/new/` + viewer, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify(responseText)
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        });
-        })
-        ;
+                    .then(response => {
+                        const messageElement = document.createElement('div');
+                        messageElement.classList.add('message');
+                        messageElement.innerText = message + '\n' + getDateTime();
+                        sentMessages.appendChild(messageElement);
+                        messageForm.reset();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+
 
         function getDateTime() {
             const now = new Date();
@@ -192,5 +203,54 @@
             return '\n' + month + '/' + date + ' ' + hour + ':' + minute;
         }
 
+        const now = new Date();
+
+
+        let preciseNow = new Date(Math.floor(now.getTime() / 1000) * 1000);
+        const time = preciseNow.toISOString()
+
+        function fetchNewMessages(preciseNow) {
+
+            fetch('/msg/find_new', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    'viewer': viewer,
+                    'response': time
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        console.log(data);
+                        data.forEach(message => {
+                            const responseMessage = message.response;
+                            const responseDateTime = message.dateTime;
+                            const messageIdentifier = responseMessage + '-' + responseDateTime;
+
+                            if (!postedMessages.has(messageIdentifier)) {
+                                const messageElement = document.createElement('div');
+                                messageElement.classList.add('incoming-msg');
+                                messageElement.innerText = responseMessage + '\n' + responseDateTime;
+                                sentMessages.appendChild(messageElement);
+
+                                postedMessages.add(messageIdentifier);
+                            }
+                        });
+                        preciseNow = Math.max(...data.map(message => message.dateTime));
+                    }
+                    setTimeout(() => fetchNewMessages(preciseNow), 5000); // Fetch every 5 seconds (adjust as needed)
+                })
+                .catch(error => {
+                    console.error('Error fetching new messages:', error);
+                    setTimeout(() => fetchNewMessages(preciseNow), 5000); // Fetch every 5 seconds (adjust as needed)
+                });
+        }
+
+        let preciseNow2 = new Date(Math.floor(now.getTime() / 1000) * 1000);
+        fetchNewMessages(preciseNow2);
     </script>
 </@main.layout>

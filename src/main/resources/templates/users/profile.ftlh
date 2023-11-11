@@ -99,11 +99,11 @@
                     <#if resumes?has_content>
                         <#list resumes as resume>
                             <div class="resume">
-                                <a href="#${resume.id}" class="resume-link">
+                                <a href="/resume/${resume.id}" class="resume-link">
                                     <#if resume.header?has_content>
                                         <p class="resume-name">${resume.header}</p>
                                     <#else>
-                                        <p class="resume-name">Без заголовок</p>
+                                        <p class="resume-name">Без заголовка</p>
                                     </#if>
                                     <#--                                    <p class="resume-experience">Опыт работы: ${resume.experience}</p>-->
                                     <#--                                    <p class="resume-category">Категория: ${resume.category}</p>-->
@@ -128,10 +128,18 @@
                     <#if portfolios?has_content>
                         <#list portfolios as portfolio>
                             <div class="portfolio">
-                                <img src="${portfolio.photo}" alt class="portfolio-img">
+                            <#if portfolio.photos?has_content>
+                                <#list portfolio.photos as photo>
+                                    <img src="${photo.photoLink}" alt class="portfolio-img">
+                                </#list>
+                            <#else>
+                                <p>У вас еще нет загруженного портфолио</p>
+                                </#if>
                                 <div>
-                                    <p>${portfolio.name}</p>
-                                    <p>Дата публикации: ${portfolio.createdDate}</p>
+                                    <p>${portfolio.title}</p>
+                                    <#if portfolio.timeOfPortfolio??>
+                                        <p>Дата публикации: ${portfolio.timeOfPortfolio}</p>
+                                    </#if>
                                 </div>
                             </div>
                         </#list>

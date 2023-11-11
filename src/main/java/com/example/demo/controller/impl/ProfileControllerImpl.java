@@ -1,7 +1,9 @@
 package com.example.demo.controller.impl;
 
 import com.example.demo.controller.ProfileController;
+import com.example.demo.dto.PortfolioDto;
 import com.example.demo.dto.UserDto;
+import com.example.demo.entities.Portfolio;
 import com.example.demo.entities.UpdateCounts;
 import com.example.demo.entities.User;
 import com.example.demo.repository.SpecialistRepository;
@@ -18,6 +20,7 @@ import org.springframework.ui.Model;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -33,6 +36,7 @@ public class ProfileControllerImpl implements ProfileController {
     private final SpecialistRepository specialistRepository;
     private final UpdateCountsRepository updateCountsRepository;
     private final UpdateCountsService updateCountsService;
+    private final PortfolioService portfolioService;
 
 
     @Override
@@ -48,6 +52,7 @@ public class ProfileControllerImpl implements ProfileController {
             byte[] qrCodeBytes = qrCodeStream.toByteArray();
             String qrCodeBase64 = Base64.getEncoder().encodeToString(qrCodeBytes);
             model.addAttribute("qrCodeBase64", qrCodeBase64);
+            model.addAttribute("portfolios", portfolioService.getPortfolioBySpecialistId(specialistId));
         }
         if (currentUser.getRole().equalsIgnoreCase("ROLE_CUSTOMER")) {
             model.addAttribute("stands", postService.getCustomerPostDtos(currentUser.getId()));
@@ -95,7 +100,7 @@ public class ProfileControllerImpl implements ProfileController {
     }
 
     @Override
-    public String updateProfile(Model model, Authentication auth, String userName, long geolocationId, String email) {
+    public String updateProfile(Model model, Authentication auth, String userName, Long geolocationId, String email) {
         UserDto currentUser = userService.getUserByAuthentication(auth);
         User user = userRepository.findById(currentUser.getId()).orElseThrow(() -> new NoSuchElementException("User not found"));
         user.setUserName(userName);

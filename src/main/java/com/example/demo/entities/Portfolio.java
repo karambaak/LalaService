@@ -23,7 +23,9 @@ public class Portfolio {
     private Specialist specialist;
 
     private String title;
-private LocalDateTime timeOfPortfolio;
+
+    private LocalDateTime timeOfPortfolio;
+
     @OneToMany(mappedBy = "portfolio")
     private List<Photo> photos;
 

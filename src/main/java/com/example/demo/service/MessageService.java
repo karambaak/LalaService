@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -265,7 +267,35 @@ public class MessageService {
         return list;
 
     }
+    public List<ResponseDto> findNewMessages(String localDateTime, String conversationId) {
+        User user = userService.getUserFromSecurityContextHolder();
+        if (user == null) return Collections.emptyList();
 
+        Long value = Long.parseLong(postService.extractStringAfterDash(conversationId));
+        List<ResponseDto> list = new ArrayList<>();
+        List<Message> messages = messageRepository.findBySenderIdAndReceiverId(value, user.getId());
+
+
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        LocalDateTime ldt = LocalDateTime.parse(localDateTime, formatter);
+
+        for(Message m: messages) {
+            ZoneId zoneId = ZoneId.of("Asia/Bishkek");
+            ZonedDateTime responseDateTime = m.getDateTime().atZone(zoneId);
+            ZonedDateTime requestDateTime = ldt.atZone(zoneId).plusHours(6);
+            if (requestDateTime.isBefore(responseDateTime)) {
+                list.add(ResponseDto.builder()
+                        .response(m.getMessageText())
+                        .viewer("reader")
+                        .dateTime(formatDateTime(m.getDateTime()))
+                        .build());
+            }
+        }
+
+        return list;
+
+    }
     public HttpStatus saveMessage(String msgId, MessageDto responseDto) {
         User user = userService.getUserFromSecurityContextHolder();
         Long receiverId = Long.parseLong(postService.extractStringAfterDash(msgId));
