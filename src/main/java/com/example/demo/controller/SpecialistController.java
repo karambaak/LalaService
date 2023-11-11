@@ -23,6 +23,7 @@ public class SpecialistController {
         model.addAttribute("resumes", resumeService.getResumesBySpecialistId(specialistId));
         model.addAttribute("user", userService.getSpecialistUserById(specialistId));
         model.addAttribute("rating", ratingService.getSpecialistRatingById(specialistId));
+        model.addAttribute("specialistId", specialistId);
 
         return "specialist/view_profile";
     }

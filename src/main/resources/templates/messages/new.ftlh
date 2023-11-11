@@ -1,5 +1,7 @@
 <#import '../layout.ftlh' as main>
 <@main.layout>
+    <div class="content">
+
     <div class="new-msg">
         <div class="email-app">
             <p class="text-center">Новое сообщение</p>
@@ -12,24 +14,24 @@
                                value="${(_csrf.token)!'--no-token--'}"/>
                         <div id="toError" class="error-message"></div> <!-- New element for error message -->
 
-                    </div>
-                </div>
-            </form>
-            <div class="list-names">
-                <#if usernameList??>
-                    <#list usernameList as item>
-                        <div class="user-item" data-id="${item.id}">
-                            <div class="textbox">
-                                ${item.userName}
-                            </div>
-
                         </div>
-                    </#list>
-                </#if>
-            </div>
-            <div class="row">
-                <div class="">
-                    <div class="form-group mt-4">
+                    </div>
+                </form>
+                <div class="list-names">
+                    <#if usernameList??>
+                        <#list usernameList as item>
+                            <div class="user-item" data-id="${item.id}">
+                                <div class="textbox">
+                                    ${item.userName}
+                                </div>
+
+                            </div>
+                        </#list>
+                    </#if>
+                </div>
+                <div class="row">
+                    <div class="">
+                        <div class="form-group mt-4">
                         <textarea class="form-control" id="message" name="body" rows="12"
                                   placeholder="Введите Ваше сообщение"></textarea>
                         <div id="messageError" class="error-message"></div>

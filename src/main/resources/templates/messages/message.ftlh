@@ -1,6 +1,8 @@
 <#import "../layout.ftlh" as main>
 
 <@main.layout>
+    <div class="content">
+
     <div class="msg">
         <button class="tablinks-1">Сообщения</button>
         <button class="tablinks-2">Уведомления</button>
@@ -42,12 +44,34 @@
                     ${item.notificationDate}
                     <a href="msg/delete/${item.id}">
                         <span class="delete-icon" style="color: black;"><i class="fas fa-trash-alt"></i></span>
+
                     </a>
-                </div>
+                </#list>
+            </#if>
 
-            </#list>
-        </#if>
 
+            <a href="/msg/new" class="btn fixed-button"><i class="fas fa-pen"></i>
+            </a>
+
+        </div>
+
+        <div id="Notifications" class="tabcontent">
+            <h3>Уведомления</h3>
+            <#if notifications??>
+                <#list notifications as item>
+                    <div class="notification-card mb-4" onclick="toggleCardExpansion(this)">
+                        ${item.notificationText}
+                        <br>
+                        ${item.notificationDate}
+                        <a href="msg/delete/${item.id}">
+                            <span class="delete-icon" style="color: black;"><i class="fas fa-trash-alt"></i></span>
+                        </a>
+                    </div>
+
+                </#list>
+            </#if>
+
+        </div>
     </div>
     <style>
         body {
