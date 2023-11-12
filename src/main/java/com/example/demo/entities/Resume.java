@@ -15,13 +15,17 @@ import java.sql.Timestamp;
 public class  Resume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "specialist_id")
     private Specialist specialist;
 
+    private String name;
     private Timestamp timeOfResume;
-
     private String resumeDescription;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private Category category;
 }

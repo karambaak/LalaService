@@ -22,13 +22,7 @@ databaseChangeLog:
                   name: company_name
                   type: varchar(255)
               - column:
-                  name: photo
-                  type: varchar(255)
-              - column:
                   name: tariff_id
-                  type: long
-              - column:
-                  name: geolocation_id
                   type: long
         - createTable:
             tableName: geolocation
@@ -72,9 +66,9 @@ databaseChangeLog:
             referencedTableName: tariffs
             referencedColumnNames: id
         - addForeignKeyConstraint:
-            baseTableName: specialists
+            baseTableName: users
             baseColumnNames: geolocation_id
-            constraintName: fk_geolocation_id_specialists
+            constraintName: fk_geolocation_id_users
             referencedTableName: geolocation
             referencedColumnNames: id
 

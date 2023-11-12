@@ -28,6 +28,9 @@ public class Ratings {
     @Column(name = "rating")
     private Integer rating;
 
+    @Column(name = "review_text")
+    private String reviewText;
+
     @Column(name = "rating_date")
     private LocalDateTime ratingDate;
 

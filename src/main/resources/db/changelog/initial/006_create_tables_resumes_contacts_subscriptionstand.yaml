@@ -19,8 +19,16 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: name
+                  type: varchar(100)
+              - column:
                   name: resume_description
                   type: varchar(255)
+              - column:
+                  name: category_id
+                  type: long
+                  constraints:
+                    nullable: false
               - column:
                   name: time_of_resume
                   type: timestamp
@@ -97,5 +105,11 @@ databaseChangeLog:
             referencedColumnNames: id
             onDelete: cascade
             onUpdate: cascade
+        - addForeignKeyConstraint:
+            baseTableName: resumes
+            baseColumnNames: category_id
+            constraintName: fk_category_id_resumes
+            referencedTableName: categories
+            referencedColumnNames: id
 
 

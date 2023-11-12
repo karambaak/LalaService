@@ -9,16 +9,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.testng.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
+@SpringBootTest
 class CategoryServiceTest {
-    @Mock
-    CategoryService categoryService;
     @InjectMocks
+    CategoryService categoryService;
+    @Mock
     CategoryRepository categoryRepository;
 
     @Before("")
@@ -30,8 +32,8 @@ class CategoryServiceTest {
 
     @Test
     void getAllCategoriesShouldReturnListOfCategoriesDto() {
-        Category firstCategory = new Category(1, "Сантехник", "Сантехнические работы");
-        Category secondCategory = new Category(2, "Плотник", "Работы с деревом");
+        Category firstCategory = new Category(1L, "Сантехник", "Сантехнические работы", new ArrayList<>(),  new ArrayList<>(),  new ArrayList<>());
+        Category secondCategory = new Category(2L, "Плотник", "Работы с деревом", new ArrayList<>(),  new ArrayList<>(),  new ArrayList<>());
         List<Category> fakeCategories = new ArrayList<>();
         fakeCategories.add(firstCategory);
         fakeCategories.add(secondCategory);

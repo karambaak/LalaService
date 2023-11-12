@@ -5,40 +5,42 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Home page</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-        <link rel="stylesheet" href="/static/styles/static.css">
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link
+                href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+                rel="stylesheet"
+                integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+                crossorigin="anonymous">
+        <link rel="stylesheet" href="/static/css/layout.css">
     </head>
     <body>
-
-    <div class="container">
+    <div class="tab-container">
         <nav class="tab-bar">
-            <a href="#main" class="tab" id="home">
+            <a href="/" class="tab" id="home">
                 <i class="fas fa-home"></i>
                 <!-- <span>Главный экран</span> -->
             </a>
-            <a href="#stand" class="tab">
-                <i class="fas fa-store"></i>
+            <a href="/contact" class="tab" id="home">
+                <i class="fas fa-id-card"></i>
+                <!-- <span>Визитница</span> -->
+            </a>
+            <a href="/stand" class="tab">
+                <i class="fas fa-tasks"></i>
                 <!-- <span>Стенд</span> -->
             </a>
-            <a href="#notifications" class="tab">
-                <i class="fas fa-bell"></i>
-                <!-- <span>Уведомления</span> -->
-            </a>
-            <a href="#messages" class="tab">
+            <a href="/msg" class="tab">
                 <i class="fas fa-envelope"></i>
                 <!-- <span>Сообщения</span> -->
             </a>
-            <a href="#profile" class="tab">
+            <a href="/profile" class="tab">
                 <i class="fas fa-user"></i>
                 <!-- <span>Личный кабинет</span> -->
             </a>
         </nav>
     </div>
-    <div id="content" class="content">
-        <#nested>
-    </div>
 
+<#nested>
     </body>
     </html>
-
 </#macro>

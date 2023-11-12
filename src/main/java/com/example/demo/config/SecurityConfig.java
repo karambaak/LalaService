@@ -21,6 +21,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final AuthUserDetailsService userDetailsService;
+    private static final String LOGIN = "/auth/login";
     @Bean
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
@@ -32,27 +33,37 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> form
-                        .loginPage("/auth/login")
-                        .loginProcessingUrl("/auth/login")
-                        .defaultSuccessUrl("/")
+                        .loginPage(LOGIN)
+                        .loginProcessingUrl(LOGIN)
+                        .defaultSuccessUrl("/profile")
                         .failureUrl("/auth/login?error=true")
                         .permitAll())
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .permitAll())
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/profile/**").authenticated()
+                        .requestMatchers("/favourites/**").authenticated()
+                        .requestMatchers("/resume/create").authenticated()
+                        .requestMatchers("/fav/**").authenticated()
+                        .requestMatchers("/msg/**").authenticated()
+                        .requestMatchers("/stand/respond/**").hasAuthority("ROLE_SPECIALIST")
+                        .requestMatchers("/tariff/**").hasAuthority("ROLE_SPECIALIST")
+                        .requestMatchers("/stand/request/**").hasAuthority("ROLE_CUSTOMER")
+                        .requestMatchers("/stand/select").hasAuthority("ROLE_CUSTOMER")
+                        .requestMatchers("/api/**").fullyAuthenticated()
                         .anyRequest().permitAll()
                 )
                 .rememberMe(customizer -> customizer
                         .key("secret")
                         .tokenValiditySeconds(60))
                 .oauth2Login(oauth -> oauth
-                        .loginPage("/auth/login")
+                        .loginPage(LOGIN)
                         .userInfoEndpoint(config -> config
                                 .userService(customOAuth2UserService))
                         .successHandler((request, response, authentication) -> {
                             CustomOAuth2User user = (CustomOAuth2User) authentication.getPrincipal();
-                            if(userDetailsService.processOAuthPostLogin(user)) {
+                            if(userDetailsService.processOAuthPostLogin(user, request)) {
                                 response.sendRedirect("/auth/oauth_2");
                             } else {
                                 response.sendRedirect("/");

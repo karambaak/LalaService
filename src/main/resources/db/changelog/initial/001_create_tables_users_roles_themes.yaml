@@ -40,8 +40,15 @@ databaseChangeLog:
                   name: theme_id
                   type: long
               - column:
+                  name: geolocation_id
+                  type: long
+              - column:
                   name: registration_date
                   type: timestamp
+              - column:
+                  name: photo
+                  type: varchar(255)
+                  defaultValue: 'https://servicesearchlalaservice.s3.eu-north-1.amazonaws.com/default_user_photo.jpg'
         - createTable:
             tableName: roles
             columns:

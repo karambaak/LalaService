@@ -24,26 +24,21 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class StorageService {
-    private final static String ROOT = "https://servicesearchlalaservice.s3.eu-north-1.amazonaws.com/";
+    private static final String ROOT = "https://servicesearchlalaservice.s3.eu-north-1.amazonaws.com/";
     private final PhotosRepository photosRepository;
     private final AmazonS3 s3Client;
     @Value("${application.bucket.name}")
     private String bucketName;
 
     //needs logic to link photo to portfolio
-    public String uploadFile(MultipartFile file) {
+    public void uploadFile(MultipartFile file, Portfolio portfolio) {
         File fileObj = convertMultiPartFileToFile(file);
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
         photosRepository.save(Photo.builder()
-                .portfolio(Portfolio.builder()
-                        .id(2)
-                        .build())
+                .portfolio(portfolio)
                 .photoLink(ROOT + fileName)
                 .build());
-        fileObj.delete();
-        System.out.println("File uploaded : " + fileName);
-        return "File uploaded : " + fileName;
     }
 
 
@@ -51,8 +46,7 @@ public class StorageService {
         S3Object s3Object = s3Client.getObject(bucketName, fileName);
         S3ObjectInputStream inputStream = s3Object.getObjectContent();
         try {
-            byte[] content = IOUtils.toByteArray(inputStream);
-            return content;
+            return IOUtils.toByteArray(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }

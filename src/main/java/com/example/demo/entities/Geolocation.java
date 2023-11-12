@@ -25,5 +25,5 @@ public class Geolocation {
     private String city;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "geolocation")
-    List<Specialist> specialists;
+    List<User> users;
 }

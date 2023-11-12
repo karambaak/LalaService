@@ -1,8 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.repository.RoleRepository;
-import com.example.demo.repository.SpecialistRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -17,8 +15,10 @@ class UserTypeTest {
 
     PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
     AuthUserDetailsService authUserDetailsService = mock(AuthUserDetailsService.class);
+    GeolocationRepository geolocationRepository = mock(GeolocationRepository.class);
+    UpdateCountsRepository updateCountsRepository = mock(UpdateCountsRepository.class);
 
-    UserService userService = new UserService(userRepository, specialistRepository, roleRepository, passwordEncoder, authUserDetailsService);
+    UserService userService = new UserService(userRepository, specialistRepository, roleRepository, passwordEncoder, authUserDetailsService, geolocationRepository, updateCountsRepository);
 
     @Test
     void insertRoleSpecialistShouldReturnUserTypeSpecialist() {

@@ -13,9 +13,9 @@ import lombok.*;
 public class SubscriptionStand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "specialist_id", referencedColumnName = "id")
     private Specialist specialist;
 

@@ -13,8 +13,8 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
@@ -44,6 +44,9 @@ public class User implements UserDetails {
     @Column(name = "registration_date")
     private LocalDateTime registrationDate;
 
+    @Column(name = "photo")
+    private String photo;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Notification> notifications;
 
@@ -51,20 +54,24 @@ public class User implements UserDetails {
     private List<Ratings> ratings;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Review> reviews;
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Post> posts;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Response> responses;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Favourite> favourites;
+
+
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToOne(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Message sentMessage;
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Message> sentMessage;
 
-    @OneToOne(mappedBy = "receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Message receivedMessage;
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Message> receivedMessage;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Specialist specialist;
@@ -72,6 +79,10 @@ public class User implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "theme_id")
     private Theme theme;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "geolocation_id")
+    private Geolocation geolocation;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
