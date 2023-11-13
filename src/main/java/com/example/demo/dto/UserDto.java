@@ -25,7 +25,7 @@ public class UserDto {
 
     private String email;
     private String photo;
-private MultipartFile fileInput;
+    private MultipartFile fileInput;
     //    @NotBlank(message = "Password is required")
 //    @Size(min = 6, max = 24, message = "Length must be >= 4 and <= 24")
 //    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).+$",
