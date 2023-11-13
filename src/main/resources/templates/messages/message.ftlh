@@ -1,11 +1,10 @@
 <#import "../layout.ftlh" as main>
 
 <@main.layout>
-    <div class="content">
-        <div class="msg">
-            <button class="tablinks-1">Сообщения</button>
-            <button class="tablinks-2">Уведомления</button>
-        </div>
+    <div class="msg">
+        <button class="tablinks-1">Сообщения</button>
+        <button class="tablinks-2">Уведомления</button>
+    </div>
 
     <div id="Messages" class="tabcontent">
         <h3 class="my-3">Сообщения</h3>
@@ -43,16 +42,12 @@
                     ${item.notificationDate}
                     <a href="msg/delete/${item.id}">
                         <span class="delete-icon" style="color: black;"><i class="fas fa-trash-alt"></i></span>
-
                     </a>
-                </#list>
-            </#if>
+                </div>
 
+            </#list>
+        </#if>
 
-            <a href="/msg/new" class="btn fixed-button"><i class="fas fa-pen"></i>
-            </a>
-
-        </div>
     </div>
     <style>
         body {

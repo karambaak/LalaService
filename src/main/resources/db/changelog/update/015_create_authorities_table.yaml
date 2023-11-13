@@ -1,0 +1,67 @@
+databaseChangeLog:
+  - changeSet:
+      id: create authorities table
+      author: Asem
+      changes:
+        - createTable:
+            tableName: authorities
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: authority_name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: specialists_authorities
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: specialist_id
+                  type: long
+                  constraints:
+                    nullable: false
+              - column:
+                  name: authority_id
+                  type: long
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_start
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_end
+                  type: timestamp
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: fk_specialist_id_specialists_authorities
+            referencedTableName: specialists
+            referencedColumnNames: id
+            baseColumnNames: specialist_id
+            baseTableName: specialists_authorities
+            onUpdate: cascade
+            onDelete: cascade
+        - addForeignKeyConstraint:
+            constraintName: fk_authority_id_specialists_authorities
+            referencedTableName: authorities
+            referencedColumnNames: id
+            baseColumnNames: authority_id
+            baseTableName: specialists_authorities
+            onUpdate: cascade
+            onDelete: cascade

@@ -9,7 +9,7 @@
         <input type="text" name="title" id="title" class="w-100 my-3 form-control">
 
         <label for="fileInput" class="btn btn-primary">Загрузите фото и видео</label> <br>
-        <input type="file" accept="image/*,video/*" class="my-3 fileInput" id="fileInput"
+        <input type="file" accept="image/*" class="my-3 fileInput" id="fileInput"
                style="visibility:hidden;">
 
         <button class="btn btn-primary text-center" type="submit" id="submitBtn">Сохранить</button>

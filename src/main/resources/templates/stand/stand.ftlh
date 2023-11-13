@@ -110,7 +110,13 @@
                                     <p>Дата публикации: ${post.publishedDate}</p></div>
                                 <div class="">
                                     <#if (viewer.specialistId)??>
+                                    <#if (viewer.specialistAuthority)??>
+                                    <#if (viewer.specialistAuthority) == 'full'>
                                     <a href="/stand/respond/${post.id}" class="respond-button my-3">Откликнуться</a>
+                                    </#if>
+                                    <#else>
+                                    Вы не можете откликнуться в бесплатном режиме.
+                                    </#if>
                                     </#if>
                                 </div>
                             </div>

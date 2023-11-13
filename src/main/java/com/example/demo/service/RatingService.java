@@ -22,7 +22,7 @@ public class RatingService {
     private final RatingsRepository ratingsRepository;
     private final UserRepository userRepository;
     private final SpecialistRepository specialistRepository;
-
+private final SpecialistService specialistService;
     public void saveRating(RatingDto dto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
@@ -74,14 +74,20 @@ public class RatingService {
 
 
     public double getSpecialistRatingById(Long specialistId){
-        List<Ratings> ratings = ratingsRepository.getRatingsBySpecialistId(specialistId);
+        var specialist = specialistRepository.findById(specialistId);
+        if(specialist.isEmpty()) return 0.0;
+        if(specialistService.isFullAuthority(specialist.get())) {
+            List<Ratings> ratings = ratingsRepository.getRatingsBySpecialistId(specialistId);
 
-        double averageRating = ratings.stream()
-                .mapToInt(Ratings::getRating)
-                .average()
-                .orElse(Double.NaN);
+            double averageRating = ratings.stream()
+                    .mapToInt(Ratings::getRating)
+                    .average()
+                    .orElse(Double.NaN);
 
 
-        return Math.round(averageRating*10.0)/10.0;
+            return Math.round(averageRating*10.0)/10.0;
+        } else {
+            return 0.0;
+        }
     }
 }

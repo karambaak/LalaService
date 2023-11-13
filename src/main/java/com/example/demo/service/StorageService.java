@@ -8,6 +8,7 @@ import com.amazonaws.util.IOUtils;
 import com.example.demo.entities.Photo;
 import com.example.demo.entities.Portfolio;
 import com.example.demo.repository.PhotosRepository;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +41,12 @@ public class StorageService {
                 .photoLink(ROOT + fileName)
                 .build());
     }
-
+public String uploadPhoto(MultipartFile file) {
+    File fileObj = convertMultiPartFileToFile(file);
+    String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+    s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
+    return ROOT + fileName;
+}
 
     public byte[] downloadFile(String fileName) {
         S3Object s3Object = s3Client.getObject(bucketName, fileName);
@@ -54,9 +60,14 @@ public class StorageService {
     }
 
 
-    public String deleteFile(String fileName) {
+    private void deleteFromStorage(String fileName) {
         s3Client.deleteObject(bucketName, fileName);
-        return fileName + " removed ...";
+
+    }
+    public void deleteFile(String imgLink) {
+        int lastIndex = imgLink.lastIndexOf("/");
+        String fileName = imgLink.substring(lastIndex + 1);
+        deleteFromStorage(fileName);
     }
 
 

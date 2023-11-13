@@ -1,16 +1,11 @@
 package com.example.demo.controller.impl;
 
 import com.example.demo.controller.ProfileController;
-import com.example.demo.dto.PortfolioDto;
 import com.example.demo.dto.UserDto;
-import com.example.demo.entities.Portfolio;
-import com.example.demo.entities.UpdateCounts;
 import com.example.demo.entities.User;
 import com.example.demo.repository.SpecialistRepository;
-import com.example.demo.repository.UpdateCountsRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.*;
-import com.example.demo.utils.QRCodeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.glxn.qrgen.javase.QRCode;
@@ -20,7 +15,6 @@ import org.springframework.ui.Model;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -34,9 +28,8 @@ public class ProfileControllerImpl implements ProfileController {
     private final RatingService ratingService;
     private final PostService postService;
     private final SpecialistRepository specialistRepository;
-    private final UpdateCountsRepository updateCountsRepository;
-    private final UpdateCountsService updateCountsService;
     private final PortfolioService portfolioService;
+    private final GeolocationService geolocationService;
 
 
     @Override
@@ -84,28 +77,28 @@ public class ProfileControllerImpl implements ProfileController {
     @Override
     public String getProfileEdit(Model model, Authentication auth) {
         UserDto currentUser = userService.getUserByAuthentication(auth);
-        if (updateCountsRepository.existsByUserId(currentUser.getId())) {
-            UpdateCounts currentCount = updateCountsRepository.findByUserId(currentUser.getId()).
-                    orElseThrow(() -> new NoSuchElementException("No such count!"));
-            if (currentCount.getCount() == 5) {
-                if (updateCountsService.hasThirtyDaysPassed(currentCount.getUpdateTime())) {
-                    updateCountsService.deleteCount(currentCount.getId());
-                } else {
-                    model.addAttribute("restricted", "restricted");
-                }
-            }
-        }
+        /*
+         я закомментировала эту часть кода, т.к. up'ать профиль - в нашей интерпретации - это про резюме
+         */
+//        if (updateCountsRepository.existsByUserId(currentUser.getId())) {
+//            UpdateCounts currentCount = updateCountsRepository.findByUserId(currentUser.getId()).
+//                    orElseThrow(() -> new NoSuchElementException("No such count!"));
+//            if (currentCount.getCount() == 5) {
+//                if (updateCountsService.hasThirtyDaysPassed(currentCount.getUpdateTime())) {
+//                    updateCountsService.deleteCount(currentCount.getId());
+//                } else {
+//                    model.addAttribute("restricted", "restricted");
+//                }
+//            }
+//        }
+        model.addAttribute("countries", geolocationService.getCountries());
         model.addAttribute("user", currentUser);
         return "users/edit";
     }
 
     @Override
-    public String updateProfile(Model model, Authentication auth, String userName, Long geolocationId, String email) {
-        UserDto currentUser = userService.getUserByAuthentication(auth);
-        User user = userRepository.findById(currentUser.getId()).orElseThrow(() -> new NoSuchElementException("User not found"));
-        user.setUserName(userName);
-        user.setEmail(email);
-        userService.editProfile(user, geolocationId);
+    public String updateProfile(UserDto userDto, Authentication auth) {
+        userService.editProfile(userDto);
         return "redirect:/profile";
     }
 

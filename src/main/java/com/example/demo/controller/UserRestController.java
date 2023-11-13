@@ -20,11 +20,5 @@ public class UserRestController {
     public List<CountryDto> getGeolocations() {
         return geolocationService.getCountries();
     }
-    @PostMapping("/auth/user/register")
-    public HttpStatus register(MessageDto messageDto) {
-        System.out.println(messageDto.getResponse());
-        System.out.println(messageDto.getViewer());
-//        System.out.println(messageDto.getPhone());
-        return HttpStatus.OK;
-    }
+
 }

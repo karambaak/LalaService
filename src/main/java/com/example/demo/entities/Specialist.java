@@ -49,4 +49,7 @@ public class Specialist {
 
     @OneToMany(mappedBy = "specialist")
     private List<Ratings> ratings;
+
+    @OneToMany(mappedBy = "specialist")
+    private List<SpecialistsAuthorities> specialistsAuthorities;
 }
