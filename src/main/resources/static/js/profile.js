@@ -108,11 +108,14 @@ document.getElementById("close-button").addEventListener("click", function () {
 });
 
 function openModalRating() {
+    document.getElementById("openModalRating").style.display = "none";
     document.getElementById("modalRating").style.display = "block";
 }
 
 function closeModalRating() {
+    document.getElementById("openModalRating").style.display = "block";
     document.getElementById("modalRating").style.display = "none";
+
 }
 
 window.onclick = function (event) {

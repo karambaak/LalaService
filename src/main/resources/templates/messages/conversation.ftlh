@@ -111,6 +111,7 @@
             background-color: #2552e7;
             color: #fff;
         }
+
         @media (max-width: 600px) {
             .respond-button {
                 width: auto;
@@ -118,6 +119,7 @@
                 margin-left: auto;
             }
         }
+
         .message {
             margin: 5px 15px 5px;
             background-color: #2552e74a;
@@ -154,39 +156,39 @@
         const sentMessages = document.querySelector('.sent-messages');
         const postedMessages = new Set();
 
-            const messageForm = document.getElementById('message-form');
-            const messageText = document.getElementById('message-text');
+        const messageForm = document.getElementById('message-form');
+        const messageText = document.getElementById('message-text');
 
-            messageForm.addEventListener('submit', function (e) {
-                e.preventDefault();
+        messageForm.addEventListener('submit', function (e) {
+            e.preventDefault();
 
-                const message = messageText.value;
-                const csrfToken = document.querySelector('input[name="_csrf"]').value;
+            const message = messageText.value;
+            const csrfToken = document.querySelector('input[name="_csrf"]').value;
 
-                let responseText = {
-                    "response": message,
-                    "viewer": viewer
-                }
+            let responseText = {
+                "response": message,
+                "viewer": viewer
+            }
 
-                fetch(`/msg/new/` + viewer, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    body: JSON.stringify(responseText)
+            fetch(`/msg/new/` + viewer, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify(responseText)
+            })
+                .then(response => {
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message');
+                    messageElement.innerText = message + '\n' + getDateTime();
+                    sentMessages.appendChild(messageElement);
+                    messageForm.reset();
                 })
-                    .then(response => {
-                        const messageElement = document.createElement('div');
-                        messageElement.classList.add('message');
-                        messageElement.innerText = message + '\n' + getDateTime();
-                        sentMessages.appendChild(messageElement);
-                        messageForm.reset();
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            });
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
 
 
         function getDateTime() {
