@@ -38,9 +38,6 @@
         </div>
     </div>
     <style>
-        .message-container{
-            margin-bottom: 40px;
-        }
         .padding-div {
             padding: 30px;
         }
