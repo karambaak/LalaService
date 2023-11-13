@@ -22,15 +22,21 @@ public class RatingService {
     private final RatingsRepository ratingsRepository;
     private final UserRepository userRepository;
     private final SpecialistRepository specialistRepository;
-private final SpecialistService specialistService;
+    private final SpecialistService specialistService;
+
     public void saveRating(RatingDto dto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
         User user = userRepository.findByPhoneNumber(userDetails.getUsername()).orElse(null);
         Specialist specialist = specialistRepository.findById(dto.getSpecialistId()).orElse(null);
+        var maybeSpecialist = specialistRepository.findByUser(user);
 
-        if (dto.getRatingValue() <= 0){
+        if (dto.getRatingValue() <= 0) {
             throw new IllegalArgumentException("Rating must be not null");
+        }
+
+        if(maybeSpecialist.isPresent()){
+            throw new IllegalArgumentException("specialist cannot leave a review for himself");
         }
 
         if (user != null && specialist != null) {
@@ -73,10 +79,10 @@ private final SpecialistService specialistService;
     }
 
 
-    public double getSpecialistRatingById(Long specialistId){
+    public double getSpecialistRatingById(Long specialistId) {
         var specialist = specialistRepository.findById(specialistId);
-        if(specialist.isEmpty()) return 0.0;
-        if(specialistService.isFullAuthority(specialist.get())) {
+        if (specialist.isEmpty()) return 0.0;
+        if (specialistService.isFullAuthority(specialist.get())) {
             List<Ratings> ratings = ratingsRepository.getRatingsBySpecialistId(specialistId);
 
             double averageRating = ratings.stream()
@@ -85,7 +91,7 @@ private final SpecialistService specialistService;
                     .orElse(Double.NaN);
 
 
-            return Math.round(averageRating*10.0)/10.0;
+            return Math.round(averageRating * 10.0) / 10.0;
         } else {
             return 0.0;
         }
