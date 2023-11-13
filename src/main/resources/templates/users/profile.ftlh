@@ -22,14 +22,14 @@
         <div class="profile-header row">
             <div class="profile-image-block col-4">
                 <#if user.photo?has_content>
-                <img src="${user.photo}"
-                     class="round-image" alt>
+                    <img src="${user.photo}"
+                         class="round-image" alt>
                 <#else>
-                <img src="/static/default.jpg" class="round-image" alt="default photo">
+                    <img src="/static/default.jpg" class="round-image" alt="default photo">
                 </#if>
-<#--                <#if qrCodeBase64??>-->
-<#--                <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code">-->
-<#--                </#if>-->
+                <#--                <#if qrCodeBase64??>-->
+                <#--                <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code">-->
+                <#--                </#if>-->
             </div>
             <div class="personal-info col-6">
                 <#if user.userName?has_content>
@@ -128,12 +128,12 @@
                     <#if portfolios?has_content>
                         <#list portfolios as portfolio>
                             <div class="portfolio">
-                            <#if portfolio.photos?has_content>
-                                <#list portfolio.photos as photo>
-                                    <img src="${photo.photoLink}" alt class="portfolio-img">
-                                </#list>
-                            <#else>
-                                <p>У вас еще нет загруженного портфолио</p>
+                                <#if portfolio.photos?has_content>
+                                    <#list portfolio.photos as photo>
+                                        <img src="${photo.photoLink}" alt class="portfolio-img">
+                                    </#list>
+                                <#else>
+                                    <p>У вас еще нет загруженного портфолио</p>
                                 </#if>
                                 <div>
                                     <p>${portfolio.title}</p>
@@ -150,10 +150,10 @@
             </div>
         <#elseif user.role = "ROLE_CUSTOMER">
             <div class="tabs">
-                <button class="tab-item" id="portfolio-tab">Ваши запросы на стенд</button>
+                <button class="tab-item active" id="stand-request-tab">Ваши запросы на стенд</button>
             </div>
 
-            <div class="tab-content" id="resume-content">
+            <div class="d-block" id="stand-request-content">
                 <div class="resume-list">
                     <div class="resume create-resume">
                         <a href="/stand/new" class="add-resume-link">
@@ -162,27 +162,30 @@
                         </a>
                     </div>
                     <#if stands??>
-                    <#list stands as stand>
-                    <div class="resume">
-                        <div class="post">
-                            <div class="post-menu">
-                                <button type="button" class="menu-button" data-bs-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
+                    <div class="stand-requests">
+                        <#list stands as stand>
+                        <div class="resume-list">
+                            <div class="post">
+                                <div class="post-menu">
+                                    <button type="button" class="menu-button" data-bs-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false">
                                 <span class="dots"><i class="fas fa-ellipsis-v"></i>
                                 </span>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="/stand/delete/${stand.id}">Удалить</a>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="/stand/delete/${stand.id}">Удалить</a>
+                                    </div>
                                 </div>
+                                <a href="/stand/request/${stand.id}" class="resume-link">
+                                    <p class="resume-name">${stand.title}</p>
+                                    <p class="resume-category">Категория: ${stand.category}</p>
+                                    <p class="resume-date">Дата создания: ${stand.publishedDate}</p>
+                                </a>
                             </div>
-                            <a href="/stand/request/${stand.id}" class="resume-link">
-                                <p class="resume-name">${stand.title}</p>
-                                <p class="resume-category">Категория: ${stand.category}</p>
-                                <p class="resume-date">Дата создания: ${stand.publishedDate}</p>
-                            </a>
                         </div>
+                        </#list>
                     </div>
-                    </#list>
                     </#if>
                 </div>
             </div>
@@ -202,4 +205,18 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/static/js/profile.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const tabButton = document.getElementById("stand-request-tab");
+    const tabContent = document.querySelector('.stand-requests');
+
+    tabButton.addEventListener("click", function() {
+        if (tabContent.style.display === "none") {
+            tabContent.style.display = "block";
+        } else {
+            tabContent.style.display = "none";
+        }
+    });
+    });
+</script>
     </@main.layout>
