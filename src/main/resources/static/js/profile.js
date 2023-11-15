@@ -132,7 +132,6 @@ function submitReview() {
 
     var rating = $("input[name='fst']:checked").val();
     var review = $("#review-input");
-    console.log("specialist Id: ", specialistId)
 
     var url = "/api/rating/new/" + specialistId.value;
 
@@ -141,35 +140,61 @@ function submitReview() {
         reviewText: review.val()
     };
 
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: JSON.stringify(data),
-        contentType: "application/json",
-        headers: {[csrfHeader]: csrfToken},
-        success: function (response) {
-            successNotification.textContent = "Спасибо за ваш отзыв"
-            closeModalRating()
-            review.value = ""
-            showSuccessNotification();
-            console.log("Отзыв успешно отправлен:", response);
-        },
-        error: function (error) {
-            successNotification.textContent = "Ошибка при отправлени отзыва"
-            closeModalRating()
-            review.value = ""
-            showSuccessNotification();
-            console.error("Ошибка при отправке отзыва:", error);
-        }
-    });
+    if (validateForm()){
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            headers: {[csrfHeader]: csrfToken},
+            success: function (response) {
+                closeModalRating()
+                showSuccessNotification(response, true);
+                console.log("Отзыв успешно отправлен:", response);
+            },
+            error: function (error) {
+                closeModalRating()
+                showSuccessNotification(error.responseText, false);
+                console.error("Ошибка при отправке отзыва:", error);
+            }
+        });
+    }
 }
 
-function showSuccessNotification() {
+function showSuccessNotification(message, isResponseOk){
+    if (!message){
+        if (isResponseOk){
+            successNotification.textContent = "Отзыв сохранен"
+        } else if (!isResponseOk){
+            successNotification.textContent = "Ошибка при отправке отзыва"
+            successNotification.classList.add("notificationError");
+        }
+    } else{
+        successNotification.textContent = message
+    }
+
+    if (!isResponseOk){
+        successNotification.classList.add("notificationError");
+
+    }
+
     successNotification.classList.add("show");
     setTimeout(() => {
         successNotification.classList.remove("show");
-    }, 4000);
+    }, 3000);
 }
 
+function validateForm() {
+    var fstValue = document.querySelector('input[name="fst"]:checked').value;
+    var reviewText = document.getElementById('review-input').value;
 
+    console.log("value of the rating ")
+    console.log("value of the rating ", fstValue)
+    if (fstValue < 1 || fstValue > 5) {
+        alert("Пожалуйста, введите рейтинг от 1 до 5");
+        return false;
+    }
+
+    return true;
+}
 
