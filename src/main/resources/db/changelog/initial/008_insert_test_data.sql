@@ -32,7 +32,7 @@ VALUES
     ('Кыргызстан', 'Чолпон-Ата'),
     ('Кыргызстан', 'Шопоков');
 
-insert into ROLES(ROLE) values ( 'ROLE_SPECIALIST' ), ('ROLE_CUSTOMER');
+insert into ROLES(ROLE) values ( 'ROLE_SPECIALIST' ), ('ROLE_CUSTOMER'),('ROLE_ADMIN');
 
 insert into THEMES (THEME_NAME) values ( 'light'), ('dark');
 
