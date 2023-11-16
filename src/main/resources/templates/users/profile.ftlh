@@ -119,7 +119,9 @@
 
             <div class="tab-content" id="portfolio-content">
                 <div class="portfolio-list">
-                    <div class="resume create-resume">
+
+                    <div class="portfolio-gallery">
+<div class="resume create-resume">
                         <a href="/portfolio/new" class="add-resume-link">
                             <p class="add-resume-text">Добавить портфолио</p>
                             <i class="fas fa-plus"></i>
@@ -129,9 +131,12 @@
                         <#list portfolios as portfolio>
                             <div class="portfolio">
                                 <#if portfolio.photos?has_content>
+                                <div class="portfolio-photos">
+
                                     <#list portfolio.photos as photo>
                                         <img src="${photo.photoLink}" alt class="portfolio-img">
                                     </#list>
+                                </div>
                                 <#else>
                                     <p>У вас еще нет загруженного портфолио</p>
                                 </#if>
@@ -146,6 +151,7 @@
                     <#else>
                         <p>У вас еще нет созданных портфолио</p>
                     </#if>
+</div>
                 </div>
             </div>
         <#elseif user.role = "ROLE_CUSTOMER">
@@ -162,30 +168,30 @@
                         </a>
                     </div>
                     <#if stands??>
-                        <div class="stand-requests">
-                            <#list stands as stand>
-                                <div class="resume-list">
-                                    <div class="post">
-                                        <div class="post-menu">
-                                            <button type="button" class="menu-button" data-bs-toggle="dropdown"
-                                                    aria-haspopup="true"
-                                                    aria-expanded="false">
+                    <div class="stand-requests">
+                        <#list stands as stand>
+                        <div class="resume-list">
+                            <div class="post">
+                                <div class="post-menu">
+                                    <button type="button" class="menu-button" data-bs-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false">
                                 <span class="dots"><i class="fas fa-ellipsis-v"></i>
                                 </span>
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item" href="/stand/delete/${stand.id}">Удалить</a>
-                                            </div>
-                                        </div>
-                                        <a href="/stand/request/${stand.id}" class="resume-link">
-                                            <p class="resume-name">${stand.title}</p>
-                                            <p class="resume-category">Категория: ${stand.category}</p>
-                                            <p class="resume-date">Дата создания: ${stand.publishedDate}</p>
-                                        </a>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="/stand/delete/${stand.id}">Удалить</a>
                                     </div>
                                 </div>
-                            </#list>
+                                <a href="/stand/request/${stand.id}" class="resume-link">
+                                    <p class="resume-name">${stand.title}</p>
+                                    <p class="resume-category">Категория: ${stand.category}</p>
+                                    <p class="resume-date">Дата создания: ${stand.publishedDate}</p>
+                                </a>
+                            </div>
                         </div>
+                        </#list>
+                    </div>
                     </#if>
                 </div>
             </div>
@@ -198,6 +204,8 @@
                 <ul>
                     <li><a href="profile/edit">Редактировать профиль</a></li>
                     <li><a href="/favourites">Посмотреть избранные</a></li>
+                    <#if user.role = "ROLE_SPECIALIST"><li><a href="/tariff">Выбрать тариф</a></li></#if>
+
                     <li><a href="/logout">Выйти из аккаунта</a></li>
                     <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                            value="${(_csrf.token)!'--no-token--'}"/>
@@ -295,13 +303,13 @@
             const tabButton = document.getElementById("stand-request-tab");
             const tabContent = document.querySelector('.stand-requests');
 
-            tabButton.addEventListener("click", function () {
-                if (tabContent.style.display === "none") {
-                    tabContent.style.display = "block";
-                } else {
-                    tabContent.style.display = "none";
-                }
-            });
-        });
-    </script>
+    tabButton.addEventListener("click", function() {
+        if (tabContent.style.display === "none") {
+            tabContent.style.display = "block";
+        } else {
+            tabContent.style.display = "none";
+        }
+    });
+    });
+</script>
     </@main.layout>
