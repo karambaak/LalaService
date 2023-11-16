@@ -225,21 +225,26 @@
     <script src="/static/js/profile.js"></script>
     <script>
         function getThemeFromServer() {
-            const url = '/api/get-theme';
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log(data)
-                    applyThemeToPage(data);
-                })
-                .catch(error => {
-                    console.error('Error getting theme from server:', error);
-                });
+            const storedTheme = localStorage.getItem('theme');
+            if (storedTheme !== null) {
+                applyThemeToPage(storedTheme);
+            } else {
+                const url = '/api/get-theme';
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        localStorage.setItem('theme', data);
+                        applyThemeToPage(data);
+                    })
+                    .catch(error => {
+                        console.error('Error getting theme from server:', error);
+                    });
+            }
         }
 
         function applyThemeToPage(theme) {
@@ -248,7 +253,6 @@
             const otherElements = document.querySelectorAll('.other-elements');
 
             body.classList.toggle('dark-theme', theme == 1);
-            console.log(theme)
             otherElements.forEach(element => {
                 element.classList.toggle('dark-theme', theme == 1);
             });
@@ -262,7 +266,7 @@
         themeToggle.addEventListener('input', function () {
             const theme = parseInt(themeToggle.value);
             body.classList.toggle('dark-theme', theme === 1);
-
+            localStorage.setItem('theme', theme);
             const otherElements = document.querySelectorAll('.other-elements');
             otherElements.forEach(element => {
                 element.classList.toggle('dark-theme', theme === 1);

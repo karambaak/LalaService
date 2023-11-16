@@ -14,6 +14,9 @@
         .title:hover {
             background-color: #f5f5f5;
         }
+        .dark-theme .title:hover {
+            color: black;
+        }
 
         .specialists-list {
             display: none;
@@ -23,11 +26,24 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+        .dark-theme .specialists-list {
+            background-color: #555;
+        }
 
         .string-item {
             margin-bottom: 5px;
         }
-
+        .dark-theme .string-item{
+            color: white;
+        }
+.string-item:hover {
+    background-color: #2552e7;
+    color: white;
+}
+.dark-theme .string-item:hover {
+    background-color: whitesmoke;x
+    color: black;
+}
         .string-list {
             padding: 30px;
             margin-bottom: 20px;
@@ -38,7 +54,12 @@
             text-decoration: none;
             color: black;
         }
-
+        .dark-theme .link-item {
+            color: white;
+        }
+        .dark-theme .link-item: hover{
+            color: black;
+        }
         .title {
             font-weight: bold;
             padding: 10px;
@@ -49,21 +70,6 @@
             display: none;
         }
 
-        .search-bar {
-            padding: 30px 0 0 30px;
-            display: flex;
-            align-items: center;
-            margin: 15px 30px;
-        }
-
-        .search-input {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-right: auto;
-            margin-left: auto;
-            flex-grow: 1;
-        }
 
         .search-button {
             padding: 10px;
@@ -77,14 +83,21 @@
         .list-names {
             display: none;
         }
+        .dark-theme .list-names a{
+            color: white
+        }
 
         .empty-message {
             color: #888;
         }
+        .dark-theme .card-body {
+            background-color: #333;
+            color: #fff;
+        }
     </style>
     <div class="p-5">
-        <div class="search-bar">
-            <input type="text" class="search-input" id="search" placeholder="Поиск...">
+        <div class="searchBox">
+            <input type="text" class="searchInput" id="search" placeholder="Поиск...">
             <#--            <button class="search-button"><i class="fas fa-search"></i></button>-->
         </div>
         <div>
