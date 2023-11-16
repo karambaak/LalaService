@@ -128,7 +128,7 @@
             titles.forEach(title => {
                 title.addEventListener('click', () => {
                     const specialistsList = title.nextElementSibling;
-                    specialistsList.style.display = (specialistsList.style.display === 'none') ? 'block' : 'none';
+                    specialistsList.style.display = (specialistsList.style.display === 'none' || specialistsList.style.display === '') ? 'block' : 'none';
                 });
             });
 
