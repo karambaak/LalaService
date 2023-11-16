@@ -28,7 +28,7 @@
                         <div class="mb-3" id="countries">
                             <#assign val = -1>
                             <#if countries??>
-                                <select name="country" id="" class="form-select" >
+                                <select name="country" id="" class="form-select">
                                     <#list countries as item>
                                         <option value="${item.country}">${item.country}
                                             <#assign val = item_index>
@@ -40,7 +40,7 @@
                         </div>
                         <div class=" mb-3" id="cities">
                             <#if countries??>
-                                <select name="city" class="form-select" >
+                                <select name="city" class="form-select">
                                     <#if (val > -1)>
                                         <#list countries[val].cities as city>
                                             <option value="${city}">${city}</option>
@@ -51,12 +51,14 @@
                         </div>
                         <div class="mb-3">
                             <label class="label-text" for="phone" style="display: none">Номер телефона</label>
-                            <input id="phone" type="tel" class="form-control" name="phoneNumber" placeholder="Номер телефона" required>
+                            <input id="phone" type="tel" class="form-control" name="phoneNumber"
+                                   placeholder="Номер телефона" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="label-text" for="password" style="display: none">Пароль</label>
-                            <input id="password" type="password" class="form-control" name="password" placeholder="Пароль" required>
+                            <input id="password" type="password" class="form-control" name="password"
+                                   placeholder="Пароль" required>
                         </div>
                         <div class="text-center">
                             <button type="submit" class="btn tab-item"
@@ -68,7 +70,7 @@
                 </div>
                 <div class="card-footer border-0">
                     <div class="text-center">
-                        У вас уже есть аккаунт?<a href="/auth/login" class="text-dark">Войти</a>
+                        У вас уже есть аккаунт?<a href="/auth/login" class="text-dark-link">Войти</a>
                     </div>
                 </div>
                 <div class="google-button">
@@ -85,6 +87,26 @@
     </div>
 
     <style>
+        .form-control {
+            border: 2px solid #2552e7;
+            width: 100%;
+            border-radius: 5px;
+            height: 30px;
+            margin: 20px 0;
+        }
+
+        .form-select {
+            border: 2px solid #2552e7;
+            width: 100%;
+            border-radius: 5px;
+            height: 35px;
+            margin-bottom: 15px;
+            background-color: #ffffff;
+        }
+
+        .form-item {
+            margin-bottom: 40px;
+        }
 
         h1 {
             font-size: 24px;
@@ -103,6 +125,12 @@
             font-size: 16px;
         }
 
+        .dark-theme .tab-item {
+            border: 2px solid white;
+            color: white;
+            background-color: #333;
+        }
+
         .tab-item:hover {
             background-color: #2552e7;
             color: #ffffff;
@@ -111,15 +139,21 @@
         .container-login {
             display: flex;
             justify-content: center;
+            margin-bottom: 60px;
+        }
+
+
+        .dark-theme .form-control {
+            border: 2px solid white;
 
         }
 
-        .form-control {
-            border: 2px solid #2552e7;
-            width: 100%;
-            border-radius: 5px;
-            height: 30px;
-            margin: 20px 0;
+        .dark-theme .form-select {
+            border: 2px solid white;
+        }
+
+        .dark-theme input::placeholder {
+            color: white;
         }
 
         .form-item {
@@ -134,23 +168,18 @@
             font-size: 20px;
         }
 
-        /*.card-footer {*/
-        /*    padding: 20px 0;*/
-        /*    margin: 20px 0;*/
-        /*}*/
 
         .google-button {
             margin-bottom: 40px;
         }
+.text-dark-link{
+    text-decoration: none;
+    color: black;
+}
+.dark-theme .text-dark-link {
+    color: white;
+}
 
-        .form-select {
-            border: 2px solid #2552e7;
-            width: 100%;
-            border-radius: 5px;
-            height: 35px;
-            margin-bottom: 15px;
-            background-color: #ffffff;
-        }
     </style>
 
 </@main.layout>

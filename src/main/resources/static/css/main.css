@@ -1,34 +1,11 @@
-.searchBox {
-    display: flex;
-    justify-content: center;
-    background: #ffffff;
-    max-width: 80%;
-    width: 100%;
-    margin: 0 auto;
-    height: 40px;
-    border-radius: 20px;
-    padding: 10px;
-    box-shadow: 0 0 15px rgba(0.0, 0.0, 0.1, 0.1);
-}
 
-.searchInput {
-    border: none;
-    background: none;
-    outline: none;
-    color: rgb(0, 0, 0);
-    font-size: 16px;
-    transition: 0.4s;
-    line-height: 40px;
-    padding: 0 0 0 10px;
-    opacity: 60%;
-    width: 100%;
-}
 
 .category-container {
     margin-top: 50px;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+    padding-top: 10px;
 }
 
 .category-card {
@@ -45,15 +22,20 @@
     justify-content: center;
     text-decoration: none;
 }
-
+.dark-theme .category-card {
+    background-color: #333;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(247, 241, 241, 0.614);
+}
 .category-card:hover{
     background-color: #2552e7;
     color: white;
 }
-
-.searchResults{
-    text-align: center;
+.dark-theme .category-card:hover{
+    background-color: #999;
+    color: white;
 }
+
 
 @media screen and (min-width: 769px){
     .category-container{
@@ -61,9 +43,7 @@
     }
 
     .tab-container {
-        background-color: white;
         border-radius: 15px;
-        box-shadow: 0 -5px 15px rgba(0.0, 0.0, 0.1, 0.2);
         overflow: hidden;
         padding: 0;
         position: fixed;
@@ -75,15 +55,16 @@
         max-width: 600px;
     }
 
-    .searchBox{
-        max-width: 50%;
-    }
+
 }
 
 .category-card i {
     font-size: 18px;
     color: #2552e7;
     margin-bottom: 10px;
+}
+.dark-theme.category-card i {
+    color: #fff;
 }
 
 .category-card span {
@@ -97,20 +78,3 @@
 }
 
 
-.searchResults{
-    position: fixed;
-    left: 40px;
-    right: 40px;
-    top: 80px;
-    border-radius: 10px;
-    background-color: #ffffff;
-    text-align: left;
-    padding: 15px 20px;
-    margin-bottom: 10px;
-}
-
-.search-result{
-    background-color: #ffffff;
-    border-radius: 10px;
-    padding-bottom: 10px;
-}

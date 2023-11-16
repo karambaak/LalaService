@@ -14,7 +14,7 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h5 class="card-title">
-                                            <a href="#" class="company-link">${favorite.companyName}</a>
+                                            <a href="/specialist/${favorite.specialistId}" class="company-link">${favorite.companyName}</a>
                                         </h5>
 
                                        <a href="/favourites/delete/${favorite.specialistId}">

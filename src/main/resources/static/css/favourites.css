@@ -1,3 +1,12 @@
 .delete-icon:hover {
     color: blue;
 }
+.dark-theme .delete-icon:hover {
+    color: white;
+}
+.dark-theme .company-link {
+    color: white;
+}
+.dark-theme .card-body{
+    background-color: #555;
+}

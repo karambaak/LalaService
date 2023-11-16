@@ -8,7 +8,10 @@ body {
     align-items: center;
     height: 100vh;
 }
-
+.dark-theme {
+    background-color: #333;
+    color: #fff;
+}
 .rating-form {
     background-color: #fff;
     border-radius: 10px;
@@ -22,6 +25,9 @@ h1 {
     margin-top: 0;
     font-size: 24px;
     color: #333;
+}
+.dark-theme h1 {
+    color: white;
 }
 
 .stars {
@@ -55,6 +61,9 @@ label[for="review"] {
     margin-bottom: 5px;
     color: #333;
     font-weight: bold;
+}
+.dark-theme label {
+    color: white;
 }
 
 textarea {

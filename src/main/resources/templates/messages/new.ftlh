@@ -1,6 +1,6 @@
 <#import '../layout.ftlh' as main>
 <@main.layout>
-<<<<<<<<< Temporary merge branch 1
+    <<<<<<<<< Temporary merge branch 1
     <div class="content">
     <div class="new-msg">
         <div class="email-app">
@@ -156,6 +156,11 @@
             margin-bottom: 40px;
         }
 
+        .dark-theme .email-app {
+            background: #333;
+            color: white
+        }
+
         @media only screen and (max-width: 600px) {
             .email-app {
                 padding: 30px;
@@ -193,6 +198,12 @@
             margin: 10px 0;
         }
 
+        .dark-theme .form-control {
+
+            background-color: #333;
+            color: white;
+        }
+
         .form-group {
             text-align: center;
         }
@@ -209,6 +220,12 @@
             text-decoration: none;
         }
 
+        .dark-theme .button-msg {
+            border: 1px solid #555;
+            background-color: #333;
+            color: white;
+        }
+
         button.button-msg {
             padding: 8px 0;
             font-family: Times;
@@ -222,5 +239,6 @@
             background-color: #2552e7;
             color: #fff;
         }
+
     </style>
 </@main.layout>
