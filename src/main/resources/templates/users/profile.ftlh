@@ -198,6 +198,7 @@
                 <ul>
                     <li><a href="profile/edit">Редактировать профиль</a></li>
                     <li><a href="/favourites">Посмотреть избранные</a></li>
+                    <#if user.role = "ROLE_SPECIALIST"> <li><a href="/tariff">Выбрать тариф</a></li></#if>
                     <li><a href="/logout">Выйти из аккаунта</a></li>
                 </ul>
             </div>
