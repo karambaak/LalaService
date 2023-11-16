@@ -132,97 +132,97 @@
             </div>
         </div>
 
-        <div>
-            <#if user.role = "ROLE_SPECIALIST">
-                <div class="tabs">
-                    <div class="share-buttons">
-                        <button class="share-button facebook">
-                            <i class="fab fa-facebook-f"></i>
-                        </button>
-                        <button class="share-button twitter">
-                            <i class="fab fa-twitter"></i>
-                        </button>
-                        <button class="share-button linkedin">
-                            <i class="fab fa-linkedin-in"></i>
-                        </button>
-                        <button class="share-button pinterest">
-                            <i class="fab fa-pinterest"></i>
-                        </button>
-                        <button class="share-button whatsapp">
-                            <i class="fab fa-whatsapp"></i>
-                        </button>
+    <div>
+        <#if user.role = "ROLE_SPECIALIST">
+            <div class="tabs">
+                <div class="share-buttons">
+                    <button class="share-button facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </button>
+                    <button class="share-button twitter">
+                        <i class="fab fa-twitter"></i>
+                    </button>
+                    <button class="share-button linkedin">
+                        <i class="fab fa-linkedin-in"></i>
+                    </button>
+                    <button class="share-button pinterest">
+                        <i class="fab fa-pinterest"></i>
+                    </button>
+                    <button class="share-button whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-item" id="resume-tab">Резюме</button>
+                <button class="tab-item" id="portfolio-tab">Портфолио</button>
+            </div>
+
+            <div class="tab-content" id="resume-content">
+                <div class="resume-list">
+                    <div class="resume create-resume">
+                        <a href="/resume/create" class="add-resume-link">
+                            <p class="add-resume-text">Добавить резюме</p>
+                            <i class="fas fa-plus"></i>
+                        </a>
                     </div>
+                    <#if resumes?has_content>
+                        <#list resumes as resume>
+                            <div class="resume">
+                                <a href="/resume/${resume.id}" class="resume-link">
+                                    <#if resume.header?has_content>
+                                        <p class="resume-name">${resume.header}</p>
+                                    <#else>
+                                        <p class="resume-name">Без заголовка</p>
+                                    </#if>
+                                    <#--                                    <p class="resume-experience">Опыт работы: ${resume.experience}</p>-->
+                                    <#--                                    <p class="resume-category">Категория: ${resume.category}</p>-->
+                                    <p class="resume-date">Дата создания: ${resume.timeOfResume}</p>
+                                </a>
+                            </div>
+                        </#list>
+                    <#else>
+                        <p>У вас еще нету созданных резюме</p>
+                    </#if>
                 </div>
+            </div>
 
-                <div class="tabs">
-                    <button class="tab-item" id="resume-tab">Резюме</button>
-                    <button class="tab-item" id="portfolio-tab">Портфолио</button>
-                </div>
-
-                <div class="tab-content" id="resume-content">
-                    <div class="resume-list">
-                        <div class="resume create-resume">
-                            <a href="/resume/create" class="add-resume-link">
-                                <p class="add-resume-text">Добавить резюме</p>
-                                <i class="fas fa-plus"></i>
-                            </a>
-                        </div>
-                        <#if resumes?has_content>
-                            <#list resumes as resume>
-                                <div class="resume">
-                                    <a href="/resume/${resume.id}" class="resume-link">
-                                        <#if resume.header?has_content>
-                                            <p class="resume-name">${resume.header}</p>
-                                        <#else>
-                                            <p class="resume-name">Без заголовка</p>
-                                        </#if>
-                                        <#--                                    <p class="resume-experience">Опыт работы: ${resume.experience}</p>-->
-                                        <#--                                    <p class="resume-category">Категория: ${resume.category}</p>-->
-                                        <p class="resume-date">Дата создания: ${resume.timeOfResume}</p>
-                                    </a>
+            <div class="tab-content" id="portfolio-content">
+                <div class="portfolio-list">
+                    <div class="resume create-resume">
+                        <a href="/portfolio/new" class="add-resume-link">
+                            <p class="add-resume-text">Добавить портфолио</p>
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </div>
+                    <#if portfolios?has_content>
+                        <#list portfolios as portfolio>
+                            <div class="portfolio">
+                                <#if portfolio.photos?has_content>
+                                    <#list portfolio.photos as photo>
+                                        <img src="${photo.photoLink}" alt class="portfolio-img">
+                                    </#list>
+                                <#else>
+                                    <p>У вас еще нет загруженного портфолио</p>
+                                </#if>
+                                <div>
+                                    <p>${portfolio.title}</p>
+                                    <#if portfolio.timeOfPortfolio??>
+                                        <p>Дата публикации: ${portfolio.timeOfPortfolio}</p>
+                                    </#if>
                                 </div>
-                            </#list>
-                        <#else>
-                            <p>У вас еще нету созданных резюме</p>
-                        </#if>
-                    </div>
+                            </div>
+                        </#list>
+                    <#else>
+                        <p>У вас еще нет созданных портфолио</p>
+                    </#if>
                 </div>
-
-                <div class="tab-content" id="portfolio-content">
-                    <div class="portfolio-list">
-                        <div class="resume create-resume">
-                            <a href="/portfolio/new" class="add-resume-link">
-                                <p class="add-resume-text">Добавить портфолио</p>
-                                <i class="fas fa-plus"></i>
-                            </a>
-                        </div>
-                        <div class="portfolio-gallery">
-                            <#if portfolios?has_content>
-                                <#list portfolios as portfolio>
-                                    <div class="portfolio">
-                                        <#if portfolio.photos?has_content>
-                                            <div class="portfolio-photos">
-                                                <#list portfolio.photos as photo>
-                                                    <img src="${photo.photoLink}" alt class="portfolio-img">
-                                                </#list>
-                                            </div>
-                                        <#else>
-                                            <p>У вас еще нет загруженного портфолио</p>
-                                        </#if>
-                                    </div>
-                                </#list>
-                            <#else>
-                                <p>У вас еще нет созданных портфолио</p>
-                            </#if>
-                        </div>
-
-
-                    </div>
-                </div>
-            <#elseif user.role = "ROLE_CUSTOMER">
-                <div class="tabs">
-                    <button class="tab-item active" id="stand-request-tab">Ваши запросы на стенд</button>
-                </div>
+            </div>
+        <#elseif user.role = "ROLE_CUSTOMER">
+            <div class="tabs">
+                <button class="tab-item active" id="stand-request-tab">Ваши запросы на стенд</button>
+            </div>
 
                 <div class="d-block" id="stand-request-content">
                     <div class="resume-list">
@@ -264,7 +264,7 @@
             </#if>
         </div>
         <div id="modal" class="modal">
-            <div class="modal-content">
+            <div class="modal-contentother-elements">
                 <div id="side-menu" class="side-menu">
                     <div class="close-button" id="close-button">X</div>
                     <ul>
@@ -272,6 +272,16 @@
                         <li><a href="/favourites">Посмотреть избранные</a></li>
                         <#if user.role = "ROLE_SPECIALIST"><li><a href="/tariff">Выбрать тариф</a></li></#if>
                         <li><a href="/logout">Выйти из аккаунта</a></li>
+                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                           value="${(_csrf.token)!'--no-token--'}"/>
+                    <li><a href="#">
+                            <div class="slider-container">
+                                <span class="slider-label">Изменить тему:</span>
+                                <input type="range" min="0" max="1" value="0" step="1" class="slider"
+                                       id="themeToggle">
+                            </div>
+                        </a>
+                    </li>
                     </ul>
                 </div>
             </div>
@@ -280,9 +290,82 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/static/js/profile.js"></script>
-
-
     <script>
+        function getThemeFromServer() {
+            const url = '/api/get-theme';
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data)
+                    applyThemeToPage(data);
+                })
+                .catch(error => {
+                    console.error('Error getting theme from server:', error);
+                });
+        }
+
+        function applyThemeToPage(theme) {
+
+            const body = document.body;
+            const otherElements = document.querySelectorAll('.other-elements');
+
+            body.classList.toggle('dark-theme', theme == 1);
+            console.log(theme)
+            otherElements.forEach(element => {
+                element.classList.toggle('dark-theme', theme == 1);
+            });
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            getThemeFromServer();
+        });
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('input', function () {
+            const theme = parseInt(themeToggle.value);
+            body.classList.toggle('dark-theme', theme === 1);
+
+            const otherElements = document.querySelectorAll('.other-elements');
+            otherElements.forEach(element => {
+                element.classList.toggle('dark-theme', theme === 1);
+            });
+            saveThemePreference(theme);
+        });
+
+        function saveThemePreference(theme) {
+            const url = '/api/save-theme-preference';
+            const csrfToken = document.querySelector('input[name="_csrf"]').value;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    theme
+                }),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Theme preference saved:', data);
+                })
+                .catch(error => {
+                    console.error('Error saving theme preference:', error);
+                });
+        }
+
+
         document.addEventListener("DOMContentLoaded", function () {
             const tabButton = document.getElementById("stand-request-tab");
             const tabContent = document.querySelector('.stand-requests');
@@ -294,10 +377,6 @@
                     tabContent.style.display = "none";
                 }
             });
-
-
-
-
         });
     </script>
-</@main.layout>
+    </@main.layout>

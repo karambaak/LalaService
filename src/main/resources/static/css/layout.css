@@ -30,6 +30,11 @@ body {
     padding: 10px 0;
 }
 
+.dark-theme .tab-bar {
+    background-color: #333;
+    color: #ffffff;
+}
+
 .tab {
     color: #2552e7;
     text-decoration: none;
@@ -40,16 +45,20 @@ body {
     cursor: pointer;
 }
 
+.dark-theme .tab {
+    color: #fff;
+}
+
 .tab i {
     font-size: 24px;
 }
 
-.content{
+.content {
     padding: 20px 20px 60px 20px;
 }
 
 
-@media screen and (min-width: 769px){
+@media screen and (min-width: 769px) {
     .tab-container {
         background-color: white;
         border-radius: 15px;

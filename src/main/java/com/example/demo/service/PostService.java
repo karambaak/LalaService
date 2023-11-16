@@ -344,12 +344,7 @@ public class PostService {
                     }
                 }
             }
-
-
-
         }
-
-
     }
 
     private Notification makeNotificationToSpecialistBySubscriptionOnCategory(Specialist specialist, Category category) {
