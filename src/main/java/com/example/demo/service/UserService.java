@@ -39,6 +39,7 @@ public class UserService {
     private final UpdateCountsRepository updateCountsRepository;
     private final SpecialistsAuthoritiesRepository specialistsAuthoritiesRepository;
     private final StorageService storageService;
+    private final ThemeRepository themeRepository;
 
     public List<User> getAllUsers() {
         return repository.findAll();
@@ -347,4 +348,45 @@ public class UserService {
     }
 
 
+    public void saveTheme(String theme) {
+        User user = getUserFromSecurityContextHolder();
+        if (user != null) {
+            Theme userTheme = extractThemeValue(theme);
+            if (userTheme != null) {
+                if(user.getTheme() == null || !user.getTheme().equals(userTheme)) {
+                    user.setTheme(userTheme);
+                    repository.save(user);
+                }
+            }
+        }
+    }
+
+    private Theme extractThemeValue(String theme) {
+        int startIndex = theme.indexOf(":") + 1;
+        int endIndex = theme.indexOf("}");
+        if (startIndex >= 0 && endIndex >= 0) {
+            String value = theme.substring(startIndex, endIndex).trim();
+            // 0 light
+            //1 dark
+            if (value.equalsIgnoreCase("0")) {
+                return themeRepository.findByThemeName("light");
+            } else {
+                return themeRepository.findByThemeName("dark");
+            }
+        }
+        return null;
+    }
+
+    public String getTheme() {
+        User user = getUserFromSecurityContextHolder();
+        if(user == null || user.getTheme() == null) {
+            return "0";
+        } else {
+            if(user.getTheme().getThemeName().equalsIgnoreCase("dark")) {
+                return "1";
+            } else {
+                return "0";
+            }
+        }
+    }
 }

@@ -162,61 +162,146 @@
                         </a>
                     </div>
                     <#if stands??>
-                    <div class="stand-requests">
-                        <#list stands as stand>
-                        <div class="resume-list">
-                            <div class="post">
-                                <div class="post-menu">
-                                    <button type="button" class="menu-button" data-bs-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false">
+                        <div class="stand-requests">
+                            <#list stands as stand>
+                                <div class="resume-list">
+                                    <div class="post">
+                                        <div class="post-menu">
+                                            <button type="button" class="menu-button" data-bs-toggle="dropdown"
+                                                    aria-haspopup="true"
+                                                    aria-expanded="false">
                                 <span class="dots"><i class="fas fa-ellipsis-v"></i>
                                 </span>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="/stand/delete/${stand.id}">Удалить</a>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item" href="/stand/delete/${stand.id}">Удалить</a>
+                                            </div>
+                                        </div>
+                                        <a href="/stand/request/${stand.id}" class="resume-link">
+                                            <p class="resume-name">${stand.title}</p>
+                                            <p class="resume-category">Категория: ${stand.category}</p>
+                                            <p class="resume-date">Дата создания: ${stand.publishedDate}</p>
+                                        </a>
                                     </div>
                                 </div>
-                                <a href="/stand/request/${stand.id}" class="resume-link">
-                                    <p class="resume-name">${stand.title}</p>
-                                    <p class="resume-category">Категория: ${stand.category}</p>
-                                    <p class="resume-date">Дата создания: ${stand.publishedDate}</p>
-                                </a>
-                            </div>
+                            </#list>
                         </div>
-                        </#list>
-                    </div>
                     </#if>
                 </div>
             </div>
         </#if>
     </div>
     <div id="modal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content other-elements">
             <div id="side-menu" class="side-menu">
                 <div class="close-button" id="close-button">X</div>
                 <ul>
                     <li><a href="profile/edit">Редактировать профиль</a></li>
                     <li><a href="/favourites">Посмотреть избранные</a></li>
                     <li><a href="/logout">Выйти из аккаунта</a></li>
+                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                           value="${(_csrf.token)!'--no-token--'}"/>
+                    <li><a href="#">
+                            <div class="slider-container">
+                                <span class="slider-label">Изменить тему:</span>
+                                <input type="range" min="0" max="1" value="0" step="1" class="slider"
+                                       id="themeToggle">
+                            </div>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/static/js/profile.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const tabButton = document.getElementById("stand-request-tab");
-    const tabContent = document.querySelector('.stand-requests');
-
-    tabButton.addEventListener("click", function() {
-        if (tabContent.style.display === "none") {
-            tabContent.style.display = "block";
-        } else {
-            tabContent.style.display = "none";
+    <script>
+        function getThemeFromServer() {
+            const url = '/api/get-theme';
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data)
+                    applyThemeToPage(data);
+                })
+                .catch(error => {
+                    console.error('Error getting theme from server:', error);
+                });
         }
-    });
-    });
-</script>
+
+        function applyThemeToPage(theme) {
+
+            const body = document.body;
+            const otherElements = document.querySelectorAll('.other-elements');
+
+            body.classList.toggle('dark-theme', theme == 1);
+            console.log(theme)
+            otherElements.forEach(element => {
+                element.classList.toggle('dark-theme', theme == 1);
+            });
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            getThemeFromServer();
+        });
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('input', function () {
+            const theme = parseInt(themeToggle.value);
+            body.classList.toggle('dark-theme', theme === 1);
+
+            const otherElements = document.querySelectorAll('.other-elements');
+            otherElements.forEach(element => {
+                element.classList.toggle('dark-theme', theme === 1);
+            });
+            saveThemePreference(theme);
+        });
+
+        function saveThemePreference(theme) {
+            const url = '/api/save-theme-preference';
+            const csrfToken = document.querySelector('input[name="_csrf"]').value;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    theme
+                }),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Theme preference saved:', data);
+                })
+                .catch(error => {
+                    console.error('Error saving theme preference:', error);
+                });
+        }
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const tabButton = document.getElementById("stand-request-tab");
+            const tabContent = document.querySelector('.stand-requests');
+
+            tabButton.addEventListener("click", function () {
+                if (tabContent.style.display === "none") {
+                    tabContent.style.display = "block";
+                } else {
+                    tabContent.style.display = "none";
+                }
+            });
+        });
+    </script>
     </@main.layout>
