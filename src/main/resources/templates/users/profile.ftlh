@@ -1,136 +1,65 @@
 <#import "../layout.ftlh" as main>
 <@main.layout>
-    <link rel="stylesheet" href="/static/css/profile.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
-    </script>
-    <style>
-        .portfolio-gallery {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-top: 15px;
-        }
-
-        .portfolio {
-            width: calc(100% - 20px);
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-
-        .portfolio-photos {
-            display: flex;
-            overflow-x: auto;
-            gap: 10px;
-        }
-
-        .portfolio-img {
-            width: 150px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        /* Style for modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 999;
-            padding-top: 50px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.9);
-        }
-
-        .modal-content {
-            margin: auto;
-            display: block;
-            width: 80%;
-            max-width: 700px;
-            max-height: 80%;
-        }
-
-        .close {
-            position: absolute;
-            top: 15px;
-            right: 35px;
-            color: #fff;
-            font-size: 40px;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #bbb;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-
-    </style>
-    <div id="content" class="content">
-        <div class="col">
-            <div id="menu-toggle" class="menu-toggle">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40"
-                     height="40" fill="currentColor" class="bi bi-list"
-                     id="openModal"
-                     viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                          d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
-                </svg>
-            </div>
+<link rel="stylesheet" href="/static/css/profile.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+</script>
+<div id="content" class="content">
+    <div class="col">
+        <div id="menu-toggle" class="menu-toggle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40"
+                 height="40" fill="currentColor" class="bi bi-list"
+                 id="openModal"
+                 viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                      d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+            </svg>
         </div>
-        <div class="profile">
-            <div class="profile-header row">
-                <div class="profile-image-block col-4">
-                    <#if user.photo?has_content>
-                        <img src="${user.photo}"
-                             class="round-image" alt>
-                    <#else>
-                        <img src="/static/default.jpg" class="round-image" alt="default photo">
-                    </#if>
-                    <#--                <#if qrCodeBase64??>-->
-                    <#--                <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code">-->
-                    <#--                </#if>-->
-                </div>
-                <div class="personal-info col-6">
-                    <#if user.userName?has_content>
-                        <p class="username">${user.userName}</p>
-                    </#if>
-                    <#if user.email?has_content>
-                        <p>${user.email}</p>
-                    </#if>
-                    <#if user.phoneNumber?has_content>
-                        <p>${user.phoneNumber}</p>
-                    </#if>
-                    <#if user.city?has_content>
-                        <p>Ваш город: ${user.city}</p>
-                    </#if>
-                    <#if rating?has_content>
-                        <div class="rating">
-                            <span class="star fas fa-star"></span>
-                            <span class="star fas fa-star"></span>
-                            <span class="star fas fa-star"></span>
-                            <span class="star fas fa-star"></span>
-                            <span class="star fas fa-star"></span>
-                            <span class="rating-number" id="rating"><#if rating??>${rating}</#if></span>
-                        </div>
-                    </#if>
-                </div>
-                <#if qrCodeBase64?has_content>
-                    <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code" class="qrCode">
+    </div>
+    <div class="profile">
+        <div class="profile-header row">
+            <div class="profile-image-block col-4">
+                <#if user.photo?has_content>
+                    <img src="${user.photo}"
+                         class="round-image" alt>
+                <#else>
+                    <img src="/static/default.jpg" class="round-image" alt="default photo">
+                </#if>
+                <#--                <#if qrCodeBase64??>-->
+                <#--                <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code">-->
+                <#--                </#if>-->
+            </div>
+            <div class="personal-info col-6">
+                <#if user.userName?has_content>
+                    <p class="username">${user.userName}</p>
+                </#if>
+                <#if user.email?has_content>
+                    <p>${user.email}</p>
+                </#if>
+                <#if user.phoneNumber?has_content>
+                    <p>${user.phoneNumber}</p>
+                </#if>
+                <#if user.city?has_content>
+                    <p>Ваш город: ${user.city}</p>
+                </#if>
+                <#if rating?has_content>
+                    <div class="rating">
+                        <span class="star fas fa-star"></span>
+                        <span class="star fas fa-star"></span>
+                        <span class="star fas fa-star"></span>
+                        <span class="star fas fa-star"></span>
+                        <span class="star fas fa-star"></span>
+                        <span class="rating-number" id="rating"><#if rating??>${rating}</#if></span>
+                    </div>
                 </#if>
             </div>
+            <#if qrCodeBase64?has_content>
+                <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code" class="qrCode">
+            </#if>
         </div>
+    </div>
 
     <div>
         <#if user.role = "ROLE_SPECIALIST">
@@ -190,7 +119,8 @@
 
             <div class="tab-content" id="portfolio-content">
                 <div class="portfolio-list">
-                    <div class="resume create-resume">
+<div class="portfolio-gallery">
+<div class="resume create-resume">
                         <a href="/portfolio/new" class="add-resume-link">
                             <p class="add-resume-text">Добавить портфолио</p>
                             <i class="fas fa-plus"></i>
@@ -200,9 +130,11 @@
                         <#list portfolios as portfolio>
                             <div class="portfolio">
                                 <#if portfolio.photos?has_content>
+<div class="portfolio-photos">
                                     <#list portfolio.photos as photo>
                                         <img src="${photo.photoLink}" alt class="portfolio-img">
                                     </#list>
+                                </div>
                                 <#else>
                                     <p>У вас еще нет загруженного портфолио</p>
                                 </#if>
@@ -217,6 +149,7 @@
                     <#else>
                         <p>У вас еще нет созданных портфолио</p>
                     </#if>
+</div>
                 </div>
             </div>
         <#elseif user.role = "ROLE_CUSTOMER">
@@ -224,54 +157,54 @@
                 <button class="tab-item active" id="stand-request-tab">Ваши запросы на стенд</button>
             </div>
 
-                <div class="d-block" id="stand-request-content">
-                    <div class="resume-list">
-                        <div class="resume create-resume">
-                            <a href="/stand/new" class="add-resume-link">
-                                <p class="add-resume-text">Новый запрос </p>
-                                <i class="fas fa-plus"></i>
-                            </a>
-                        </div>
-                        <#if stands??>
-                            <div class="stand-requests">
-                                <#list stands as stand>
-                                    <div class="resume-list">
-                                        <div class="post">
-                                            <div class="post-menu">
-                                                <button type="button" class="menu-button" data-bs-toggle="dropdown"
-                                                        aria-haspopup="true"
-                                                        aria-expanded="false">
+            <div class="d-block" id="stand-request-content">
+                <div class="resume-list">
+                    <div class="resume create-resume">
+                        <a href="/stand/new" class="add-resume-link">
+                            <p class="add-resume-text">Новый запрос </p>
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </div>
+                    <#if stands??>
+                    <div class="stand-requests">
+                        <#list stands as stand>
+                        <div class="resume-list">
+                            <div class="post">
+                                <div class="post-menu">
+                                    <button type="button" class="menu-button" data-bs-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false">
                                 <span class="dots"><i class="fas fa-ellipsis-v"></i>
                                 </span>
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item"
-                                                       href="/stand/delete/${stand.id}">Удалить</a>
-                                                </div>
-                                            </div>
-                                            <a href="/stand/request/${stand.id}" class="resume-link">
-                                                <p class="resume-name">${stand.title}</p>
-                                                <p class="resume-category">Категория: ${stand.category}</p>
-                                                <p class="resume-date">Дата создания: ${stand.publishedDate}</p>
-                                            </a>
-                                        </div>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="/stand/delete/${stand.id}">Удалить</a>
                                     </div>
-                                </#list>
+                                </div>
+                                <a href="/stand/request/${stand.id}" class="resume-link">
+                                    <p class="resume-name">${stand.title}</p>
+                                    <p class="resume-category">Категория: ${stand.category}</p>
+                                    <p class="resume-date">Дата создания: ${stand.publishedDate}</p>
+                                </a>
                             </div>
-                        </#if>
+                        </div>
+                        </#list>
                     </div>
+                    </#if>
                 </div>
-            </#if>
-        </div>
-        <div id="modal" class="modal">
-            <div class="modal-contentother-elements">
-                <div id="side-menu" class="side-menu">
-                    <div class="close-button" id="close-button">X</div>
-                    <ul>
-                        <li><a href="profile/edit">Редактировать профиль</a></li>
-                        <li><a href="/favourites">Посмотреть избранные</a></li>
-                        <#if user.role = "ROLE_SPECIALIST"><li><a href="/tariff">Выбрать тариф</a></li></#if>
-                        <li><a href="/logout">Выйти из аккаунта</a></li>
+            </div>
+        </#if>
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal-content other-elements">
+            <div id="side-menu" class="side-menu">
+                <div class="close-button" id="close-button">X</div>
+                <ul>
+                    <li><a href="profile/edit">Редактировать профиль</a></li>
+                    <li><a href="/favourites">Посмотреть избранные</a></li>
+                    <#if user.role = "ROLE_SPECIALIST"><li><a href="/tariff">Выбрать тариф</a></li></#if>
+
+                    <li><a href="/logout">Выйти из аккаунта</a></li>
                     <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                            value="${(_csrf.token)!'--no-token--'}"/>
                     <li><a href="#">
@@ -282,31 +215,34 @@
                             </div>
                         </a>
                     </li>
-                    </ul>
-                </div>
+                </ul>
             </div>
         </div>
-
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/static/js/profile.js"></script>
     <script>
         function getThemeFromServer() {
-            const url = '/api/get-theme';
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log(data)
-                    applyThemeToPage(data);
-                })
-                .catch(error => {
-                    console.error('Error getting theme from server:', error);
-                });
+            const storedTheme = localStorage.getItem('theme');
+            if (storedTheme !== null) {
+                applyThemeToPage(storedTheme);
+            } else {
+                const url = '/api/get-theme';
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        localStorage.setItem('theme', data);
+                        applyThemeToPage(data);
+                    })
+                    .catch(error => {
+                        console.error('Error getting theme from server:', error);
+                    });
+            }
         }
 
         function applyThemeToPage(theme) {
@@ -315,7 +251,6 @@
             const otherElements = document.querySelectorAll('.other-elements');
 
             body.classList.toggle('dark-theme', theme == 1);
-            console.log(theme)
             otherElements.forEach(element => {
                 element.classList.toggle('dark-theme', theme == 1);
             });
@@ -329,7 +264,7 @@
         themeToggle.addEventListener('input', function () {
             const theme = parseInt(themeToggle.value);
             body.classList.toggle('dark-theme', theme === 1);
-
+            localStorage.setItem('theme', theme);
             const otherElements = document.querySelectorAll('.other-elements');
             otherElements.forEach(element => {
                 element.classList.toggle('dark-theme', theme === 1);
@@ -370,13 +305,13 @@
             const tabButton = document.getElementById("stand-request-tab");
             const tabContent = document.querySelector('.stand-requests');
 
-            tabButton.addEventListener("click", function () {
-                if (tabContent.style.display === "none") {
-                    tabContent.style.display = "block";
-                } else {
-                    tabContent.style.display = "none";
-                }
-            });
-        });
-    </script>
+    tabButton.addEventListener("click", function() {
+        if (tabContent.style.display === "none") {
+            tabContent.style.display = "block";
+        } else {
+            tabContent.style.display = "none";
+        }
+    });
+    });
+</script>
     </@main.layout>

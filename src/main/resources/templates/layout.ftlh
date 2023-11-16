@@ -39,7 +39,26 @@
             </a>
         </nav>
     </div>
+<script>
+    function applyThemeToPage() {
+        const storedTheme = localStorage.getItem('theme');
 
+        const theme = storedTheme !== null ? parseInt(storedTheme, 10) : 0;
+
+        const body = document.body;
+        const otherElements = document.querySelectorAll('.other-elements');
+
+        body.classList.toggle('dark-theme', theme == 1);
+        otherElements.forEach(element => {
+            element.classList.toggle('dark-theme', theme == 1);
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        applyThemeToPage();
+    });
+
+</script>
 <#nested>
     </body>
     </html>

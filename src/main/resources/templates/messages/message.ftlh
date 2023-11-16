@@ -58,17 +58,19 @@
             padding: 0;
         }
 
-
-
-        /* Style the tabs */
         .msg {
             overflow: hidden;
             border: 1px solid #ccc;
             background-color: #f9f9f9;
             display: flex;
         }
+        .dark-theme .msg {
+            background-color: #333;
+            color: white
+            border: 1px solid #555;
 
-        /* Style the buttons inside the tab */
+        }
+
         .msg button {
             background-color: inherit;
             display: inline-block;
@@ -81,19 +83,17 @@
             font-size: 17px;
         }
 
-        /* Change background color of buttons on hover */
+
         .msg button:hover {
             background-color: #2552e7;
             color: white;
         }
 
-        /* Create an active/current tablink class */
         .msg button.active {
             background-color: #2552e7;
             color: white;
         }
 
-        /* Style the tab content */
         .tabcontent {
             display: none;
             padding: 12px 25px;
@@ -116,6 +116,11 @@
             height: 90px;
             flex-direction: row;
             padding: 20px 30px;
+        }
+        .dark-theme .message-card {
+            background-color: #333;
+            color: #fff;
+            box-shadow: 0 5px 15px rgba(247, 241, 241, 0.614);
         }
 
         @media only screen and (max-width: 600px) {
@@ -173,7 +178,11 @@
             transition: height 0.3s ease;
             height: 90px;
         }
-
+.dark-theme .notification-card {
+    background-color: #333;
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(247, 241, 241, 0.614);
+}
         .expanded {
             max-height: none;
         }
@@ -195,7 +204,6 @@
                 notificationsTab.style.display = 'block';
             }
 
-            // Add event listeners to the buttons
             const tablinks1 = document.querySelector('.tablinks-1');
             const tablinks2 = document.querySelector('.tablinks-2');
 

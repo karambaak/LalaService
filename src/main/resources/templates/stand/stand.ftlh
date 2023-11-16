@@ -136,7 +136,6 @@
         <style>
             .category {
                 font-weight: bold;
-                border: 1px #ccc solid;
                 border-radius: 15px;
                 margin: 25px 10px;
                 box-shadow: 5px -5px 15px rgba(0.0, 0.0, 0.1, 0.2);
@@ -148,12 +147,19 @@
                 padding: 25px;
                 cursor: pointer;
             }
+            .dark-theme .category {
+                box-shadow: 5px -5px 15px rgba(247, 241, 241, 0.614);
+                background-color: #333;
+            }
 
             .category:hover {
                 background-color: #2552e7;
                 color: white;
             }
-
+.dark-theme .category:hover {
+    background-color: white;
+    color: black;
+}
             .category::after {
                 padding-left: 30px;
                 font-family: 'Font Awesome 5 Free';
@@ -171,10 +177,8 @@
 
             #content {
                 padding-bottom: 60px;
-                /* Adjust this value to match the height of your tab bar */
                 overflow-y: scroll;
                 height: calc(100vh - 60px);
-                /* Subtract the height of the tab bar from the viewport height */
             }
 
             .response-link {
@@ -182,9 +186,12 @@
                 text-decoration: none;
                 margin-left: 20px;
             }
+            .dark-theme .response-link {
+                color: #d9d9d9;
 
+            }
             .response-link:hover {
-                color: #2552e7;
+                color: #fff;
             }
 
             .tasks {

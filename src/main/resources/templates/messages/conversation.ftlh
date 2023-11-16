@@ -87,38 +87,8 @@
             margin-bottom: 20px;
         }
 
-        .msg-input {
-            width: 80%;
-            border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 -5px 15px rgb(224, 220, 220);
-            height: 100px;
-            margin: 30px 0 10px;
-        }
 
-        .respond-button {
-            padding: 15px 20px;
-            color: #2552e7;
-            border: 2px solid #2552e7;
-            background-color: #fff;
-            cursor: pointer;
-            border-radius: 15px;
-            text-decoration: none;
-            width: 25%;
-        }
 
-        .respond-button:hover {
-            background-color: #2552e7;
-            color: #fff;
-        }
-
-        @media (max-width: 600px) {
-            .respond-button {
-                width: auto;
-                margin-right: auto;
-                margin-left: auto;
-            }
-        }
 
         .message {
             margin: 5px 15px 5px;
@@ -130,15 +100,7 @@
 
         }
 
-        .back-button {
-            text-decoration: none;
-            color: #2552e7;
-            display: flex;
-            align-items: center;
-            font-size: 18px;
-            margin-right: 40px;
-            margin-left: 10px;
-        }
+
 
         .incoming-msg {
             margin: 5px 15px 5px;
