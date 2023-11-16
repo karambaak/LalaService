@@ -122,16 +122,17 @@
 
                     <div class="portfolio-gallery">
 <div class="resume create-resume">
-    <a href="/portfolio/new" class="add-resume-link">
-        <p class="add-resume-text">Добавить портфолио</p>
-        <i class="fas fa-plus"></i>
-    </a>
-</div>
+                        <a href="/portfolio/new" class="add-resume-link">
+                            <p class="add-resume-text">Добавить портфолио</p>
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </div>
                     <#if portfolios?has_content>
                         <#list portfolios as portfolio>
                             <div class="portfolio">
                                 <#if portfolio.photos?has_content>
                                 <div class="portfolio-photos">
+
                                     <#list portfolio.photos as photo>
                                         <img src="${photo.photoLink}" alt class="portfolio-img">
                                     </#list>
@@ -216,7 +217,8 @@
                             </div>
                         </a>
                     </li>
-                </ul>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

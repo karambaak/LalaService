@@ -127,8 +127,6 @@
     opacity: 65%;
 }
 
-
-
 .portfolio {
     width: calc(100% - 20px);
     padding: 10px;
@@ -244,7 +242,6 @@
     width: 50%;
 }
 
-/*shares*/
 .share-buttons {
     display: flex;
     gap: 10px;
@@ -337,7 +334,6 @@
 }
 
 
-/* Стили для модального окна */
 .modal {
     display: none;
     position: fixed;
@@ -348,7 +344,6 @@
     background: rgba(0, 0, 0, 0.6);
     z-index: 2;
     transition: transform 0.3s ease;
-    /* Плавное появление и скрытие окна */
 }
 
 .modal-container.active {
@@ -364,7 +359,6 @@
     padding: 20px;
     box-shadow: 0px 5px 15px rgba(0.0, 0.0, 0.1, 0.4);
     transform: translateY(100%);
-    /* Смещение окна вниз (выход за пределы экрана) */
     transition: transform 0.3s ease;
 }
 
@@ -579,4 +573,5 @@ body.dark-theme {
     color: #bbb;
     text-decoration: none;
     cursor: pointer;
+
 }
