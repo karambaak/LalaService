@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-foreign-key-user_id-for-table-subscriptions_on_tariffs
+      author: master_Aleksandr
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            constraintName: fk_user_id-for-table-subscriptions_on_tariffs
+            referencedTableName: users
+            referencedColumnNames: ID
+            baseTableName: subscriptions_on_tariffs
+            onDelete: CASCADE
+            onUpdate: CASCADE
+  - changeSet:
+      id: add-foreign-key-tariff_id-for-table-subscriptions_on_tariffs
+      author: master_Aleksandr
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: tariff_id
+            constraintName: fk_tariff_id-for-table-subscriptions_on_tariffs
+            referencedTableName: tariffs
+            referencedColumnNames: ID
+            baseTableName: subscriptions_on_tariffs
+            onDelete: CASCADE
+            onUpdate: CASCADE
