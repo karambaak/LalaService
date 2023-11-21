@@ -8,6 +8,7 @@ import com.example.demo.entities.*;
 import com.example.demo.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MessageService {
@@ -34,14 +35,19 @@ public class MessageService {
 
     public List<MessageBundleDto> getAll() {
         User user = userService.getUserFromSecurityContextHolder();
+
+        return getAllMessagesByUser(user);
+    }
+
+    public List<MessageBundleDto> getAllMessagesByUser(User user) {
         if (user != null) {
             List<MessageBundleDto> list = getMessages(user);
             list.addAll(getResponses(user));
+            log.info("Fetched {} messages for user {}", list.size(), user.getId());
             return list;
         }
         return Collections.emptyList();
     }
-
 
     private List<MessageBundleDto> getMessages(User user) {
         List<Message> allMessages = messageRepository.findAll();
@@ -267,6 +273,7 @@ public class MessageService {
         return list;
 
     }
+
     public List<ResponseDto> findNewMessages(String localDateTime, String conversationId) {
         User user = userService.getUserFromSecurityContextHolder();
         if (user == null) return Collections.emptyList();
@@ -276,11 +283,10 @@ public class MessageService {
         List<Message> messages = messageRepository.findBySenderIdAndReceiverId(value, user.getId());
 
 
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
         LocalDateTime ldt = LocalDateTime.parse(localDateTime, formatter);
 
-        for(Message m: messages) {
+        for (Message m : messages) {
             ZoneId zoneId = ZoneId.of("Asia/Bishkek");
             ZonedDateTime responseDateTime = m.getDateTime().atZone(zoneId);
             ZonedDateTime requestDateTime = ldt.atZone(zoneId).plusHours(6);
@@ -296,6 +302,7 @@ public class MessageService {
         return list;
 
     }
+
     public HttpStatus saveMessage(String msgId, MessageDto responseDto) {
         User user = userService.getUserFromSecurityContextHolder();
         Long receiverId = Long.parseLong(postService.extractStringAfterDash(msgId));
