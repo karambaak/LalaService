@@ -26,6 +26,9 @@ public class Tariff {
     @Column(name = "availability")
     private Boolean availability;
 
+    @Column(name = "day_amount")
+    private Integer dayAmount;
+
     @OneToMany(mappedBy = "tariff", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Specialist> specialists;
 }

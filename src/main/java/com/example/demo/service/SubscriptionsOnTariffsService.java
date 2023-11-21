@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.TariffDto;
-import com.example.demo.entities.*;
+import com.example.demo.entities.SpecialistsAuthorities;
+import com.example.demo.entities.SubscriptionsOnTariffs;
+import com.example.demo.entities.Tariff;
 import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +12,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAmount;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -24,6 +25,7 @@ public class SubscriptionsOnTariffsService {
     private final AuthorityRepository authorityRepository;
     private final SpecialistRepository specialistRepository;
     private final UserRepository userRepository;
+    private final TariffRepository tariffRepository;
 
     @Scheduled(cron = "@daily")
     public void tariffChecking(){
@@ -41,7 +43,9 @@ public class SubscriptionsOnTariffsService {
     public void addPaymentOnTariffByUserAuth(TariffDto tariffDto, User user) {
        com.example.demo.entities.User userByAuth = userRepository.findByPhoneNumber(user.getUsername())
                .orElseThrow(() -> new NoSuchElementException("User not found"));
-       LocalDateTime dateOfEnd = LocalDateTime.now().plusDays(determineDurationOfTariff(tariffDto.getTariffName()));
+       Tariff tariff = tariffRepository.findById(tariffDto.getId())
+               .orElseThrow(() -> new NoSuchElementException("Tariff not found"));
+       LocalDateTime dateOfEnd = LocalDateTime.now().plusDays(tariff.getDayAmount());
        subscriptionsOnTariffsRepository.save(SubscriptionsOnTariffs.builder()
                        .user(userByAuth)
                        .tariff(Tariff.builder()
@@ -61,15 +65,5 @@ public class SubscriptionsOnTariffsService {
                 .dateEnd(dateOfEnd)
                 .id(specialistsAuthorities.getId())
                 .build()));
-    }
-
-    private int determineDurationOfTariff(String tariffName){
-        return switch (tariffName) {
-            case "monthly" -> 30;
-            case "quarterly" -> 90;
-            case "half-yearly" -> 180;
-            case "yearly" -> 360;
-            default -> throw new NoSuchElementException("Tariff type not found");
-        };
     }
 }
