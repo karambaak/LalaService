@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.UserDto;
+import com.example.demo.entities.Role;
 import com.example.demo.entities.User;
+import com.example.demo.repository.GeolocationRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -32,6 +34,8 @@ class UserServiceTest {
     private PasswordEncoder encoder;
     @Mock
     private AuthUserDetailsService service;
+    @Mock
+    private GeolocationRepository geolocationRepository;
 
     @Test
     void testGetAllUsers_ReturnListUsers() {
@@ -50,27 +54,28 @@ class UserServiceTest {
         Mockito.verify(userRepository, Mockito.times(1)).findAll();
     }
 
-//    @Test
-//    void testRegisterExistingUser() {
-//        UserDto userDto = new UserDto();
-//        userDto.setPhoneNumber("1234567890");
-//
-//        when(userRepository.findByPhoneNumber(userDto.getPhoneNumber())).thenReturn(Optional.of(new User()));
-//
-//        assertThrows(IllegalArgumentException.class, () -> userService.register(userDto));
-//    }
-}
+    @Test
+    void testRegisterExistingUser() {
+        UserDto userDto = new UserDto();
+        userDto.setPhoneNumber("1234567890");
+        userDto.setCountry("Кыргызстан");
+        userDto.setCity("Бишкек");
+        when(userRepository.findByPhoneNumber(userDto.getPhoneNumber())).thenReturn(Optional.of(new User()));
 
-//    @Test
-//    void testGetRoles() {
-//        List<Role> testRoles = List.of(
-//                new Role(1L, "ROLE_SPECIALIST", new ArrayList<>()),
-//                new Role(2L, "ROLE_CUSTOMER", new ArrayList<>())
-//        );
-//        Mockito.when(roleRepository.findAll()).thenReturn(testRoles);
-//        List<String> result = userService.getRoles();
-//        List<String> expectedRoles = List.of("ROLE_SPECIALIST", "ROLE_CUSTOMER");
-//        assertEquals(expectedRoles, result);
-//        Mockito.verify(roleRepository, Mockito.times(1)).findAll();
-//    }
-//}
+        assertThrows(IllegalArgumentException.class, () -> userService.register(userDto));
+    }
+
+
+    @Test
+    void testGetRoles() {
+        List<Role> testRoles = List.of(
+                new Role(1L, "ROLE_SPECIALIST", new ArrayList<>()),
+                new Role(2L, "ROLE_CUSTOMER", new ArrayList<>())
+        );
+        Mockito.when(roleRepository.findAll()).thenReturn(testRoles);
+        List<String> result = userService.getRoles();
+        List<String> expectedRoles = List.of("ROLE_SPECIALIST", "ROLE_CUSTOMER");
+        assertEquals(expectedRoles, result);
+        Mockito.verify(roleRepository, Mockito.times(1)).findAll();
+    }
+}

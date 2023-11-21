@@ -61,27 +61,27 @@
         </div>
     </div>
 
-    <div>
-        <#if user.role = "ROLE_SPECIALIST">
-            <div class="tabs">
-                <div class="share-buttons">
-                    <button class="share-button facebook">
-                        <i class="fab fa-facebook-f"></i>
-                    </button>
-                    <button class="share-button twitter">
-                        <i class="fab fa-twitter"></i>
-                    </button>
-                    <button class="share-button linkedin">
-                        <i class="fab fa-linkedin-in"></i>
-                    </button>
-                    <button class="share-button pinterest">
-                        <i class="fab fa-pinterest"></i>
-                    </button>
-                    <button class="share-button whatsapp">
-                        <i class="fab fa-whatsapp"></i>
-                    </button>
+        <div>
+            <#if user.role = "ROLE_SPECIALIST">
+                <div class="tabs">
+                    <div class="share-buttons">
+                        <button class="share-button facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button class="share-button twitter">
+                            <i class="fab fa-twitter"></i>
+                        </button>
+                        <button class="share-button linkedin">
+                            <i class="fab fa-linkedin-in"></i>
+                        </button>
+                        <button class="share-button pinterest">
+                            <i class="fab fa-pinterest"></i>
+                        </button>
+                        <button class="share-button whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
 
             <div class="tabs">
                 <button class="tab-item" id="resume-tab">Резюме</button>
@@ -119,7 +119,8 @@
 
             <div class="tab-content" id="portfolio-content">
                 <div class="portfolio-list">
-<div class="portfolio-gallery">
+
+                    <div class="portfolio-gallery">
 <div class="resume create-resume">
                         <a href="/portfolio/new" class="add-resume-link">
                             <p class="add-resume-text">Добавить портфолио</p>
@@ -130,7 +131,8 @@
                         <#list portfolios as portfolio>
                             <div class="portfolio">
                                 <#if portfolio.photos?has_content>
-<div class="portfolio-photos">
+                                <div class="portfolio-photos">
+
                                     <#list portfolio.photos as photo>
                                         <img src="${photo.photoLink}" alt class="portfolio-img">
                                     </#list>
@@ -215,7 +217,8 @@
                             </div>
                         </a>
                     </li>
-                </ul>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

@@ -242,7 +242,6 @@
     width: 50%;
 }
 
-/*shares*/
 .share-buttons {
     display: flex;
     gap: 10px;
@@ -345,7 +344,6 @@
     background: rgba(0, 0, 0, 0.6);
     z-index: 2;
     transition: transform 0.3s ease;
-    /* Плавное появление и скрытие окна */
 }
 
 .modal-container.active {
