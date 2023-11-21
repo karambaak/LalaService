@@ -18,6 +18,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -48,7 +49,8 @@ public class SpecialistService {
         Authority limitedAuthority = authorityRepository.findByAuthorityName("LIMITED");
         LocalDateTime dateTime = LocalDateTime.of(3023, Month.DECEMBER, 31, 0, 0);
 
-        SpecialistsAuthorities sa = specialistsAuthoritiesRepository.findBySpecialistId(s.getId());
+        SpecialistsAuthorities sa = specialistsAuthoritiesRepository.findBySpecialistId(s.getId())
+                .orElseThrow(() -> new NoSuchElementException("Authority not found"));
         if (sa.getAuthority().getAuthorityName().equalsIgnoreCase("FULL")) {
             if (sa.getDateEnd().isAfter(LocalDateTime.now())) {
                 return true;
