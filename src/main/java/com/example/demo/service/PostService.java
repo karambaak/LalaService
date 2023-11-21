@@ -31,9 +31,12 @@ public class PostService {
     private final CategoryRepository categoryRepository;
     private final SpecialistService specialistService;
 
-
     public List<StandCategoryDto> getAll() {
         List<Post> list = postRepository.findAll();
+        return getAllStandCategoryDtos(list);
+    }
+
+    public List<StandCategoryDto> getAllStandCategoryDtos(List<Post> list) {
         list.sort(Comparator.comparing(post -> post.getCategory().getCategoryName()));
         List<StandCategoryDto> standPostList = new ArrayList<>();
 
@@ -83,12 +86,12 @@ public class PostService {
                 .build();
     }
 
-    private String formatDateTime(LocalDateTime dateTime) {
+    public String formatDateTime(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return dateTime.format(formatter);
     }
 
-    private String formatDateTimeShort(LocalDateTime dateTime) {
+    public String formatDateTimeShort(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd HH:mm");
         return dateTime.format(formatter);
     }
@@ -96,11 +99,14 @@ public class PostService {
     public List<StandCategoryDto> getMySubscriptions(ViewerDto v) {
         List<SubscriptionStand> subscribed = subscriptionStandRepository.findAllBySpecialistId(v.getSpecialistId());
         List<StandCategoryDto> all = getAll();
+
+        return getAllBySubsctiontionStandList(subscribed, all);
+    }
+
+    public List<StandCategoryDto> getAllBySubsctiontionStandList(List<SubscriptionStand> subscribed, List<StandCategoryDto> all) {
         HashSet<StandCategoryDto> hashSet = new HashSet<>();
-        for (SubscriptionStand c :
-                subscribed) {
-            for (StandCategoryDto s :
-                    all) {
+        for (SubscriptionStand c : subscribed) {
+            for (StandCategoryDto s : all) {
                 if (c.getCategory().getCategoryName().equalsIgnoreCase(s.getCategory())) {
                     hashSet.add(s);
                 }
@@ -109,9 +115,13 @@ public class PostService {
         return new ArrayList<>(hashSet);
     }
 
+
     public List<StandCategoryDto> getOtherPosts(ViewerDto v) {
         List<SubscriptionStand> subscribed = subscriptionStandRepository.findAllBySpecialistId(v.getSpecialistId());
         List<StandCategoryDto> all = getAll();
+        return getPostsNotSubscribed(subscribed, all);
+    }
+    public List<StandCategoryDto> getPostsNotSubscribed(List<SubscriptionStand> subscribed, List<StandCategoryDto> all) {
         if (subscribed.isEmpty()) return all;
         HashSet<StandCategoryDto> hashSet = new HashSet<>();
         for (SubscriptionStand c :
@@ -323,7 +333,7 @@ public class PostService {
         User user = userService.getUserFromSecurityContextHolder();
         if (user != null) {
             var maybeCategory = categoryRepository.findById(dto.getCategoryId());
-            if(maybeCategory.isPresent()){
+            if (maybeCategory.isPresent()) {
                 Category c = maybeCategory.get();
                 postRepository.saveAndFlush(Post.builder()
                         .user(user)
@@ -421,6 +431,7 @@ public class PostService {
         postRepository.delete(post);
 
     }
+
     @Transactional
     public void deletePost(Long postId) {
         var post = postRepository.findById(postId);
@@ -475,7 +486,7 @@ public class PostService {
         LocalDateTime ldt = LocalDateTime.parse(localDateTime, formatter);
 
         List<Response> list = new ArrayList<>();
-        for (Response r:responses) {
+        for (Response r : responses) {
             ZoneId zoneId = ZoneId.of("Asia/Bishkek");
             ZonedDateTime responseDateTime = r.getDateTime().atZone(zoneId);
             ZonedDateTime requestDateTime = ldt.atZone(zoneId).plusHours(6);
