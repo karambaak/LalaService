@@ -1,5 +1,5 @@
-insert into tariffs (tariff_name, cost, availability)
-values ('monthly', 10, true),
-       ('quarterly', 30, true),
-       ('half-yearly', 60, true),
-       ('yearly', 120, true);
+insert into tariffs (tariff_name, cost, availability, day_amount)
+values ('monthly', 10, true, 30),
+       ('quarterly', 30, true, 90),
+       ('half-yearly', 60, true, 180),
+       ('yearly', 120, true, 360);
