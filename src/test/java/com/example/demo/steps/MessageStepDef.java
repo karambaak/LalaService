@@ -54,9 +54,7 @@ public class MessageStepDef {
     @Тогда("я получаю список сообщений")
     public void яПолучаюСписокСообщений() {
         User user = mockExistingUser();
-        System.out.println(user.getId());
         List<MessageBundleDto> messages = messageService.getAllMessagesByUser(user);
-        System.out.println(messages.size());
         assertFalse(messages.isEmpty());
     }
 

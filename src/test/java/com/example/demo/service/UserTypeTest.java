@@ -1,24 +1,28 @@
 package com.example.demo.service;
 
-import com.example.demo.repository.*;
+import com.example.demo.enums.UserType;
+import io.cucumber.java.Before;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
 
+@SpringBootTest
 class UserTypeTest {
-    UserRepository userRepository = mock(UserRepository.class);
-    SpecialistRepository specialistRepository = mock(SpecialistRepository.class);
-    RoleRepository roleRepository = mock(RoleRepository.class);
+    @Autowired
+    private UserService userService;
 
-    PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
-    AuthUserDetailsService authUserDetailsService = mock(AuthUserDetailsService.class);
-    GeolocationRepository geolocationRepository = mock(GeolocationRepository.class);
-    UpdateCountsRepository updateCountsRepository = mock(UpdateCountsRepository.class);
+    @Mock
+    private UserType userType;
 
-    UserService userService = new UserService(userRepository, specialistRepository, roleRepository, passwordEncoder, authUserDetailsService, geolocationRepository, updateCountsRepository);
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     void insertRoleSpecialistShouldReturnUserTypeSpecialist() {

@@ -35,7 +35,6 @@ public class MessageService {
 
     public List<MessageBundleDto> getAll() {
         User user = userService.getUserFromSecurityContextHolder();
-
         return getAllMessagesByUser(user);
     }
 
@@ -89,26 +88,26 @@ public class MessageService {
         return list;
     }
 
-    private Set<Long> uniqueIds(List<Message> messages, User user) {
+    public Set<Long> uniqueIds(List<Message> messages, User user) {
         return messages.stream()
                 .flatMap(m -> Stream.of(m.getReceiver().getId(), m.getSender().getId()))
                 .filter(id -> !id.equals(user.getId()))
                 .collect(Collectors.toSet());
     }
 
-    private List<Message> iAmSender(List<Message> messages, User user) {
+    public List<Message> iAmSender(List<Message> messages, User user) {
         return messages.stream()
                 .filter(m -> m.getSender().getId().equals(user.getId()))
                 .toList();
     }
 
-    private List<Message> iAmReceiver(List<Message> messages, User user) {
+    public List<Message> iAmReceiver(List<Message> messages, User user) {
         return messages.stream()
                 .filter(m -> m.getReceiver().getId().equals(user.getId()))
                 .toList();
     }
 
-    private String formatDateTime(LocalDateTime dateTime) {
+    public String formatDateTime(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd HH:mm");
         return dateTime.format(formatter);
     }
@@ -117,8 +116,15 @@ public class MessageService {
     public List<NotificationDto> getAllNotifications() {
         User user = userService.getUserFromSecurityContextHolder();
         if (user != null) {
-            List<Notification> list = notificationRepository.findAllByUser(user);
+            List<Notification> list = getAllNotificationsByUser(user);
             return list.stream().map(this::makeDtoFromNotification).toList();
+        }
+        return Collections.emptyList();
+    }
+
+    public List<Notification> getAllNotificationsByUser(User user) {
+        if (user != null) {
+            return notificationRepository.findAllByUser(user);
         }
         return Collections.emptyList();
     }
