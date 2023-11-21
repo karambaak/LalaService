@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: create table linking users and subscriptions on tariffs
+      author: Aleksandr
+      changes:
+        - createTable:
+            tableName: subscriptions_on_tariffs
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: long
+              - column:
+                  name: tariff_id
+                  type: long
+              - column:
+                  name: start_period_time
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_period_time
+                  type: datetime
+                  constraints:
+                    nullable: false
