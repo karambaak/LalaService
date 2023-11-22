@@ -22,5 +22,5 @@ public class Theme {
     private String themeName;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "theme")
-    List<User> users;
+    private List<User> users;
 }

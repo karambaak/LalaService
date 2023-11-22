@@ -8,19 +8,19 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: long
+                  type: bigserial
                   autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: user_id
-                  type: long
+                  type: bigserial
                   constraints:
                     nullable: false
               - column:
                   name: category_id
-                  type: long
+                  type: bigserial
                   constraints:
                     nullable: false
               - column:
@@ -40,7 +40,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: long
+                  type: bigserial
                   autoIncrement: true
                   constraints:
                     primaryKey: true
@@ -56,14 +56,14 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: long
+                  type: bigserial
                   autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: user_id
-                  type: long
+                  type: bigserial
                   constraints:
                     nullable: false
               - column:
