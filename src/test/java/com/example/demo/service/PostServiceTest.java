@@ -6,6 +6,7 @@ import com.example.demo.entities.Post;
 import com.example.demo.entities.SubscriptionStand;
 import com.example.demo.entities.User;
 import io.cucumber.java.Before;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class PostServiceTest {
@@ -33,6 +33,22 @@ public class PostServiceTest {
     void should_get_list_of_posts_grouped_by_category() {
         List<StandCategoryDto> testList = postService.getAllStandCategoryDtos(allPosts());
         assertEquals(3, testList.size());
+    }
+
+    @Test
+    void should_get_list_of_posts_by_one_customer() {
+        User user = mockUser();
+        List<Post> listFromRepository = postService.getAllCustomerPosts(user.getId());
+        assertFalse(listFromRepository.isEmpty());
+        assertTrue(listFromRepository.stream().allMatch(post -> Matchers.equalTo(2L).matches(post.getUser().getId())));
+    }
+
+    @Test
+    void should_get_empty_list_when_customer_does_not_exist() {
+        User user = new User();
+        user.setId(400L);
+        List<Post> listFromRepository = postService.getAllCustomerPosts(user.getId());
+        assertTrue(listFromRepository.isEmpty());
     }
 
     @Test
