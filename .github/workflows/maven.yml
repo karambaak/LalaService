@@ -17,7 +17,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.actor }}/movie_review_image:latest
+  IMAGE_NAME: ${{ github.actor }}/lalaservice_image:latest
 
 jobs:
   build:
