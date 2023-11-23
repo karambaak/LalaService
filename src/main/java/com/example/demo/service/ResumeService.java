@@ -77,12 +77,15 @@ public class ResumeService {
 
     private boolean checkNotAppearResumeInCategory(ResumeDto resumeDto) {
         List<Resume> resumesBySpecialistId = resumeRepository.findAllBySpecialist_Id(resumeDto.getSpecialistId());
-        for (Resume r : resumesBySpecialistId) {
-            if (Objects.equals(r.getCategory().getId(), resumeDto.getCategoryId())) {
-                return false;
+        return checkDuplicateCategoryResumes(resumeDto.getCategoryId(), resumesBySpecialistId);
+    }
+    public boolean checkDuplicateCategoryResumes(Long categoryId, List<Resume> resumes) {
+        for(Resume r: resumes) {
+            if(r.getCategory().getId().equals(categoryId)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     public void deleteResume(long specialistId, long resumeId) {
@@ -100,9 +103,11 @@ public class ResumeService {
     }
 
     private ResumeDto makeDto(Resume resume) {
+        String resumeName = (resume.getName() != null) ? resume.getName() : "";
+
         return ResumeDto.builder()
                 .id(resume.getId())
-                .header(resume.getName())
+                .header(resumeName)
                 .specialistId(resume.getSpecialist().getId())
                 .timeOfResume(resume.getTimeOfResume())
                 .resumeDescription(resume.getResumeDescription())
