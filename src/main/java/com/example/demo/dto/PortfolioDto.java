@@ -2,14 +2,15 @@ package com.example.demo.dto;
 
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.util.List;
 
 @Builder
 @Data
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PortfolioDto {
     private Long id;
     private Long specialistId;
