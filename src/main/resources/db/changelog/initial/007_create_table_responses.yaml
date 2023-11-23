@@ -8,22 +8,21 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: long
-                  autoIncrement: true
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: post_id
-                  type: long
+                  type: bigserial
                   constraints:
                     nullable: false
               - column:
                   name: specialist_id
-                  type: long
+                  type: bigserial
               - column:
                   name: user_id
-                  type: long
+                  type: bigserial
               - column:
                   name: conversation_id
                   type: varchar(50)

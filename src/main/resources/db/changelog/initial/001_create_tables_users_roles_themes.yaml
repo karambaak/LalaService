@@ -8,8 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: long
-                  autoIncrement: true
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -35,16 +34,16 @@ databaseChangeLog:
                   type: boolean
               - column:
                   name: role_id
-                  type: long
-#              - column:
-#                  name: tariffId
-#                  type: long
+                  type: bigserial
+              - column:
+                  name: tariff_id
+                  type: bigserial
               - column:
                   name: theme_id
-                  type: long
+                  type: bigserial
               - column:
                   name: geolocation_id
-                  type: long
+                  type: bigserial
               - column:
                   name: registration_date
                   type: timestamp
@@ -57,8 +56,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: long
-                  autoIncrement: true
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -70,8 +68,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: long
-                  autoIncrement: true
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false

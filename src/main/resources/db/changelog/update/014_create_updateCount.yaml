@@ -4,18 +4,17 @@ databaseChangeLog:
       author: Sanat
       changes:
         - createTable:
-            tableName: updateCounts
+            tableName: update_counts
             columns:
               - column:
                   name: id
-                  type: long
-                  autoIncrement: true
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: user_id
-                  type: long
+                  type: bigserial
                   constraints:
                     nullable: false
               - column:
@@ -25,7 +24,7 @@ databaseChangeLog:
                   name: update_time
                   type: timestamp
         - addForeignKeyConstraint:
-            baseTableName: updateCounts
+            baseTableName: update_counts
             baseColumnNames: user_id
             constraintName: fk_user_id_updateCounts
             referencedColumnNames: id

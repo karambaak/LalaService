@@ -8,8 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: long
-                  autoIncrement: true
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -18,25 +17,23 @@ databaseChangeLog:
                   type: varchar(50)
                   constraints:
                     nullable: false
-
         - createTable:
             tableName: specialists_authorities
             columns:
               - column:
                   name: id
-                  type: long
-                  autoIncrement: true
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: specialist_id
-                  type: long
+                  type: bigserial
                   constraints:
                     nullable: false
               - column:
                   name: authority_id
-                  type: long
+                  type: bigserial
                   constraints:
                     nullable: false
               - column:

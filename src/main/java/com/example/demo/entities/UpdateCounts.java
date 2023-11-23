@@ -12,14 +12,14 @@ import java.sql.Timestamp;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "updatecounts")
+@Table(name = "update_counts")
 public class UpdateCounts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    private long userId;
-    private int count;
+    private Long userId;
+    private Integer count;
 
     private Timestamp updateTime;
 

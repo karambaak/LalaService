@@ -8,14 +8,13 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: long
-                  autoIncrement: true
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: specialist_id
-                  type: long
+                  type: bigserial
                   constraints:
                     nullable: false
               - column:
@@ -26,7 +25,7 @@ databaseChangeLog:
                   type: varchar(255)
               - column:
                   name: category_id
-                  type: long
+                  type: bigserial
                   constraints:
                     nullable: false
               - column:
@@ -37,14 +36,13 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: long
-                  autoIncrement: true
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: specialist_id
-                  type: long
+                  type: bigserial
                   constraints:
                     nullable: false
               - column:
@@ -58,19 +56,18 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: long
-                  autoIncrement: true
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: specialist_id
-                  type: long
+                  type: bigserial
                   constraints:
                     nullable: false
               - column:
                   name: category_id
-                  type: long
+                  type: bigserial
                   constraints:
                     nullable: false
         - addForeignKeyConstraint:

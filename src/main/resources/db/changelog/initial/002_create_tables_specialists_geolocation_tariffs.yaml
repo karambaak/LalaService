@@ -8,14 +8,13 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: long
-                  autoIncrement: true
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: user_id
-                  type: long
+                  type: bigserial
                   constraints:
                     nullable: false
               - column:
@@ -23,14 +22,13 @@ databaseChangeLog:
                   type: varchar(255)
               - column:
                   name: tariff_id
-                  type: long
+                  type: bigserial
         - createTable:
             tableName: geolocation
             columns:
               - column:
                   name: id
-                  type: long
-                  autoIncrement: true
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -45,8 +43,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: long
-                  autoIncrement: true
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false

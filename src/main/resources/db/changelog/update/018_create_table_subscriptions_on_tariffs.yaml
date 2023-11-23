@@ -8,17 +8,16 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: long
-                  autoIncrement: true
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: user_id
-                  type: long
+                  type: bigserial
               - column:
                   name: tariff_id
-                  type: long
+                  type: bigserial
               - column:
                   name: start_period_time
                   type: datetime

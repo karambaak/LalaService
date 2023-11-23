@@ -22,7 +22,9 @@ public class  Resume {
     private Specialist specialist;
 
     private String name;
+
     private Timestamp timeOfResume;
+
     private String resumeDescription;
 
     @ManyToOne

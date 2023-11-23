@@ -25,6 +25,8 @@ public class SpecialistsAuthorities {
     @ManyToOne
     @JoinColumn(name = "authority_id")
     private Authority authority;
+
     private LocalDateTime dateStart;
+
     private LocalDateTime dateEnd;
 }

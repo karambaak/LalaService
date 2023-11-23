@@ -1,3 +1,20 @@
+insert into TARIFFS (TARIFF_NAME, COST, AVAILABILITY, day_amount)
+VALUES ( 'free', 0, true, 0 );
+
+insert into tariffs (tariff_name, cost, availability, day_amount)
+values ('monthly', 10, true, 30),
+       ('quarterly', 30, true, 90),
+       ('half-yearly', 60, true, 180),
+       ('yearly', 120, true, 360);
+
+insert into ROLES(ROLE)
+values ( 'ROLE_SPECIALIST'),
+       ('ROLE_CUSTOMER'),
+       ('ROLE_ADMIN');
+
+insert into THEMES (THEME_NAME)
+values ( 'light'),
+       ('dark');
 INSERT INTO GEOLOCATION (country, city)
 VALUES
     ('Кыргызстан', 'Бишкек'),
@@ -31,11 +48,6 @@ VALUES
     ('Кыргызстан', 'Токтогул'),
     ('Кыргызстан', 'Чолпон-Ата'),
     ('Кыргызстан', 'Шопоков');
-
-insert into ROLES(ROLE) values ( 'ROLE_SPECIALIST' ), ('ROLE_CUSTOMER'),('ROLE_ADMIN');
-
-insert into THEMES (THEME_NAME) values ( 'light'), ('dark');
-
 insert into CATEGORIES (CATEGORY_NAME, DESCRIPTION)
 VALUES ( 'Компьютеры', 'Ремонт и обсуживание' ),
        ('Интернет-услуги', 'IT, SMM, реклама в интернете'),
@@ -55,14 +67,10 @@ VALUES ( 'Компьютеры', 'Ремонт и обсуживание' ),
        ('Пошив и ремонт одежды', 'швейные ателье, обувные мастерские'),
        ('Разное', 'бытовые услуги, клининговый сервис, аренда помещений, прокат оборудования и другое');
 
-insert into TARIFFS (TARIFF_NAME, COST, AVAILABILITY)
-VALUES ( 'бесплатный', 0, true );
-
 insert into USERS (PHONE_NUMBER, USER_NAME, USER_TYPE, EMAIL, PASSWORD, ENABLED, ROLE_ID, THEME_ID, REGISTRATION_DATE, geolocation_id)
 VALUES ('123', 'Alex', 'SPECIALIST', '', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true,
         (SELECT id FROM roles WHERE role LIKE '%SPECIALIST'), (select id from THEMES where THEME_NAME = 'light'),
         '2023-10-15 15:30:00', (select id from GEOLOCATION where CITY = 'Бишкек')),
        ('1234', 'Qwe', 'CUSTOMER', '', '$2a$12$a72Udagvfj0P2ezcWE1yV.s7mMxn6SgJsyHWVOMegNmTN/WBayFbC', true,
         (SELECT id FROM roles WHERE role LIKE '%CUSTOMER'), (select id from THEMES where THEME_NAME = 'light'),
-       '2023-10-15 15:30:00', (select id from GEOLOCATION where CITY = 'Бишкек'));
-
+        '2023-10-15 15:30:00', (select id from GEOLOCATION where CITY = 'Бишкек'));

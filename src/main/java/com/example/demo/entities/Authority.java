@@ -17,7 +17,9 @@ public class Authority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String authorityName;
+
     @OneToMany(mappedBy = "authority")
     private List<SpecialistsAuthorities> specialistsAuthorities;
 
