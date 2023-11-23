@@ -9,7 +9,6 @@ databaseChangeLog:
               - column:
                   name: id
                   type: bigserial
-                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -58,7 +57,6 @@ databaseChangeLog:
               - column:
                   name: id
                   type: bigserial
-#                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -71,7 +69,6 @@ databaseChangeLog:
               - column:
                   name: id
                   type: bigserial
-#                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false

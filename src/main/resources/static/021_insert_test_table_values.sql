@@ -26,25 +26,31 @@ VALUES
 
 insert into SPECIALISTS (TARIFF_ID, USER_ID, COMPANY_NAME)
 VALUES (
-           (select id from TARIFFS where TARIFF_NAME='бесплатный'),
+           (select id from TARIFFS where TARIFF_NAME='free'),
            (select id from USERS where PHONE_NUMBER='123' ),
            'Services Co.'
        );
 
-insert into PORTFOLIOS (SPECIALIST_ID, TITLE) VALUES ( 1, 'Примеры моих работ');
+insert into PORTFOLIOS (SPECIALIST_ID, TITLE)
+VALUES ( 1, 'Примеры моих работ');
 
-insert into PHOTOS (PORTFOLIO_ID, PHOTO_LINK) VALUES ( 1, 'https://www.imperialhotel.ru/upload/iblock/f7b/photo_2021-06-30_13-27-56.jpg' ),
-                                                     (1, 'https://upload.wikimedia.org/wikipedia/commons/e/ef/Basingstoke_Sports_Centre_Pool.jpg');
+insert into PHOTOS (PORTFOLIO_ID, PHOTO_LINK)
+VALUES ( 1, 'https://www.imperialhotel.ru/upload/iblock/f7b/photo_2021-06-30_13-27-56.jpg' ),
+(1, 'https://upload.wikimedia.org/wikipedia/commons/e/ef/Basingstoke_Sports_Centre_Pool.jpg');
 
 insert into RESUMES (CATEGORY_ID, SPECIALIST_ID, TIME_OF_RESUME, RESUME_DESCRIPTION)
 VALUES (
            (select  id from  CATEGORIES where CATEGORY_NAME like 'Строительные работы%'),
-           1, '2023-10-18 12:00:00', 'строительство бассейнов, срок строительства от 6 мес., от $20000'), (
-           (select id from CATEGORIES where CATEGORY_NAME like 'Строительные работы и ремонт'), 1, '2023-10-19 12:00:00', 'сантех-работы');
+           1, '2023-10-18 12:00:00', 'строительство бассейнов, срок строительства от 6 мес., от $20000'),
+    (
+           (select id from CATEGORIES where CATEGORY_NAME like 'Строительные работы и ремонт'),
+        1, '2023-10-19 12:00:00', 'сантех-работы');
 
-insert into FAVOURITES (SPECIALIST_ID, USER_ID) VALUES ( 1, 2 );
+insert into FAVOURITES (SPECIALIST_ID, USER_ID)
+VALUES ( 1, 2 );
 
-insert into SUBSCRIPTION_STAND (CATEGORY_ID, SPECIALIST_ID) VALUES ( (select id from CATEGORIES where CATEGORY_NAME like 'Строительные работы%'), 1 );
+insert into SUBSCRIPTION_STAND (CATEGORY_ID, SPECIALIST_ID)
+VALUES ( (select id from CATEGORIES where CATEGORY_NAME like 'Строительные работы%'), 1 );
 
 insert into RATINGS (USER_ID, SPECIALIST_ID, RATING, REVIEW_TEXT, RATING_DATE)
 VALUES ( 2, 1, 5,'Специалист заменил трубы в ванной комнате. работа выполнена отлично', '2023-10-18 12:00:00'  ),

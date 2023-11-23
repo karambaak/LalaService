@@ -9,7 +9,6 @@ databaseChangeLog:
               - column:
                   name: id
                   type: bigserial
-                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -18,14 +17,12 @@ databaseChangeLog:
                   type: varchar(50)
                   constraints:
                     nullable: false
-
         - createTable:
             tableName: specialists_authorities
             columns:
               - column:
                   name: id
                   type: bigserial
-                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
