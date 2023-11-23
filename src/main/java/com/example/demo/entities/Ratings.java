@@ -33,6 +33,4 @@ public class Ratings {
 
     @Column(name = "rating_date")
     private LocalDateTime ratingDate;
-
-
 }

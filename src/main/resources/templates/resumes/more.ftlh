@@ -2,7 +2,7 @@
 <@main.layout>
     <link rel="stylesheet" href="../../static/css/resume_more.css">
     <div class="header shadow">
-        <a href="#" class="back-button">
+        <a href="javascript:history.go(-1);" class="back-button">
             <i class="fas fa-arrow-left"></i>Назад
         </a>
         <button id="share-button">

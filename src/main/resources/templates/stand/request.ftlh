@@ -140,6 +140,11 @@
             padding: 20px 30px;
             position: relative;
         }
+        .dark-theme .message-card {
+            background-color: #333;
+            color: #fff;
+            box-shadow: 0 5px 15px rgba(247, 241, 241, 0.614);
+        }
         .stand-button {
             background-color: #fff;
             padding: 10px 30px;
@@ -147,6 +152,18 @@
             text-decoration: none;
             position: absolute;
             top: 25px;
+        }
+        @media (max-width: 600px) {
+            .message-card {
+                flex-direction: column;
+                align-items: center;
+                height: auto;
+            }
+
+            .stand-button {
+                position: static;
+                margin-top: 10px;
+            }
         }
         .chatb {
             border: 2px solid #2552e7;

@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
 @Table(name = "posts")
 public class Post {

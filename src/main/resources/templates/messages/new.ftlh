@@ -1,5 +1,7 @@
 <#import '../layout.ftlh' as main>
 <@main.layout>
+    <<<<<<<<< Temporary merge branch 1
+    <div class="content">
     <div class="new-msg">
         <div class="email-app">
             <p class="text-center">Новое сообщение</p>
@@ -9,7 +11,7 @@
                     <div class="">
                         <input type="text" class="form-control" id="to" placeholder="Имя пользователя">
                         <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                               value="${(_csrf.token)!'--no-token--'}" />
+                               value="${(_csrf.token)!'--no-token--'}"/>
                         <div id="toError" class="error-message"></div> <!-- New element for error message -->
 
                     </div>
@@ -32,9 +34,10 @@
                     <div class="form-group mt-4">
                         <textarea class="form-control" id="message" name="body" rows="12"
                                   placeholder="Введите Ваше сообщение"></textarea>
+
                         <div id="messageError" class="error-message"></div>
-</div>
-                    <div class="form-group">
+                    </div>
+                    <div class="form-group btns">
                         <button type="button" class="button-msg" id="send">Отправить</button>
                         <a href="javascript:history.go(-1);" class="button-msg" id="cancel">Отмена</a>
                     </div>
@@ -47,7 +50,7 @@
             const toInput = document.getElementById('to');
             const listNames = document.querySelector('.list-names');
             let userId;
-            toInput.addEventListener('input', function() {
+            toInput.addEventListener('input', function () {
                 const userInput = this.value.toLowerCase();
                 const userItems = listNames.querySelectorAll('.user-item');
 
@@ -68,11 +71,11 @@
                 }
             });
 
-            listNames.addEventListener('click', function(e) {
+            listNames.addEventListener('click', function (e) {
                 const userItem = e.target.closest('.user-item');
 
                 if (userItem) {
-                     userId = userItem.dataset.id;
+                    userId = userItem.dataset.id;
                     toInput.value = userItem.textContent.trim();
                     console.log('Selected user ID:', userId);
 
@@ -120,6 +123,7 @@
         .list-names {
             display: none;
         }
+
         .error-message {
             color: red;
             font-size: 12px;
@@ -134,6 +138,7 @@
             margin-right: auto;
             width: 500px;
         }
+
         .textbox {
             border: 1px solid #2552e7;
             padding: 5px;
@@ -148,7 +153,40 @@
             padding: 30px;
             border: 1px solid #ccc;
             border-radius: 10px;
-            margin-bottom: 15%;
+            margin-bottom: 40px;
+        }
+
+        .dark-theme .email-app {
+            background: #333;
+            color: white
+        }
+
+        @media only screen and (max-width: 600px) {
+            .email-app {
+                padding: 30px;
+                margin: 5px;
+            }
+
+            .new-msg {
+                padding: 10px;
+                width: auto;
+            }
+
+            textarea {
+                height: 300px;
+            }
+        }
+
+        @media only screen and (max-width: 400px) {
+            .btns {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .button-msg {
+                margin: 15px auto;
+            }
         }
 
         .form-control {
@@ -157,6 +195,13 @@
             background-color: #fff;
             border-radius: 10px;
             padding: 10px;
+            margin: 10px 0;
+        }
+
+        .dark-theme .form-control {
+
+            background-color: #333;
+            color: white;
         }
 
         .form-group {
@@ -167,16 +212,33 @@
             border: 1px solid #2552e7;
             background-color: #fff;
             border-radius: 10px;
-            padding: 10px;
-            width: 40%;
-            margin: 20px 5px;
+            width: 150px;
+            padding: 8px 0;
+            font-size: 15px;
+            margin: 15px 10px;
             color: #2552e7;
             text-decoration: none;
+        }
+
+        .dark-theme .button-msg {
+            border: 1px solid #555;
+            background-color: #333;
+            color: white;
+        }
+
+        button.button-msg {
+            padding: 8px 0;
+            font-family: Times;
+        }
+
+        a.button-msg {
+            display: inline-block;
         }
 
         .button-msg:hover {
             background-color: #2552e7;
             color: #fff;
         }
+
     </style>
 </@main.layout>

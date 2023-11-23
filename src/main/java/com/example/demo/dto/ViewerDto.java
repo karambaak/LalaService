@@ -11,4 +11,5 @@ public class ViewerDto {
     private Long userId;
     private Long specialistId;
     private String userType;
+    private String specialistAuthority; //Если FULL, пишется full. Если нет, оставляется пустым
 }

@@ -6,7 +6,10 @@ body {
     padding: 0;
 }
 
-/* Убираем округление навбара и добавляем тень только на верхней части */
+.dark-theme {
+    background-color: #333;
+    color: #fff;
+}
 .tab-container {
     background-color: rgb(255, 255, 255);
     border-top-left-radius: 18px; /* Только верхнее левое округление */
@@ -22,12 +25,21 @@ body {
     z-index: 1;
 }
 
-
+.dark-theme .tab-container {
+    background-color: #333;
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(247, 241, 241, 0.614);
+}
 .tab-bar {
     background-color: #ffffff;
     display: flex;
     justify-content: space-around;
     padding: 10px 0;
+}
+.dark-theme .tab-bar {
+    background-color: #333;
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(247, 241, 241, 0.614);
 }
 
 .tab {
@@ -38,6 +50,9 @@ body {
     align-items: center;
     padding: 5px;
     cursor: pointer;
+}
+.dark-theme .tab {
+    color: white;
 }
 
 .tab i {
@@ -58,7 +73,11 @@ body {
     margin: 20px 0px;
     box-shadow: 0px 5px 15px rgba(0.0, 0.0, 0.1, 0.1);
 }
-
+.dark-theme .resume {
+    background-color: #333;
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(247, 241, 241, 0.614);
+}
 .resume:hover{
     box-shadow: 0px 5px 18px rgba(0.1, 0.2, 0.3, 0.4);
 }
@@ -144,9 +163,7 @@ body {
 
 @media screen and (min-width: 769px){
     .tab-container {
-        background-color: white;
         border-radius: 15px;
-        box-shadow: 0px -5px 15px rgba(0.0, 0.0, 0.1, 0.2);
         overflow: hidden;
         margin: 0;
         padding: 0;
@@ -174,12 +191,19 @@ body {
     margin: 0 auto;
     text-align: left;
 }
-
+.dark-theme .resume {
+    background-color: #333;
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(247, 241, 241, 0.614);
+}
 .resume-name {
     font-size: 24px;
     font-weight: bold;
     color: #2552e7;
     margin-bottom: 10px;
+}
+.dark-theme .resume-name {
+    color: white;
 }
 
 .resume-category, .resume-experience, .resume-phone {

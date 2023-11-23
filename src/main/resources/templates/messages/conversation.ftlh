@@ -1,38 +1,40 @@
 <#import '../layout.ftlh' as main>
 <@main.layout>
-    <div class="padding-div">
-        <div class="category-header">
-            <a href="javascript:history.go(-1);" class="back-button">
-                <i class="fas fa-arrow-left"></i>Назад
-            </a>
-        </div>
-        <div class="d-flex flex-column align-items-end me-3 my-3">
-            <#if (messages)??>
-                <#list messages as item>
-                    <#if item.viewer == 'author'>
-                        <div class="message"><#if (item.response)??>${item.response} </#if> <br>
-                            <#if (item.dateTime)??>${item.dateTime}</#if>
-                        </div>
-                    <#else>
-                        <div class="incoming-msg"><#if (item.response)??>${item.response} </#if>
-                            <br> <#if (item.dateTime)??>${item.dateTime}</#if></div>
-                    </#if>
-                </#list>
-            </#if>
-        </div>
+    <div class="content">
+        <div class="padding-div">
+            <div class="category-header">
+                <a href="javascript:history.go(-1);" class="back-button">
+                    <i class="fas fa-arrow-left"></i>Назад
+                </a>
+            </div>
+            <div class="d-flex flex-column align-items-end me-3 my-3">
+                <#if (messages)??>
+                    <#list messages as item>
+                        <#if item.viewer == 'author'>
+                            <div class="message"><#if (item.response)??>${item.response} </#if> <br>
+                                <#if (item.dateTime)??>${item.dateTime}</#if>
+                            </div>
+                        <#else>
+                            <div class="incoming-msg"><#if (item.response)??>${item.response} </#if>
+                                <br> <#if (item.dateTime)??>${item.dateTime}</#if></div>
+                        </#if>
+                    </#list>
+                </#if>
+            </div>
 
 
-        <div class="sent-messages d-flex flex-column align-items-end me-3 my-3">
-            <!-- Messages will be displayed here -->
-        </div>
-        <div class="message-container">
-            <form id="message-form"
-                  class="d-flex flex-column align-items-end me-3">
-                <input type="text" id="message-text" class="msg-input" autofocus required>
-                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                       value="${(_csrf.token)!'--no-token--'}"/>
-                <button type="submit" class="respond-button">Отправить</button>
-            </form>
+            <div class="sent-messages d-flex flex-column align-items-end me-3 my-3">
+                <!-- Messages will be displayed here -->
+            </div>
+            <div class="message-container">
+                <form id="message-form"
+                      class="d-flex flex-column align-items-end me-3">
+                    <input type="text" id="message-text" class="msg-input" autofocus required>
+                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                           value="${(_csrf.token)!'--no-token--'}"/>
+                    <button type="submit" class="respond-button">Отправить</button>
+                </form>
+            </div>
         </div>
     </div>
     <style>
@@ -85,30 +87,8 @@
             margin-bottom: 20px;
         }
 
-        .msg-input {
-            width: 80%;
-            border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 -5px 15px rgb(224, 220, 220);
-            height: 100px;
-            margin: 30px 0 10px;
-        }
 
-        .respond-button {
-            padding: 15px 20px;
-            color: #2552e7;
-            border: 2px solid #2552e7;
-            background-color: #fff;
-            cursor: pointer;
-            border-radius: 15px;
-            text-decoration: none;
-            width: 25%;
-        }
 
-        .respond-button:hover {
-            background-color: #2552e7;
-            color: #fff;
-        }
 
         .message {
             margin: 5px 15px 5px;
@@ -120,15 +100,7 @@
 
         }
 
-        .back-button {
-            text-decoration: none;
-            color: #2552e7;
-            display: flex;
-            align-items: center;
-            font-size: 18px;
-            margin-right: 40px;
-            margin-left: 10px;
-        }
+
 
         .incoming-msg {
             margin: 5px 15px 5px;
@@ -141,43 +113,45 @@
         }
     </style>
     <script>
-            const messageForm = document.getElementById('message-form');
-            const messageText = document.getElementById('message-text');
-            const sentMessages = document.querySelector('.sent-messages');
+        const viewer = '${msgId}';
+        const csrfToken = document.querySelector('input[name="_csrf"]').value;
+        const sentMessages = document.querySelector('.sent-messages');
+        const postedMessages = new Set();
 
-            messageForm.addEventListener('submit', function (e) {
-                e.preventDefault();
+        const messageForm = document.getElementById('message-form');
+        const messageText = document.getElementById('message-text');
 
-                const message = messageText.value;
-                const csrfToken = document.querySelector('input[name="_csrf"]').value;
+        messageForm.addEventListener('submit', function (e) {
+            e.preventDefault();
 
-                const viewer = '${msgId}';
+            const message = messageText.value;
+            const csrfToken = document.querySelector('input[name="_csrf"]').value;
 
-                let responseText = {
-                    "response": message,
-                    "viewer": viewer
-                }
+            let responseText = {
+                "response": message,
+                "viewer": viewer
+            }
 
-                fetch(`/msg/new/` + viewer, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    body: JSON.stringify(responseText)
+            fetch(`/msg/new/` + viewer, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify(responseText)
+            })
+                .then(response => {
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message');
+                    messageElement.innerText = message + '\n' + getDateTime();
+                    sentMessages.appendChild(messageElement);
+                    messageForm.reset();
                 })
-                    .then(response => {
-                        const messageElement = document.createElement('div');
-                        messageElement.classList.add('message');
-                        messageElement.textContent = message + '\n' + getDateTime();
-                        sentMessages.appendChild(messageElement);
-                        messageForm.reset();
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            });
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         });
+
 
         function getDateTime() {
             const now = new Date();
@@ -189,5 +163,54 @@
             return '\n' + month + '/' + date + ' ' + hour + ':' + minute;
         }
 
+        const now = new Date();
+
+
+        let preciseNow = new Date(Math.floor(now.getTime() / 1000) * 1000);
+        const time = preciseNow.toISOString()
+
+        function fetchNewMessages(preciseNow) {
+
+            fetch('/msg/find_new', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    'viewer': viewer,
+                    'response': time
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        console.log(data);
+                        data.forEach(message => {
+                            const responseMessage = message.response;
+                            const responseDateTime = message.dateTime;
+                            const messageIdentifier = responseMessage + '-' + responseDateTime;
+
+                            if (!postedMessages.has(messageIdentifier)) {
+                                const messageElement = document.createElement('div');
+                                messageElement.classList.add('incoming-msg');
+                                messageElement.innerText = responseMessage + '\n' + responseDateTime;
+                                sentMessages.appendChild(messageElement);
+
+                                postedMessages.add(messageIdentifier);
+                            }
+                        });
+                        preciseNow = Math.max(...data.map(message => message.dateTime));
+                    }
+                    setTimeout(() => fetchNewMessages(preciseNow), 5000); // Fetch every 5 seconds (adjust as needed)
+                })
+                .catch(error => {
+                    console.error('Error fetching new messages:', error);
+                    setTimeout(() => fetchNewMessages(preciseNow), 5000); // Fetch every 5 seconds (adjust as needed)
+                });
+        }
+
+        let preciseNow2 = new Date(Math.floor(now.getTime() / 1000) * 1000);
+        fetchNewMessages(preciseNow2);
     </script>
 </@main.layout>

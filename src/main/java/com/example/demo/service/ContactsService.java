@@ -34,13 +34,15 @@ public class ContactsService {
             Set<SpecialistShortInfoDto> ss = new HashSet<>();
             Set<Long> specialistIds = new HashSet<>();
             for (Resume r : resumes) {
-                if (r.getCategory().getCategoryName().equalsIgnoreCase(c.getCategoryName()) && !specialistIds.contains(r.getSpecialist().getId())) {
-                    ss.add(SpecialistShortInfoDto.builder()
-                            .id(r.getSpecialist().getId())
-                            .name(specialistService.findSpecialistName(r.getSpecialist()))
-                            .build());
-                    specialistIds.add(r.getSpecialist().getId());
+                if(specialistService.isFullAuthority(r.getSpecialist())) {
+                    if (r.getCategory().getCategoryName().equalsIgnoreCase(c.getCategoryName()) && !specialistIds.contains(r.getSpecialist().getId())) {
+                        ss.add(SpecialistShortInfoDto.builder()
+                                .id(r.getSpecialist().getId())
+                                .name(specialistService.findSpecialistName(r.getSpecialist()))
+                                .build());
+                        specialistIds.add(r.getSpecialist().getId());
 
+                    }
                 }
             }
             list.add(ContactsDto.builder()
@@ -57,22 +59,26 @@ public class ContactsService {
         List<SpecialistShortInfoDto> list = new ArrayList<>();
         for (Resume r :
                 resumes) {
-            list.add(SpecialistShortInfoDto.builder()
-                    .id(r.getSpecialist().getId())
-                    .name(r.getName())
-                    .build());
-            list.add(SpecialistShortInfoDto.builder()
-                    .id(r.getSpecialist().getId())
-                    .name(r.getResumeDescription())
-                    .build());
+            if(specialistService.isFullAuthority(r.getSpecialist())) {
+                list.add(SpecialistShortInfoDto.builder()
+                        .id(r.getSpecialist().getId())
+                        .name(r.getName())
+                        .build());
+                list.add(SpecialistShortInfoDto.builder()
+                        .id(r.getSpecialist().getId())
+                        .name(r.getResumeDescription())
+                        .build());
+            }
         }
         for (Specialist s :
                 specialists) {
-            String name = specialistService.findSpecialistName(s);
-            list.add(SpecialistShortInfoDto.builder()
-                    .id(s.getId())
-                    .name(name)
-                    .build());
+            if(specialistService.isFullAuthority(s)) {
+                String name = specialistService.findSpecialistName(s);
+                list.add(SpecialistShortInfoDto.builder()
+                        .id(s.getId())
+                        .name(name)
+                        .build());
+            }
         }
         return list;
     }

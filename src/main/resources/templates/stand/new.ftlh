@@ -10,7 +10,11 @@
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
-
+.dark-theme .content {
+    border: 1px solid #555;
+    background-color: #333;
+    color: white;
+}
     form {
         display: flex;
         flex-direction: column;

@@ -1,12 +1,12 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.UserDto;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public interface ProfileController {
@@ -21,11 +21,6 @@ public interface ProfileController {
     String getProfileEdit(Model model, Authentication auth);
 
     @PostMapping("/profile/edit")
-    String updateProfile(Model model, Authentication auth,
-                         @RequestParam(name = "username") String userName,
-                         @RequestParam(name = "city") Long geolocationId,
-                         @RequestParam(name = "email") String email
-
-    );
+    String updateProfile(UserDto userDto, Authentication auth);
 
 }

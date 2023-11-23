@@ -15,9 +15,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,14 +27,19 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class UserService {
     public static final String SPECIALIST = "specialist";
+    private static final String DEFAULTPHOTO = "https://servicesearchlalaservice.s3.eu-north-1.amazonaws.com/default_user_photo.jpg";
     private final UserRepository repository;
     private final SpecialistRepository specialistRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
     private final AuthUserDetailsService service;
     private final GeolocationRepository geolocationRepository;
-
+    private final AuthorityRepository authorityRepository;
+    private final SpecialistService specialistService;
     private final UpdateCountsRepository updateCountsRepository;
+    private final SpecialistsAuthoritiesRepository specialistsAuthoritiesRepository;
+    private final StorageService storageService;
+    private final ThemeRepository themeRepository;
 
     public List<User> getAllUsers() {
         return repository.findAll();
@@ -54,6 +60,7 @@ public class UserService {
                     .userName(userDto.getUserName())
                     .userType(userType)
                     .role(role)
+                    .photo(DEFAULTPHOTO)
                     .geolocation(geo)
                     .enabled(Boolean.TRUE)
                     .registrationDate(LocalDateTime.now())
@@ -61,15 +68,30 @@ public class UserService {
             repository.saveAndFlush(user);
             if (userType.equalsIgnoreCase(SPECIALIST)) {
                 var newUser = repository.findByPhoneNumber(userDto.getPhoneNumber());
-                newUser.ifPresent(value -> specialistRepository.save(Specialist.builder()
-                        .user(value)
-                        .build()));
+                if (newUser.isPresent()) {
+                    Specialist s = specialistRepository.saveAndFlush(Specialist.builder()
+                            .user(newUser.get())
+                            .build());
+                    saveNewSpecialistAuthority(s);
+                }
+
+
             }
 
         } else {
             log.warn("User already exists: {}", userDto.getPhoneNumber());
             throw new IllegalArgumentException("User already exists");
         }
+    }
+
+    private void saveNewSpecialistAuthority(Specialist s) {
+        Authority a = getFullAuthority();
+        specialistsAuthoritiesRepository.save(SpecialistsAuthorities.builder()
+                .specialist(s)
+                .authority(a)
+                .dateStart(LocalDateTime.now())
+                .dateEnd(LocalDateTime.now().plusMonths(1))
+                .build());
     }
 
     private Role defineUserRole(String userRole) {
@@ -119,6 +141,9 @@ public class UserService {
                 .toList();
     }
 
+    private Authority getFullAuthority() {
+        return authorityRepository.findByAuthorityName("FULL");
+    }
 
     public void updateUser(HttpServletRequest request, Authentication auth) {
         String selectedRole = request.getParameter("role");
@@ -138,9 +163,11 @@ public class UserService {
             repository.saveAndFlush(u);
 
             if (role.getRole().equalsIgnoreCase("ROLE_SPECIALIST")) {
-                specialistRepository.save(Specialist.builder()
+                Specialist s = specialistRepository.save(Specialist.builder()
                         .user(u)
                         .build());
+                saveNewSpecialistAuthority(s);
+
             }
             service.loadUserByUsernameEmail(user.get().getEmail());
         }
@@ -210,11 +237,15 @@ public class UserService {
             if (user.getUserType().equalsIgnoreCase(SPECIALIST)) {
                 var specialist = specialistRepository.findByUser(user);
                 if (specialist.isPresent()) {
-
+                    String authority = null;
+                    if (specialistService.isFullAuthority(specialist.get())) {
+                        authority = "full";
+                    }
                     return ViewerDto.builder()
                             .userId(user.getId())
                             .specialistId(specialist.get().getId())
                             .userType(user.getUserType())
+                            .specialistAuthority(authority)
                             .build();
                 }
 
@@ -271,28 +302,91 @@ public class UserService {
         return list;
     }
 
-    public void editProfile(User user, long geolocationId) {
-        Geolocation geolocation = geolocationRepository.findById(geolocationId).orElseThrow(() -> new NoSuchElementException("No such location!"));
-        if (!updateCountsRepository.existsByUserId(user.getId())) {
-            updateCountsRepository.save(UpdateCounts.builder()
-                    .userId(user.getId())
-                    .updateTime(new Timestamp(System.currentTimeMillis()))
-                    .count(1)
-                    .build());
-            repository.updateUserInformationWithGeolocation(user.getId(), user.getUserName(), user.getPhoneNumber(),
-                    user.getEmail(), geolocation);
+    public void editProfile(UserDto userDto) {
+        User user = getUserFromSecurityContextHolder();
+        if (user != null) {
+            if (userDto.getFileInput() != null) {
+                if (!user.getPhoto().equalsIgnoreCase(DEFAULTPHOTO)) {
+                    storageService.deleteFile(user.getPhoto());
+                }
+                user.setPhoto(storageService.uploadPhoto(userDto.getFileInput()));
+            }
 
-        } else {
-            int currentCount = updateCountsRepository.findByUserId(user.getId()).
-                    orElseThrow(() -> new NoSuchElementException("No such count!")).getCount();
-            if (currentCount < 5) {
-                currentCount++;
-                updateCountsRepository.setCountForUser(user.getId(), currentCount);
-                repository.updateUserInformationWithGeolocation(user.getId(), user.getUserName(), user.getPhoneNumber(),
-                        user.getEmail(), geolocation);
+            if (userDto.getUserName() != null) {
+                user.setUserName(userDto.getUserName());
+            }
+            if (userDto.getCountry() != null && userDto.getCity() != null) {
+                var geolocation = geolocationRepository.findByCountryAndCity(userDto.getCountry(), userDto.getCity());
+                if (geolocation.isPresent()) user.setGeolocation(geolocation.get());
+            }
+            repository.save(user);
+        }
+
+
+/*
+ я закомментировала эту часть кода, т.к. up'ать профиль - в нашей интерпретации - это про резюме
+ */
+//        if (!updateCountsRepository.existsByUserId(user.getId())) {
+//            updateCountsRepository.save(UpdateCounts.builder()
+//                    .userId(user.getId())
+//                    .updateTime(new Timestamp(System.currentTimeMillis()))
+//                    .count(1)
+//                    .build());
+//            repository.updateUserInformationWithGeolocation(user.getId(), user.getUserName(), user.getPhoneNumber(),
+//                    user.getEmail(), geolocation);
+//
+//        } else {
+//            int currentCount = updateCountsRepository.findByUserId(user.getId()).
+//                    orElseThrow(() -> new NoSuchElementException("No such count!")).getCount();
+//            if (currentCount < 5) {
+//                currentCount++;
+//                updateCountsRepository.setCountForUser(user.getId(), currentCount);
+//                repository.updateUserInformationWithGeolocation(user.getId(), user.getUserName(), user.getPhoneNumber(),
+//                        user.getEmail(), geolocation);
+//            }
+//        }
+    }
+
+
+    public void saveTheme(String theme) {
+        User user = getUserFromSecurityContextHolder();
+        if (user != null) {
+            Theme userTheme = extractThemeValue(theme);
+            if (userTheme != null) {
+                if(user.getTheme() == null || !user.getTheme().equals(userTheme)) {
+                    user.setTheme(userTheme);
+                    repository.save(user);
+                }
             }
         }
     }
 
+    private Theme extractThemeValue(String theme) {
+        int startIndex = theme.indexOf(":") + 1;
+        int endIndex = theme.indexOf("}");
+        if (startIndex >= 0 && endIndex >= 0) {
+            String value = theme.substring(startIndex, endIndex).trim();
+            // 0 light
+            //1 dark
+            if (value.equalsIgnoreCase("0")) {
+                return themeRepository.findByThemeName("light");
+            } else {
+                return themeRepository.findByThemeName("dark");
+            }
+        }
+        return null;
+    }
 
+    public String getTheme() {
+        User user = getUserFromSecurityContextHolder();
+        if(user == null || user.getTheme() == null) {
+            return "0";
+        } else {
+            if(user.getTheme().getThemeName().equalsIgnoreCase("dark")) {
+                return "1";
+            } else {
+                return "0";
+            }
+        }
+    }
 }

@@ -59,7 +59,7 @@
                         </div>
                         <div class="card-footer border-0">
                             <div class="text-center">
-                                У вас уже есть аккаунт? <a href="/auth/login" class="text-dark">Войти</a>
+                                У вас уже есть аккаунт? <a href="/auth/login" class="text-dark-link">Войти</a>
                             </div>
                         </div>
                     </div>
@@ -91,12 +91,17 @@
         background-color: #2552e7;
         color: #ffffff;
     }
+    .dark-theme .tab-item {
+        border: 2px solid #2552e7;
+        color: white;
+        background-color: #333;
+    }
     .container-login {
         height: 70vh;
         display: flex;
         align-items: center;
         justify-content: center;
-
+margin-bottom: 40px;
     }
 
     .form-item {
@@ -138,7 +143,24 @@
         background-color: #2552e7;
         color: #ffffff;
     }
+    .dark-theme .form-control{
+        border: 2px solid white;
 
+    }
+    .dark-theme .form-select {
+        border: 2px solid white;
+
+    }
+    .dark-theme input::placeholder {
+        color: white;
+    }
+    .text-dark-link{
+        text-decoration: none;
+        color: black;
+    }
+    .dark-theme .text-dark-link {
+        color: white;
+    }
 </style>
 
 </@main.layout>

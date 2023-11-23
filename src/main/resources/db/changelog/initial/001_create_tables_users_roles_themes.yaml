@@ -36,6 +36,9 @@ databaseChangeLog:
               - column:
                   name: role_id
                   type: long
+#              - column:
+#                  name: tariffId
+#                  type: long
               - column:
                   name: theme_id
                   type: long

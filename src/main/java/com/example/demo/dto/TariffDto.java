@@ -18,4 +18,5 @@ public class TariffDto {
     private Double cost;
 
     private Boolean availability;
+
 }

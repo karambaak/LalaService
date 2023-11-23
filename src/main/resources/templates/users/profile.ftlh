@@ -22,14 +22,14 @@
         <div class="profile-header row">
             <div class="profile-image-block col-4">
                 <#if user.photo?has_content>
-                <img src="${user.photo}"
-                     class="round-image" alt>
+                    <img src="${user.photo}"
+                         class="round-image" alt>
                 <#else>
-                <img src="/static/default.jpg" class="round-image" alt="default photo">
+                    <img src="/static/default.jpg" class="round-image" alt="default photo">
                 </#if>
-<#--                <#if qrCodeBase64??>-->
-<#--                <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code">-->
-<#--                </#if>-->
+                <#--                <#if qrCodeBase64??>-->
+                <#--                <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code">-->
+                <#--                </#if>-->
             </div>
             <div class="personal-info col-6">
                 <#if user.userName?has_content>
@@ -61,27 +61,27 @@
         </div>
     </div>
 
-    <div>
-        <#if user.role = "ROLE_SPECIALIST">
-            <div class="tabs">
-                <div class="share-buttons">
-                    <button class="share-button facebook">
-                        <i class="fab fa-facebook-f"></i>
-                    </button>
-                    <button class="share-button twitter">
-                        <i class="fab fa-twitter"></i>
-                    </button>
-                    <button class="share-button linkedin">
-                        <i class="fab fa-linkedin-in"></i>
-                    </button>
-                    <button class="share-button pinterest">
-                        <i class="fab fa-pinterest"></i>
-                    </button>
-                    <button class="share-button whatsapp">
-                        <i class="fab fa-whatsapp"></i>
-                    </button>
+        <div>
+            <#if user.role = "ROLE_SPECIALIST">
+                <div class="tabs">
+                    <div class="share-buttons">
+                        <button class="share-button facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button class="share-button twitter">
+                            <i class="fab fa-twitter"></i>
+                        </button>
+                        <button class="share-button linkedin">
+                            <i class="fab fa-linkedin-in"></i>
+                        </button>
+                        <button class="share-button pinterest">
+                            <i class="fab fa-pinterest"></i>
+                        </button>
+                        <button class="share-button whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
 
             <div class="tabs">
                 <button class="tab-item" id="resume-tab">Резюме</button>
@@ -119,7 +119,9 @@
 
             <div class="tab-content" id="portfolio-content">
                 <div class="portfolio-list">
-                    <div class="resume create-resume">
+
+                    <div class="portfolio-gallery">
+<div class="resume create-resume">
                         <a href="/portfolio/new" class="add-resume-link">
                             <p class="add-resume-text">Добавить портфолио</p>
                             <i class="fas fa-plus"></i>
@@ -128,12 +130,15 @@
                     <#if portfolios?has_content>
                         <#list portfolios as portfolio>
                             <div class="portfolio">
-                            <#if portfolio.photos?has_content>
-                                <#list portfolio.photos as photo>
-                                    <img src="${photo.photoLink}" alt class="portfolio-img">
-                                </#list>
-                            <#else>
-                                <p>У вас еще нет загруженного портфолио</p>
+                                <#if portfolio.photos?has_content>
+                                <div class="portfolio-photos">
+
+                                    <#list portfolio.photos as photo>
+                                        <img src="${photo.photoLink}" alt class="portfolio-img">
+                                    </#list>
+                                </div>
+                                <#else>
+                                    <p>У вас еще нет загруженного портфолио</p>
                                 </#if>
                                 <div>
                                     <p>${portfolio.title}</p>
@@ -146,14 +151,15 @@
                     <#else>
                         <p>У вас еще нет созданных портфолио</p>
                     </#if>
+</div>
                 </div>
             </div>
         <#elseif user.role = "ROLE_CUSTOMER">
             <div class="tabs">
-                <button class="tab-item" id="portfolio-tab">Ваши запросы на стенд</button>
+                <button class="tab-item active" id="stand-request-tab">Ваши запросы на стенд</button>
             </div>
 
-            <div class="tab-content" id="resume-content">
+            <div class="d-block" id="stand-request-content">
                 <div class="resume-list">
                     <div class="resume create-resume">
                         <a href="/stand/new" class="add-resume-link">
@@ -162,44 +168,153 @@
                         </a>
                     </div>
                     <#if stands??>
-                    <#list stands as stand>
-                    <div class="resume">
-                        <div class="post">
-                            <div class="post-menu">
-                                <button type="button" class="menu-button" data-bs-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
+                    <div class="stand-requests">
+                        <#list stands as stand>
+                        <div class="resume-list">
+                            <div class="post">
+                                <div class="post-menu">
+                                    <button type="button" class="menu-button" data-bs-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false">
                                 <span class="dots"><i class="fas fa-ellipsis-v"></i>
                                 </span>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="/stand/delete/${stand.id}">Удалить</a>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="/stand/delete/${stand.id}">Удалить</a>
+                                    </div>
                                 </div>
+                                <a href="/stand/request/${stand.id}" class="resume-link">
+                                    <p class="resume-name">${stand.title}</p>
+                                    <p class="resume-category">Категория: ${stand.category}</p>
+                                    <p class="resume-date">Дата создания: ${stand.publishedDate}</p>
+                                </a>
                             </div>
-                            <a href="/stand/request/${stand.id}" class="resume-link">
-                                <p class="resume-name">${stand.title}</p>
-                                <p class="resume-category">Категория: ${stand.category}</p>
-                                <p class="resume-date">Дата создания: ${stand.publishedDate}</p>
-                            </a>
                         </div>
+                        </#list>
                     </div>
-                    </#list>
                     </#if>
                 </div>
             </div>
         </#if>
     </div>
     <div id="modal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content other-elements">
             <div id="side-menu" class="side-menu">
                 <div class="close-button" id="close-button">X</div>
                 <ul>
                     <li><a href="profile/edit">Редактировать профиль</a></li>
                     <li><a href="/favourites">Посмотреть избранные</a></li>
+                    <#if user.role = "ROLE_SPECIALIST"><li><a href="/tariff">Выбрать тариф</a></li></#if>
+
                     <li><a href="/logout">Выйти из аккаунта</a></li>
-                </ul>
+                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                           value="${(_csrf.token)!'--no-token--'}"/>
+                    <li><a href="#">
+                            <div class="slider-container">
+                                <span class="slider-label">Изменить тему:</span>
+                                <input type="range" min="0" max="1" value="0" step="1" class="slider"
+                                       id="themeToggle">
+                            </div>
+                        </a>
+                    </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/static/js/profile.js"></script>
+    <script>
+        function getThemeFromServer() {
+            const storedTheme = localStorage.getItem('theme');
+            if (storedTheme !== null) {
+                applyThemeToPage(storedTheme);
+            } else {
+                const url = '/api/get-theme';
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        localStorage.setItem('theme', data);
+                        applyThemeToPage(data);
+                    })
+                    .catch(error => {
+                        console.error('Error getting theme from server:', error);
+                    });
+            }
+        }
+
+        function applyThemeToPage(theme) {
+
+            const body = document.body;
+            const otherElements = document.querySelectorAll('.other-elements');
+
+            body.classList.toggle('dark-theme', theme == 1);
+            otherElements.forEach(element => {
+                element.classList.toggle('dark-theme', theme == 1);
+            });
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            getThemeFromServer();
+        });
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('input', function () {
+            const theme = parseInt(themeToggle.value);
+            body.classList.toggle('dark-theme', theme === 1);
+            localStorage.setItem('theme', theme);
+            const otherElements = document.querySelectorAll('.other-elements');
+            otherElements.forEach(element => {
+                element.classList.toggle('dark-theme', theme === 1);
+            });
+            saveThemePreference(theme);
+        });
+
+        function saveThemePreference(theme) {
+            const url = '/api/save-theme-preference';
+            const csrfToken = document.querySelector('input[name="_csrf"]').value;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    theme
+                }),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Theme preference saved:', data);
+                })
+                .catch(error => {
+                    console.error('Error saving theme preference:', error);
+                });
+        }
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const tabButton = document.getElementById("stand-request-tab");
+            const tabContent = document.querySelector('.stand-requests');
+
+    tabButton.addEventListener("click", function() {
+        if (tabContent.style.display === "none") {
+            tabContent.style.display = "block";
+        } else {
+            tabContent.style.display = "none";
+        }
+    });
+    });
+</script>
     </@main.layout>

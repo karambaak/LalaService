@@ -59,6 +59,9 @@ databaseChangeLog:
               - column:
                   name: availability
                   type: boolean
+              - column:
+                  name: day_amount
+                  type: int
         - addForeignKeyConstraint:
             baseTableName: specialists
             baseColumnNames: tariff_id
