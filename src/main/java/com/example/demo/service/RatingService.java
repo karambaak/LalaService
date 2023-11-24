@@ -9,17 +9,17 @@ import com.example.demo.repository.SpecialistRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -33,8 +33,10 @@ public class RatingService {
     public ResponseEntity<String> saveRating(RatingDto dto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
+
         User currentUser = userRepository.findByPhoneNumber(userDetails.getUsername()).orElse(null);
         Specialist specialist = specialistRepository.findById(dto.getSpecialistId()).orElse(null);
+
         var maybeSpecialist = specialistRepository.findByUser_Id(currentUser.getId());
 
         if (isUserAlreadyLeaveRating(currentUser, specialist)) {
@@ -107,6 +109,17 @@ public class RatingService {
         }
     }
 
+    public List<RatingDto> getRatingsBySpecialistId(Long specialistId) {
+        return ratingsRepository.findBySpecialistId(specialistId).stream()
+                .map(rating -> RatingDto.builder()
+                        .id(rating.getId())
+                        .specialistId(rating.getSpecialist().getId())
+                        .ratingValue(rating.getRating())
+                        .reviewText(rating.getReviewText())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
     private boolean isUserAlreadyLeaveRating(User currentUser, Specialist specialist) {
         var maybeRating = ratingsRepository.findFirstByUser_IdAndSpecialist_IdOrderByRatingDateDesc(currentUser.getId(), specialist.getId());
 
@@ -120,6 +133,26 @@ public class RatingService {
         } else {
             return false;
         }
+    }
+
+    public ResponseEntity<String> deleteRatingById(Long ratingId, Authentication auth) {
+        var rating = ratingsRepository.findById(ratingId);
+        var userDetails = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
+        User currentUser = userRepository.findByPhoneNumber(userDetails.getUsername()).orElseThrow(() -> new NoSuchElementException("User not found"));
+
+        if (rating.isPresent()) {
+            User ownerOfTheRating = rating.get().getUser();
+
+            if (ownerOfTheRating.getId().equals(currentUser.getId())) {
+                ratingsRepository.deleteById(ratingId);
+                return ResponseEntity.status(HttpStatus.OK).body(String.format("Рейтинг с ID %s успешно удалено", ratingId));
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ошибка при удалени рейтинга");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Рейтинг с таким ID %s не найден", ratingId));
+        }
+
     }
 
 }

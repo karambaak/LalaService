@@ -11,7 +11,7 @@ public interface RatingsRepository extends JpaRepository<Ratings, Long> {
 
     List<Ratings> getRatingsBySpecialistId(Long specialistId);
 
-//    Optional<Ratings> findByUserIdAndSpecialistIdOrderByRatingDateDescLi();
-
     Optional<Ratings> findFirstByUser_IdAndSpecialist_IdOrderByRatingDateDesc(Long userId, Long specialistId);
+
+    List<Ratings> findBySpecialistId(Long specialistId);
 }
