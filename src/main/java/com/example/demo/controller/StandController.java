@@ -4,6 +4,7 @@ import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.ViewerDto;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.PostService;
+import com.example.demo.service.ResponseService;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ public class StandController {
     private final PostService postService;
     private final UserService userService;
     private final CategoryService categoryService;
+    private final ResponseService responseService;
 
     @GetMapping()
     public String getStand(Model model) {
@@ -29,7 +31,7 @@ public class StandController {
             if (v.getSpecialistId() != null) {
                 model.addAttribute("myPosts", postService.getMySubscriptions(v));
                 model.addAttribute(POSTS, postService.getOtherPosts(v));
-                model.addAttribute("myResponses", postService.getSpecialistResponses(v.getSpecialistId()));
+                model.addAttribute("myResponses", responseService.getSpecialistResponses(v.getSpecialistId()));
             } else {
                 model.addAttribute("myRequests", postService.getCustomerPosts(v.getUserId()));
                 model.addAttribute(POSTS, postService.getAll());
@@ -46,7 +48,7 @@ public class StandController {
         ViewerDto v = userService.defineViewer();
         model.addAttribute(VIEWER, v);
         if (v.getSpecialistId() != null) {
-            model.addAttribute("pastMessages", postService.getSpecialistConversation(postId, v));
+            model.addAttribute("pastMessages", responseService.getSpecialistConversation(postId, v));
         }
         return "stand/respond";
     }
@@ -96,7 +98,7 @@ public class StandController {
         if (postId != null) {
             model.addAttribute("post", postService.getPostDto(postId));
         }
-        model.addAttribute("pastMessages", postService.getCustomerMsgByConversation(conversationId));
+        model.addAttribute("pastMessages", responseService.getCustomerMsgByConversation(conversationId));
         return "stand/request_detail";
     }
 

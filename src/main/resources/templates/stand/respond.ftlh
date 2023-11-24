@@ -40,15 +40,17 @@
         <#if (viewer.specialistId)??>
             <div class="d-flex flex-column align-items-end me-3 my-3">
                 <#if (pastMessages)??>
-                    <#list pastMessages as item>
-                        <#if item.viewer == 'author'>
-                            <div class="message">${item.response} <br> <#if (item.dateTime)??> ${item.dateTime} </#if>
-                            </div>
-                        <#else>
-                            <div class="incoming-msg">${item.response}
-                                <br> <#if (item.dateTime)??> ${item.dateTime} </#if> </div>
-                        </#if>
-                    </#list>
+                <#if pastMessages?has_content>
+                <#list pastMessages as item>
+                <#if item.viewer == 'author'>
+                <div class="message">${item.response} <br> <#if (item.dateTime)??> ${item.dateTime} </#if>
+                </div>
+                <#else>
+                <div class="incoming-msg">${item.response}
+                    <br> <#if (item.dateTime)??> ${item.dateTime} </#if> </div>
+                </#if>
+                </#list>
+                </#if>
                 </#if>
             </div>
 
