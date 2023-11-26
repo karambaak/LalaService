@@ -5,7 +5,9 @@ import com.example.demo.dto.UserDto;
 import com.example.demo.dto.ViewerDto;
 import com.example.demo.entities.*;
 import com.example.demo.enums.UserType;
+import com.example.demo.errors.exceptions.InvalidPhoneNumberException;
 import com.example.demo.repository.*;
+import com.example.demo.utils.CountryCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,12 +17,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.example.demo.utils.CountryCode.readCountryCodesFromFile;
 
 @Slf4j
 @Service
@@ -45,16 +48,22 @@ public class UserService {
         return repository.findAll();
     }
 
-    public void register(UserDto userDto) {
+    public void register(UserDto userDto) throws IOException {
         var u = repository.findByPhoneNumber(userDto.getPhoneNumber());
         var geolocation = geolocationRepository.findByCountryAndCity(userDto.getCountry(), userDto.getCity());
         Geolocation geo = null;
         if (geolocation.isPresent()) geo = geolocation.get();
+
+        if (!isValidPhoneNumber(userDto.getPhoneNumberCode(), userDto.getPhoneNumber())){
+                throw new NumberFormatException("Некорректный формат номера");
+        }
+
         if (u.isEmpty()) {
+            String phoneNumber = userDto.getPhoneNumberCode() + userDto.getPhoneNumber();
             Role role = defineUserRole(userDto.getRole());
             String userType = defineUserType(userDto.getRole());
             var user = User.builder()
-                    .phoneNumber(userDto.getPhoneNumber())
+                    .phoneNumber(phoneNumber)
                     .email(userDto.getEmail())
                     .password(encoder.encode(userDto.getPassword()))
                     .userName(userDto.getUserName())
@@ -74,8 +83,6 @@ public class UserService {
                             .build());
                     saveNewSpecialistAuthority(s);
                 }
-
-
             }
 
         } else {
@@ -389,4 +396,34 @@ public class UserService {
             }
         }
     }
+
+    public List<CountryCode> getCountryCodes() throws IOException {
+        return readCountryCodesFromFile();
+    }
+
+    private boolean isValidPhoneNumber(Integer phoneNumberCode, String phoneNumber) throws IOException {
+        List<CountryCode> countryCodes = getCountryCodes();
+        log.info("Codes from json: {}", countryCodes.toString());
+
+        if (phoneNumberCode != null) {
+            Optional<CountryCode> countryCodeOptional = countryCodes.stream()
+                    .filter(countryCode -> Objects.equals(countryCode.getCode(), phoneNumberCode))
+                    .findFirst();
+
+            if (countryCodeOptional.isPresent()) {
+                CountryCode countryCode = countryCodeOptional.get();
+                int expectedDigitCount = countryCode.getCountOfNumber();
+
+                String regex = "^\\d{" + expectedDigitCount + "}$";
+                Pattern pattern = Pattern.compile(regex);
+                Matcher matcher = pattern.matcher(phoneNumber);
+                return matcher.matches();
+            } else {
+                return false; // Страновой код не найден
+            }
+        } else {
+            return false; // Неверный или отсутствующий страновой код
+        }
+    }
+
 }
