@@ -41,7 +41,6 @@ public class ContactsService {
                                 .name(specialistService.findSpecialistName(r.getSpecialist()))
                                 .build());
                         specialistIds.add(r.getSpecialist().getId());
-
                     }
                 }
             }
