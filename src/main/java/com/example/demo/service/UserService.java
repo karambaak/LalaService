@@ -55,7 +55,7 @@ public class UserService {
         if (geolocation.isPresent()) geo = geolocation.get();
 
         if (!isValidPhoneNumber(userDto.getPhoneNumberCode(), userDto.getPhoneNumber())){
-                throw new NumberFormatException("Некорректный формат номера");
+                throw new InvalidPropertiesFormatException("Некорректный формат номера");
         }
 
         if (u.isEmpty()) {
@@ -403,7 +403,6 @@ public class UserService {
 
     private boolean isValidPhoneNumber(Integer phoneNumberCode, String phoneNumber) throws IOException {
         List<CountryCode> countryCodes = getCountryCodes();
-        log.info("Codes from json: {}", countryCodes.toString());
 
         if (phoneNumberCode != null) {
             Optional<CountryCode> countryCodeOptional = countryCodes.stream()
@@ -419,10 +418,10 @@ public class UserService {
                 Matcher matcher = pattern.matcher(phoneNumber);
                 return matcher.matches();
             } else {
-                return false; // Страновой код не найден
+                return false;
             }
         } else {
-            return false; // Неверный или отсутствующий страновой код
+            return false;
         }
     }
 
