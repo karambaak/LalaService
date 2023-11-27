@@ -23,6 +23,7 @@ public class UserDto {
 //    @NotBlank(message = "Phone number  is required")
     private String phoneNumber;
 
+    private Integer phoneNumberCode;
     private String email;
     private String photo;
     private MultipartFile fileInput;

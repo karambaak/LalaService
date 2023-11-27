@@ -10,19 +10,22 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/auth")
 public interface AuthController {
 
     @GetMapping("/register")
-    public String register(Model model);
+    public String register(Model model) throws IOException;
 
     @PostMapping("/register")
-    public String register(@Valid UserDto userDto, BindingResult bindingResult);
+    public String register(@Valid UserDto userDto, BindingResult bindingResult) throws IOException;
 
     @GetMapping("/login")
-    public String login();
+    public String login(@RequestParam(defaultValue = "false", required = false) Boolean error, Model model);
 
     @GetMapping("/oauth_2")
     public String pickRole(Model model);

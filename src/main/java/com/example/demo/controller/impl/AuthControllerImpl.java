@@ -7,6 +7,7 @@ import com.example.demo.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.h2.engine.Mode;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/auth")
@@ -23,7 +27,8 @@ public class AuthControllerImpl implements AuthController {
     private final GeolocationService geolocationService;
 
     @GetMapping("/register")
-    public String register(Model model) {
+    public String register(Model model) throws IOException {
+        model.addAttribute("countryCodes", userService.getCountryCodes());
         model.addAttribute("userDto", new UserDto());
         model.addAttribute("roles", userService.getRoles());
         model.addAttribute("countries", geolocationService.getCountries());
@@ -31,7 +36,7 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@Valid UserDto userDto, BindingResult bindingResult) {
+    public String register(@Valid UserDto userDto, BindingResult bindingResult) throws IOException {
         if (!bindingResult.hasErrors()) {
             userService.register(userDto);
             return "redirect:/auth/login";
@@ -40,7 +45,13 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String login(
+            @RequestParam(defaultValue = "false", required = false) Boolean error,
+            Model model
+    ) {
+        if (error.equals(Boolean.TRUE)) {
+            model.addAttribute("error", "Неправильный номер телефона или пароль");
+        }
         return "/auth/login";
     }
 
