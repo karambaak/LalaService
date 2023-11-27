@@ -183,6 +183,12 @@
     color: #fff;
     box-shadow: 0 5px 15px rgba(247, 241, 241, 0.614);
 }
+.dark-theme .tablinks-1 {
+    color: white;
+}
+.dark-theme .tablinks-2 {
+    color: white;
+}
         .expanded {
             max-height: none;
         }

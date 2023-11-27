@@ -211,6 +211,9 @@ body {
     color: #333;
     margin-bottom: 10px;
 }
+.dark-theme .resume-category, .resume-experience, .resume-phone {
+    color: white;
+}
 
 .resume-description {
     font-size: 16px;
@@ -261,7 +264,10 @@ body {
     padding: 10px 20px;
     margin-bottom: 20px;
 }
-
+.dark-theme .header {
+    background-color: #333;
+    color: white;
+}
 
 .favorite-button{
     font-size: 15px;
