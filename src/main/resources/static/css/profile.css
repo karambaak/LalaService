@@ -134,6 +134,7 @@
     border-radius: 5px;
     margin-bottom: 15px;
 }
+
 .dark-theme .portfolio {
     background-color: #333;
     color: #fff;
@@ -329,6 +330,10 @@
     z-index: 3;
 }
 
+@media screen and (min-width: 769px) {
+    margin-bottom: 35px;
+}
+
 .leave-review-btn:hover {
     background-color: #45a049;
 }
@@ -408,7 +413,7 @@
     transition: fill 0.3s;
 }
 
-.full-stars input:checked~label svg {
+.full-stars input:checked ~ label svg {
     fill: #BFE2FF;
 }
 
@@ -416,7 +421,7 @@
     fill: #ffb300;
 }
 
-.full-stars .rating-group input:hover~label svg {
+.full-stars .rating-group input:hover ~ label svg {
     fill: #BFE2FF;
 }
 
@@ -481,6 +486,7 @@
     background-color: red;
     color: white;
 }
+
 body {
     transition: background-color 0.3s ease;
     font-family: 'Arial', sans-serif;
