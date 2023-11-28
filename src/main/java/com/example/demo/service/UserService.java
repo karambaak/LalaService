@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -423,6 +424,12 @@ public class UserService {
         } else {
             return false;
         }
+    }
+
+    public Optional<User> getCurrentUser(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
+        return repository.findByPhoneNumber(user.getUsername());
     }
 
 }

@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.ViewerDto;
+import com.example.demo.errors.exceptions.InvalidPostOwnerException;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.PostService;
 import com.example.demo.service.ResponseService;
@@ -108,7 +109,7 @@ public class StandController {
         return "redirect:/stand";
     }
     @GetMapping("/delete/{postId}")
-    public String deletePost(@PathVariable Long postId) {
+    public String deletePost(@PathVariable Long postId) throws InvalidPostOwnerException {
         postService.deletePost(postId);
         return "redirect:/profile";
     }

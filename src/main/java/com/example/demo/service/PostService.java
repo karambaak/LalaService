@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.*;
 import com.example.demo.entities.*;
+import com.example.demo.errors.exceptions.InvalidPostOwnerException;
 import com.example.demo.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -238,7 +239,6 @@ public class PostService {
     }
 
 
-
     public List<ConversationDto> getCustomerConversations(Long postId) {
         List<Response> responses = getAllPostResponses(postId);
         if (responses.isEmpty()) {
@@ -373,11 +373,23 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId) throws InvalidPostOwnerException {
         var post = postRepository.findById(postId);
-        if (post.isPresent()) {
-            postRepository.deleteById(postId);
+        var currentUser = userService.getCurrentUser();
+
+        if (!post.isPresent()) {
+            throw new NoSuchElementException(String.format("Пост с таким id %s не найден", postId));
         }
+
+        User postOwner = post.get().getUser();
+
+        if (!postOwner.getId().equals(currentUser.map(User::getId).orElse(null))) {
+            throw new InvalidPostOwnerException("Запрещено удалить запросы других пользователей");
+        }
+
+        postRepository.deleteById(postId);
+
+
         String keyword = makeKeyword(post.get());
 
         List<Response> responses = responseRepository.findAllByPostId(postId);
