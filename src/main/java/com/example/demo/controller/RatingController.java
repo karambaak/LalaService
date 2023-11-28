@@ -16,7 +16,7 @@ public class RatingController {
     @GetMapping("/new/{specialistId}")
     public String newRating(Model model, @PathVariable Long specialistId){
         model.addAttribute("specialistId", specialistId);
-        return "functions/rating";
+        return "ratings/rating";
     }
 
     @PostMapping("/new/{specialistId}")
@@ -24,5 +24,11 @@ public class RatingController {
         dto.setSpecialistId(specialistId);
         service.saveRating(dto);
         return "redirect:/";
+    }
+
+    @GetMapping("/{specialistId}/reviews")
+    public String readReviewsBySpecialistId(@PathVariable Long specialistId, Model model){
+        model.addAttribute("reviews", service.getRatingsBySpecialistId(specialistId));
+        return "ratings/view";
     }
 }

@@ -116,6 +116,7 @@ public class RatingService {
                         .specialistId(rating.getSpecialist().getId())
                         .ratingValue(rating.getRating())
                         .reviewText(rating.getReviewText())
+                        .ratingDate(rating.getRatingDate())
                         .build())
                 .collect(Collectors.toList());
     }

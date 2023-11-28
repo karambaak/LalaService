@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,5 +20,6 @@ public class RatingDto {
     @Min(value = 1, message = "Должно быть не меньше 1")
     Integer ratingValue;
 
+    LocalDateTime ratingDate;
     String reviewText;
 }
