@@ -89,6 +89,9 @@
         .error-login-text{
             font-size: 14px;
         }
+        .dark-theme input::placeholder {
+            color: white;
+        }
     </style>
     <body>
     <section class="h-100">
@@ -105,14 +108,14 @@
                                     <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                            value="${(_csrf.token)!'--no-token--'}"/>
                                 </#if>
-                                <label class="mb-2 text-muted" for="email">Телефон Номер</label>
+                                <label class="mb-2" for="email">Телефон Номер</label>
                                 <div class="mb-3 phone-input-group">
                                     <input id="phone" type="number" class="form-control" name="username" value="" placeholder="(555) 00 00 00" required autofocus>
                                 </div>
 
                                 <div class="mb-3">
                                     <div class="mb-2 w-100">
-                                        <label class="text-muted" for="password">Пароль</label>
+                                        <label class="" for="password">Пароль</label>
                                     </div>
                                     <input id="password" type="password" class="form-control" name="password" required>
                                 </div>

@@ -36,6 +36,9 @@
             border: 1px solid #ced4da;
 
         }
+        .dark-theme .country {
+            color: white;
+        }
 
         select {
             -webkit-appearance: none;
@@ -91,6 +94,9 @@
         .google-login-btn:hover {
             background-color: #f5f5f5;
         }
+        .dark-theme input::placeholder {
+            color: white;
+        }
     </style>
     <body>
     <section class="h-100">
@@ -140,7 +146,7 @@
                                         </select>
                                     </#if>
                                 </div>
-                                <label class="mb-2 text-muted" for="email">Телефон Номер</label>
+                                <label class="mb-2" for="email">Телефон Номер</label>
                                 <div class="mb-3 phone-input-group">
                                     <select id="countrySelect" name="phoneNumberCode" onchange="changeCountry()"
                                             class="country" required>
@@ -156,7 +162,7 @@
 
                                 <div class="mb-3">
                                     <div class="mb-2 w-100">
-                                        <label class="text-muted" for="password">Пароль</label>
+                                        <label class="" for="password">Пароль</label>
                                     </div>
                                     <input id="password" type="password" class="form-control" name="password" required>
                                 </div>

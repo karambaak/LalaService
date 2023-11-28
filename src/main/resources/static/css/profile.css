@@ -315,7 +315,10 @@
     right: 0;
     z-index: 2;
 }
-
+.dark-theme .dropdown-menu {
+    background-color: #333333;
+    color: white;
+}
 .leave-review-btn {
     position: fixed;
     bottom: 70px;
@@ -369,7 +372,10 @@
     transition: transform 0.3s ease;
 }
 
-
+.dark-theme .modal-content{
+    background-color: #333333;
+    color: white;
+}
 .side-menu ul {
     list-style: none;
     padding: 0;
