@@ -331,7 +331,9 @@
 }
 
 @media screen and (min-width: 769px) {
-    margin-bottom: 35px;
+    .leave-review-btn {
+        margin-bottom: 35px;
+    }
 }
 
 .leave-review-btn:hover {
