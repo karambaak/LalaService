@@ -92,6 +92,11 @@
         .dark-theme input::placeholder {
             color: white;
         }
+
+        .forgot-password{
+            text-align: right;
+            text-decoration: none;
+        }
     </style>
     <body>
     <section class="h-100">
@@ -126,6 +131,9 @@
                                 <button type="submit" class=" active" id="send-button" >
                                     Войти
                                 </button>
+                                <div class="mt-2">
+                                    <a href="/auth/forgot_password"  class="forgot-password">Забыли пароль?</a>
+                                </div>
                             </form>
                             <div class="google-login-btn mt-3">
                                 <a class="btn tab-item" href="/oauth2/authorization/google" style="color: #2552e7">
