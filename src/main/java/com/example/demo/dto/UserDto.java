@@ -32,4 +32,5 @@ public class UserDto {
 //    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).+$",
 //            message = "Password should contain at least one uppercase letter, one number")
     private String password;
+    private String resetPasswordToken;
 }
