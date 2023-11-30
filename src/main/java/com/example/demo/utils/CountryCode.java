@@ -18,7 +18,7 @@ public class CountryCode {
     public static List<CountryCode> readCountryCodesFromFile() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         List<CountryCode> countryCodes = objectMapper.readValue(
-                new File("/static/phone_number_codes.json"),
+                new File("phone_number_codes.json"),
                 new TypeReference<>() {
                 });
         return countryCodes;
