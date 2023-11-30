@@ -112,13 +112,15 @@
                                     <select id="role" class="form-select" name="role" required>
                                         <option value="" disabled selected>Выберите кто Вы:</option>
                                         <#list roles as role>
-                                            <option value="${role}">
-                                                <#if role == 'ROLE_SPECIALIST'>
-                                                    я специалист
-                                                <#else>
-                                                    я ищу специалиста
-                                                </#if>
-                                            </option>
+                                            <#if role != 'ROLE_ADMIN'>
+                                                <option value="${role}">
+                                                    <#if role == 'ROLE_SPECIALIST'>
+                                                        Я специалист
+                                                    <#elseif role == 'ROLE_CUSTOMER'>
+                                                        Я ищу специалиста
+                                                    </#if>
+                                                </option>
+                                            </#if>
                                         </#list>
                                     </select>
                                 </div>
