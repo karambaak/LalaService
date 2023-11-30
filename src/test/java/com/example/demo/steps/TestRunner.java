@@ -6,5 +6,5 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "src/test/resources/feature", glue={"LoginStepDefinitions", "com.example.demo.steps"})
-public class MessageTestRunner {
+public class TestRunner {
 }

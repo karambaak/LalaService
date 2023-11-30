@@ -18,7 +18,9 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 class MessageServiceTest {
@@ -86,6 +88,29 @@ class MessageServiceTest {
         assertEquals(1, actualList.size());
         assertEquals("abc1", actualList.get(0).getLastMessageText());
         assertEquals("2.jpg", actualList.get(0).getSenderPhoto());
+    }
+    @Test
+    void should_create_new_message() {
+
+        Message message1 = new Message();
+        message1.setMessageText("abc1");
+        message1.setSender(mockUser());
+        message1.setReceiver(mockAnotherUser());
+        message1.setDateTime(LocalDateTime.of(2023, Month.NOVEMBER, 21, 19, 0));
+
+        Message m = messageService.saveANewMessage(message1);
+
+        assertNotNull(m);
+    }
+    @Test
+    void should_delete_a_message() {
+        Message m = messageService.findAMessage(10L);
+        assertNotNull(m);
+
+        messageService.deleteAMessage(m);
+
+        m = messageService.findAMessage(10L);
+        assertNull(m);
     }
 
     private User mockUser() {

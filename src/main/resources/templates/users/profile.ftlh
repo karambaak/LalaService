@@ -229,6 +229,7 @@
             const storedTheme = localStorage.getItem('theme');
             if (storedTheme !== null) {
                 applyThemeToPage(storedTheme);
+                themeToggle.value = storedTheme;
             } else {
                 const url = '/api/get-theme';
                 fetch(url)

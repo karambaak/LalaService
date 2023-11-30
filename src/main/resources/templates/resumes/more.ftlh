@@ -51,7 +51,7 @@
                 <#if resume.description?has_content>
                     <i class="fas fa-info-circle"></i> ${resume.description}
                 <#else>
-                    <i class="fas fa-info-circle"></i> Без описании
+                    <i class="fas fa-info-circle"></i> Без описания
                 </#if>
             </p>
             <div class="resume-phone">

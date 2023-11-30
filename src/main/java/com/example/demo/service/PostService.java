@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.*;
 import com.example.demo.entities.*;
+import com.example.demo.errors.exceptions.InvalidPostOwnerException;
 import com.example.demo.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -30,6 +29,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final SpecialistService specialistService;
+    private final ResponseService responseService;
 
     public List<StandCategoryDto> getAll() {
         List<Post> list = postRepository.findAll();
@@ -121,6 +121,7 @@ public class PostService {
         List<StandCategoryDto> all = getAll();
         return getPostsNotSubscribed(subscribed, all);
     }
+
     public List<StandCategoryDto> getPostsNotSubscribed(List<SubscriptionStand> subscribed, List<StandCategoryDto> all) {
         if (subscribed.isEmpty()) return all;
         HashSet<StandCategoryDto> hashSet = new HashSet<>();
@@ -141,33 +142,18 @@ public class PostService {
         return post.map(this::makeDtoFromPost).orElse(null);
     }
 
-    public List<PostShortInfoDto> getSpecialistResponses(Long specialistId) {
-        List<Response> list = responseRepository.findAllBySpecialistId(specialistId);
-        HashSet<Long> set = new HashSet<>();
-        for (Response r : list) {
-            set.add(r.getPost().getId());
-        }
-        List<PostShortInfoDto> result = new ArrayList<>();
-        for (Long l : set) {
-
-            var post = postRepository.findById(l);
-            if (post.isPresent()) {
-                result.add(PostShortInfoDto.builder()
-                        .postId(post.get().getId())
-                        .postTitle(post.get().getTitle())
-                        .build());
-            }
-        }
-        return result;
-    }
-
     public List<PostShortInfoDto> getCustomerPosts(Long userId) {
-        List<Post> posts = postRepository.findAllByUserId(userId);
+        List<Post> posts = getAllCustomerPosts(userId);
         List<PostShortInfoDto> list = new ArrayList<>();
-        for (Post p :
-                posts) {
+        for (Post p : posts) {
             list.add(PostShortInfoDto.builder().postId(p.getId()).postTitle(p.getTitle()).build());
         }
+        return list;
+    }
+
+    public List<Post> getAllCustomerPosts(Long userId) {
+        List<Post> list = postRepository.findAllByUserId(userId);
+        if (list.isEmpty()) return Collections.emptyList();
         return list;
     }
 
@@ -208,25 +194,14 @@ public class PostService {
                 var userFromSpecialist = userRepository.findById(s.get().getUser().getId());
                 if (userFromSpecialist.isPresent()) u = userFromSpecialist.get();
 
-                responseRepository.save(Response.builder()
-                        .post(post.get())
-                        .user(user)
-                        .conversationId(conversationId)
-                        .response(response.getResponse())
-                        .dateTime(LocalDateTime.now())
-                        .build());
+                responseService.saveResponse(post.get(), specialist.get(), conversationId, response.getResponse());
+
                 sendNotification("Вы получили новое сообщение от автора запроса:", u, keyword);
 
             } else {
                 User u = post.get().getUser();
+                responseService.saveResponse(post.get(), specialist.get(), conversationId, response.getResponse());
 
-                responseRepository.save(Response.builder()
-                        .post(post.get())
-                        .specialist(specialist.get())
-                        .conversationId(conversationId)
-                        .response(response.getResponse())
-                        .dateTime(LocalDateTime.now())
-                        .build());
                 sendNotification("Вы получили новое сообщение в ответ на запрос:", u, keyword);
             }
             return HttpStatus.OK;
@@ -254,40 +229,20 @@ public class PostService {
 
     public List<Response> getAllPostResponses(Long postId) {
         var post = postRepository.findById(postId);
-        if (post.isEmpty()) return null;
+        if (post.isEmpty()) return Collections.emptyList();
 
         List<Response> responses = responseRepository.findAllByPostId(postId);
-        if (responses.isEmpty()) return null;
+        if (responses.isEmpty()) return Collections.emptyList();
         responses.sort(Comparator.comparing(Response::getDateTime));
 
         return responses;
     }
 
-    public List<ResponseDto> getSpecialistConversation(Long postId, ViewerDto v) {
-        String conversationId = new StringBuilder().append(postId).append("-").append(v.getSpecialistId()).toString();
-        List<Response> conversationList = responseRepository.findAllByConversationId(conversationId);
-        var specialist = specialistRepository.findById(v.getSpecialistId());
-        if (specialist.isEmpty()) return null;
-
-        var post = postRepository.findById(postId);
-        if (post.isEmpty()) return null;
-        List<ResponseDto> list = new ArrayList<>();
-        for (Response r :
-                conversationList) {
-            String s = (r.getSpecialist() == null) ? READER : AUTHOR;
-            list.add(ResponseDto.builder()
-                    .response(r.getResponse())
-                    .viewer(s)
-                    .dateTime(formatDateTimeShort(r.getDateTime()))
-                    .build());
-        }
-        return list;
-    }
 
     public List<ConversationDto> getCustomerConversations(Long postId) {
         List<Response> responses = getAllPostResponses(postId);
-        if (responses == null) {
-            return null;
+        if (responses.isEmpty()) {
+            return Collections.emptyList();
         }
         responses.sort(Comparator.comparing(Response::getConversationId));
         HashSet<String> uniqueConversationIds = new HashSet<>();
@@ -375,21 +330,6 @@ public class PostService {
         return Long.parseLong(extractStringBeforeDash(conversationId));
     }
 
-    public List<ResponseDto> getCustomerMsgByConversation(String conversationId) {
-        List<Response> responses = responseRepository.findAllByConversationId(conversationId);
-        List<ResponseDto> list = new ArrayList<>();
-        for (Response r : responses) {
-            String s = (r.getSpecialist() == null) ? AUTHOR : READER;
-            list.add(ResponseDto.builder()
-                    .response(r.getResponse())
-                    .viewer(s)
-                    .dateTime(formatDateTimeShort(r.getDateTime()))
-                    .build()
-            );
-        }
-        return list;
-    }
-
     private String makeKeyword(Post post) {
         return new StringBuilder().append(post.getTitle()).append(" (")
                 .append(post.getPublishedDate()).append(")").toString();
@@ -433,11 +373,23 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId) throws InvalidPostOwnerException {
         var post = postRepository.findById(postId);
-        if (post.isPresent()) {
-            postRepository.deleteById(postId);
+        var currentUser = userService.getCurrentUser();
+
+        if (!post.isPresent()) {
+            throw new NoSuchElementException(String.format("Пост с таким id %s не найден", postId));
         }
+
+        User postOwner = post.get().getUser();
+
+        if (!postOwner.getId().equals(currentUser.map(User::getId).orElse(null))) {
+            throw new InvalidPostOwnerException("Запрещено удалить запросы других пользователей");
+        }
+
+        postRepository.deleteById(postId);
+
+
         String keyword = makeKeyword(post.get());
 
         List<Response> responses = responseRepository.findAllByPostId(postId);
@@ -464,50 +416,5 @@ public class PostService {
     private void deleteNotificationsByKeyword(String keyword) {
         List<Notification> notifications = notificationRepository.findByNotificationTextContaining(keyword);
         notificationRepository.deleteAll(notifications);
-    }
-
-    public List<ResponseDto> updateMessagesForSpecialist(String localDateTime, String conversationId) {
-        List<Response> responsesNew = getNew(localDateTime, conversationId);
-        List<ResponseDto> list = new ArrayList<>();
-        for (Response r :
-                responsesNew) {
-            if (r.getUser() != null) list.add(ResponseDto.builder()
-                    .response(r.getResponse())
-                    .viewer(READER)
-                    .dateTime(formatDateTimeShort(r.getDateTime()))
-                    .build());
-        }
-        return list;
-    }
-
-    private List<Response> getNew(String localDateTime, String conversationId) {
-        List<Response> responses = responseRepository.findAllByConversationId(conversationId);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-        LocalDateTime ldt = LocalDateTime.parse(localDateTime, formatter);
-
-        List<Response> list = new ArrayList<>();
-        for (Response r : responses) {
-            ZoneId zoneId = ZoneId.of("Asia/Bishkek");
-            ZonedDateTime responseDateTime = r.getDateTime().atZone(zoneId);
-            ZonedDateTime requestDateTime = ldt.atZone(zoneId).plusHours(6);
-            if (requestDateTime.isBefore(responseDateTime)) {
-                list.add(r);
-            }
-        }
-        return list;
-    }
-
-    public List<ResponseDto> updateMessagesForCustomer(String localDateTime, String conversationId) {
-        List<Response> responsesNew = getNew(localDateTime, conversationId);
-        List<ResponseDto> list = new ArrayList<>();
-        for (Response r :
-                responsesNew) {
-            if (r.getSpecialist() != null) list.add(ResponseDto.builder()
-                    .response(r.getResponse())
-                    .viewer(READER)
-                    .dateTime(formatDateTimeShort(r.getDateTime()))
-                    .build());
-        }
-        return list;
     }
 }

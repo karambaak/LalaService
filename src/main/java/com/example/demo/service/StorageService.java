@@ -8,7 +8,6 @@ import com.amazonaws.util.IOUtils;
 import com.example.demo.entities.Photo;
 import com.example.demo.entities.Portfolio;
 import com.example.demo.repository.PhotosRepository;
-import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +30,6 @@ public class StorageService {
     @Value("${application.bucket.name}")
     private String bucketName;
 
-    //needs logic to link photo to portfolio
     public void uploadFile(MultipartFile file, Portfolio portfolio) {
         File fileObj = convertMultiPartFileToFile(file);
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();

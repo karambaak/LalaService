@@ -48,6 +48,7 @@
                         <span class="rating-number" id="rating">${rating}</span>
                     </div>
                 </#if>
+                <a href="/rating/${specialistId}/reviews">Посмотреть отзывы</a>
             </div>
         </div>
     </div>
@@ -64,7 +65,7 @@
                 <#if resumes?has_content>
                     <#list resumes as resume>
                         <div class="resume">
-                            <a href="#${resume.id}" class="resume-link">
+                            <a href="/resume/${resume.id}" class="resume-link">
                                 <#if resume.header?has_content>
                                     <p class="resume-name">${resume.header}</p>
                                 <#else>

@@ -41,6 +41,9 @@
     color: #2552e7;
     margin-bottom: 6px;
 }
+.dark-theme .resume-name {
+    color: white;
+}
 
 .resume-experience, .resume-category, .resume-date{
     font-size: 15px;
@@ -101,6 +104,9 @@
     font-size: 15px;
     border: none;
     background-color: transparent;
+}
+.dark-theme .favorite-button svg{
+    color: white;
 }
 
 .favorite-button svg{

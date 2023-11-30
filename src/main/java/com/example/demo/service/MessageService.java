@@ -19,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,12 +27,11 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final UserService userService;
     private final NotificationRepository notificationRepository;
-    private final PostRepository postRepository;
     private final ResponseRepository responseRepository;
     private final SpecialistRepository specialistRepository;
     private final UserRepository userRepository;
-    private final SpecialistService specialistService;
     private final PostService postService;
+    private final ResponseService responseService;
 
     public List<MessageBundleDto> getAll() {
         User user = userService.getUserFromSecurityContextHolder();
@@ -141,22 +141,17 @@ public class MessageService {
     private List<MessageBundleDto> getResponses(User user) {
         List<Response> allResponses = responseRepository.findAll();
         if (user.getUserType().equalsIgnoreCase("customer")) {
-            List<Post> posts = getAllCustomerPosts(user);
+            List<Post> posts = postService.getAllCustomerPosts(user.getId());
             List<Response> responses = getCustomerResponses(allResponses, posts);
             Set<String> filter = uniqueConversations(responses);
-            return customerResponses(responses, filter);
+            return responseService.customerResponses(responses, filter);
         } else {
             Set<String> filter = uniqueConversationsBySpecialist(allResponses, user);
             List<Response> responses = getSpecialistResponses(allResponses, filter);
-            return specialistResponses(responses, filter);
+            return responseService.specialistResponses(responses, filter);
         }
     }
 
-    private List<Post> getAllCustomerPosts(User user) {
-        List<Post> list = postRepository.findAllByUserId(user.getId());
-        if (list.isEmpty()) return Collections.emptyList();
-        return list;
-    }
 
     private List<Response> getCustomerResponses(List<Response> responses, List<Post> posts) {
         List<Response> list = new ArrayList<>();
@@ -174,47 +169,6 @@ public class MessageService {
                 .collect(Collectors.toSet());
     }
 
-    private List<MessageBundleDto> customerResponses(List<Response> responses, Set<String> filter) {
-        List<MessageBundleDto> list = new ArrayList<>();
-        responses.sort(Comparator.comparing(Response::getDateTime).reversed());
-        for (String s : filter) {
-            for (Response r : responses) {
-                if (r.getConversationId().equalsIgnoreCase(s) && r.getSpecialist() != null) {
-                    var user = userRepository.findById(r.getSpecialist().getUser().getId());
-                    if (user.isPresent()) {
-                        list.add(MessageBundleDto.builder()
-                                .id(new StringBuilder().append("response").append("-").append(s).toString())
-                                .senderPhoto(user.get().getPhoto())
-                                .senderName(new StringBuilder().append("[стенд] ").append(specialistService.findSpecialistName(r.getSpecialist())).toString())
-                                .lastMessageText(getLastMessageText(responses, s))
-                                .lastMessageDateTime(getLastMessageDateTime(responses, s))
-                                .build());
-                        break;
-                    }
-                }
-            }
-        }
-        return list;
-    }
-
-    private String getLastMessageText(List<Response> responses, String conversationId) {
-        return responses.stream()
-                .filter(r -> r.getConversationId().equalsIgnoreCase(conversationId))
-                .map(Response::getResponse)
-                .findFirst()
-                .orElse(null);
-    }
-
-    private String getLastMessageDateTime(List<Response> responses, String conversationId) {
-        LocalDateTime dt = responses.stream()
-                .filter(r -> r.getConversationId().equalsIgnoreCase(conversationId))
-                .map(Response::getDateTime)
-                .findFirst()
-                .orElse(null);
-        if (dt == null) return null;
-        return formatDateTime(dt);
-    }
-
     private Set<String> uniqueConversationsBySpecialist(List<Response> responses, User user) {
         var specialist = specialistRepository.findByUser(user);
         Set<String> set = new HashSet<>();
@@ -222,7 +176,6 @@ public class MessageService {
             for (Response r : responses) {
                 if (r.getSpecialist() != null && (r.getSpecialist().getId().equals(specialist.get().getId()))) {
                     set.add(r.getConversationId());
-
                 }
             }
         }
@@ -234,26 +187,6 @@ public class MessageService {
         for (String s : filter) {
             for (Response r : responses) {
                 if (s.equalsIgnoreCase(r.getConversationId())) list.add(r);
-            }
-        }
-        return list;
-    }
-
-    private List<MessageBundleDto> specialistResponses(List<Response> responses, Set<String> filter) {
-        List<MessageBundleDto> list = new ArrayList<>();
-        responses.sort(Comparator.comparing(Response::getDateTime).reversed());
-        for (String s : filter) {
-            for (Response r : responses) {
-                if (r.getConversationId().equalsIgnoreCase(s) && r.getSpecialist() == null) {
-                    list.add(MessageBundleDto.builder()
-                            .id(new StringBuilder().append("response").append("-").append(s).toString())
-                            .senderPhoto(r.getUser().getPhoto())
-                            .senderName(new StringBuilder().append("[стенд] ").append(r.getUser().getUserName()).toString())
-                            .lastMessageText(getLastMessageText(responses, s))
-                            .lastMessageDateTime(getLastMessageDateTime(responses, s))
-                            .build());
-                    break;
-                }
             }
         }
         return list;
@@ -277,7 +210,6 @@ public class MessageService {
                     .build());
         }
         return list;
-
     }
 
     public List<ResponseDto> findNewMessages(String localDateTime, String conversationId) {
@@ -304,9 +236,7 @@ public class MessageService {
                         .build());
             }
         }
-
         return list;
-
     }
 
     public HttpStatus saveMessage(String msgId, MessageDto responseDto) {
@@ -314,12 +244,13 @@ public class MessageService {
         Long receiverId = Long.parseLong(postService.extractStringAfterDash(msgId));
         var user2 = userRepository.findById(receiverId);
         if (user2.isPresent()) {
-            messageRepository.save(Message.builder()
+            Message m = Message.builder()
                     .sender(user)
                     .receiver(user2.get())
                     .messageText(responseDto.getResponse())
                     .dateTime(LocalDateTime.now())
-                    .build());
+                    .build();
+            saveANewMessage(m);
         } else {
             return HttpStatus.NOT_FOUND;
         }
@@ -327,30 +258,43 @@ public class MessageService {
     }
 
     public HttpStatus saveNewMessage(MessageDto messageDto) {
+        Message m = makeMessageFromDto(messageDto);
+        if (m == null) {
+            return HttpStatus.NOT_FOUND;
+        }
+        saveANewMessage(m);
+        return HttpStatus.OK;
+
+    }
+
+    private Message makeMessageFromDto(MessageDto messageDto) {
         User sender = userService.getUserFromSecurityContextHolder();
         if (sender != null) {
             User receiver = null;
             try {
                 Long id = Long.parseLong(messageDto.getViewer());
                 var user = userRepository.findById(id);
-                if (!user.isEmpty()) receiver = user.get();
+                if (user.isPresent()) receiver = user.get();
             } catch (NumberFormatException e) {
                 var user = userRepository.findAllByUserNameContainingIgnoreCase(messageDto.getViewer());
                 if (user.size() == 1) {
                     receiver = user.get(0);
                 } else {
-                    return HttpStatus.NOT_FOUND;
+                    return null;
                 }
             }
-            messageRepository.save(Message.builder()
+            return Message.builder()
                     .sender(sender)
                     .receiver(receiver)
                     .messageText(messageDto.getResponse())
                     .dateTime(LocalDateTime.now())
-                    .build());
-            return HttpStatus.OK;
+                    .build();
         }
-        return HttpStatus.NOT_FOUND;
+        return null;
+    }
+
+    public Message saveANewMessage(Message m) {
+        return messageRepository.save(m);
     }
 
     @Transactional
@@ -360,7 +304,18 @@ public class MessageService {
 
     @Transactional
     public void deleteMessage(long messageId, long userId) {
-
+        var m = messageRepository.findById(messageId);
+        if(m.isPresent()) {
+            deleteAMessage(m.get());
+        }
+    }
+    public void deleteAMessage(Message m) {
+        messageRepository.delete(m);
+    }
+    public Message findAMessage(Long id) {
+        var m = messageRepository.findById(id);
+        if(m.isEmpty()) return null;
+        else return m.get();
     }
 }
 
