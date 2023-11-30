@@ -23,4 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("UPDATE User u SET u.userName = :newName, u.phoneNumber = :newPhone, u.email = :newEmail, u.geolocation = :newGeolocation WHERE u.id = :userId")
     void updateUserInformationWithGeolocation(Long userId, String newName, String newPhone, String newEmail, Geolocation newGeolocation);
 
+    Optional<User> findUserByEmail(String email);
+
+    Optional<User> findUserByResetPasswordToken(String token);
 }

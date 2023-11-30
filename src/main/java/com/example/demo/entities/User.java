@@ -47,6 +47,8 @@ public class User implements UserDetails {
     @Column(name = "photo")
     private String photo;
 
+    private String resetPasswordToken;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Notification> notifications;
 

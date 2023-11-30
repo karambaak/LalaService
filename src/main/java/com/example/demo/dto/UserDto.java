@@ -23,6 +23,7 @@ public class UserDto {
 //    @NotBlank(message = "Phone number  is required")
     private String phoneNumber;
 
+    private Integer phoneNumberCode;
     private String email;
     private String photo;
     private MultipartFile fileInput;
@@ -31,4 +32,5 @@ public class UserDto {
 //    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).+$",
 //            message = "Password should contain at least one uppercase letter, one number")
     private String password;
+    private String resetPasswordToken;
 }

@@ -14,4 +14,5 @@ public interface PortfolioRepository extends JpaRepositoryImplementation<Portfol
 
     Optional<Portfolio> findPortfolioById(long id);
     List<Portfolio> findAllBySpecialist_Id(Long id);
+    void deleteById(long id);
 }

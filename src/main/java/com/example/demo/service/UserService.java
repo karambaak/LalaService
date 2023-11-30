@@ -6,21 +6,27 @@ import com.example.demo.dto.ViewerDto;
 import com.example.demo.entities.*;
 import com.example.demo.enums.UserType;
 import com.example.demo.repository.*;
+import com.example.demo.utils.CountryCode;
+import com.example.demo.utils.Utility;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.example.demo.utils.CountryCode.readCountryCodesFromFile;
 
 @Slf4j
 @Service
@@ -40,21 +46,28 @@ public class UserService {
     private final SpecialistsAuthoritiesRepository specialistsAuthoritiesRepository;
     private final StorageService storageService;
     private final ThemeRepository themeRepository;
+    private final EmailService emailService;
 
     public List<User> getAllUsers() {
         return repository.findAll();
     }
 
-    public void register(UserDto userDto) {
+    public void register(UserDto userDto) throws IOException {
         var u = repository.findByPhoneNumber(userDto.getPhoneNumber());
         var geolocation = geolocationRepository.findByCountryAndCity(userDto.getCountry(), userDto.getCity());
         Geolocation geo = null;
         if (geolocation.isPresent()) geo = geolocation.get();
+
+        if (!isValidPhoneNumber(userDto.getPhoneNumberCode(), userDto.getPhoneNumber())) {
+            throw new InvalidPropertiesFormatException("Некорректный формат номера");
+        }
+
         if (u.isEmpty()) {
+            String phoneNumber = userDto.getPhoneNumberCode() + userDto.getPhoneNumber();
             Role role = defineUserRole(userDto.getRole());
             String userType = defineUserType(userDto.getRole());
             var user = User.builder()
-                    .phoneNumber(userDto.getPhoneNumber())
+                    .phoneNumber(phoneNumber)
                     .email(userDto.getEmail())
                     .password(encoder.encode(userDto.getPassword()))
                     .userName(userDto.getUserName())
@@ -74,8 +87,6 @@ public class UserService {
                             .build());
                     saveNewSpecialistAuthority(s);
                 }
-
-
             }
 
         } else {
@@ -353,7 +364,7 @@ public class UserService {
         if (user != null) {
             Theme userTheme = extractThemeValue(theme);
             if (userTheme != null) {
-                if(user.getTheme() == null || !user.getTheme().equals(userTheme)) {
+                if (user.getTheme() == null || !user.getTheme().equals(userTheme)) {
                     user.setTheme(userTheme);
                     repository.save(user);
                 }
@@ -379,14 +390,80 @@ public class UserService {
 
     public String getTheme() {
         User user = getUserFromSecurityContextHolder();
-        if(user == null || user.getTheme() == null) {
+        if (user == null || user.getTheme() == null) {
             return "0";
         } else {
-            if(user.getTheme().getThemeName().equalsIgnoreCase("dark")) {
+            if (user.getTheme().getThemeName().equalsIgnoreCase("dark")) {
                 return "1";
             } else {
                 return "0";
             }
         }
+    }
+
+    public List<CountryCode> getCountryCodes() throws IOException {
+        return readCountryCodesFromFile();
+    }
+
+    private boolean isValidPhoneNumber(Integer phoneNumberCode, String phoneNumber) throws IOException {
+        List<CountryCode> countryCodes = getCountryCodes();
+
+        if (phoneNumberCode != null) {
+            Optional<CountryCode> countryCodeOptional = countryCodes.stream()
+                    .filter(countryCode -> Objects.equals(countryCode.getCode(), phoneNumberCode))
+                    .findFirst();
+
+            if (countryCodeOptional.isPresent()) {
+                CountryCode countryCode = countryCodeOptional.get();
+                int expectedDigitCount = countryCode.getCountOfNumber();
+
+                String regex = "^\\d{" + expectedDigitCount + "}$";
+                Pattern pattern = Pattern.compile(regex);
+                Matcher matcher = pattern.matcher(phoneNumber);
+                return matcher.matches();
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public Optional<User> getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
+        return repository.findByPhoneNumber(user.getUsername());
+    }
+
+    public void makeResetPasswdLink(HttpServletRequest request) throws UsernameNotFoundException, UnsupportedEncodingException, MessagingException {
+        String email = request.getParameter("email");
+        String token = UUID.randomUUID().toString();
+        updateResetPasswordToken(token, email);
+
+        String resetPasswordLink = Utility.getSiteUrl(request) + "/auth/reset_password?token=" + token;
+        emailService.sendEmail(email, resetPasswordLink);
+    }
+
+    private void updateResetPasswordToken(String token, String email) {
+        User user = repository.findUserByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Could not find any user with the email " + email));
+        user.setResetPasswordToken(token);
+        repository.saveAndFlush(user);
+    }
+
+    public UserDto getByResetPasswordToken(String token) {
+        User u = repository.findUserByResetPasswordToken(token).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return UserDto.builder()
+                .email(u.getEmail())
+                .password(u.getPassword())
+                .userName(u.getUsername())
+                .resetPasswordToken(u.getResetPasswordToken())
+                .build();
+    }
+
+    public void updatePassword(UserDto userDto, String newPasswd) {
+        User u = repository.findUserByEmail(userDto.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        u.setResetPasswordToken(null);
+        u.setPassword(encoder.encode(newPasswd));
+        repository.saveAndFlush(u);
     }
 }
