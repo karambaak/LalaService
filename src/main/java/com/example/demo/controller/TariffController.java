@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.TariffDto;
 import com.example.demo.service.SubscriptionsOnTariffsService;
-import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -22,7 +21,7 @@ public class TariffController {
         return "tariffs/tariff";
     }
 
-    @PostMapping
+    @PostMapping("/save")
     public void saveTariff(TariffDto tariffDto, Authentication auth){
         User user = (User) auth.getPrincipal();
         subscriptionsOnTariffsService.addPaymentOnTariffByUserAuth(tariffDto, user);

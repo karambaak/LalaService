@@ -63,7 +63,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="paymentForm">
+                        <form id="paymentForm" action="/tariff/save" method="POST">
                             <input type="text" placeholder="Введите номер карты" name="cardNumber" required><br><br>
                             <input type="text" placeholder="Срок действия" name="expiryDate" required><br><br>
                             <input type="text" placeholder="CVV" name="cvv" required><br><br>
