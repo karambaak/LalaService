@@ -32,7 +32,7 @@ public class ResumeService {
     private final ResumeRepository resumeRepository;
     private final SpecialistRepository specialistRepository;
     private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     public Page<ResumeDto> getAllResumes(int start, int end) {
         Sort sort = Sort.by(Sort.Order.desc("timeOfResume"));
@@ -49,20 +49,13 @@ public class ResumeService {
     }
 
     public void saveResume(ResumeDto resumeDto) throws OnlyOneResumeInSameCategoryException {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
-
-        User user = userRepository.findByPhoneNumber(userDetails.getUsername()).orElseThrow(() -> new NoSuchElementException("User not found"));
-        Long specialistId = specialistRepository.findByUser_Id(user.getId()).orElseThrow(() -> new NoSuchElementException("Specialist not found")).getId();
-        resumeDto.setSpecialistId(specialistId);
+        User user = userService.getCurrentUser().orElseThrow(() -> new NoSuchElementException("User not found"));
+        Specialist specialist = specialistRepository.findByUser_Id(user.getId()).orElseThrow(() -> new NoSuchElementException("Specialist not found"));
+        resumeDto.setSpecialistId(specialist.getId());
 
         if (checkNotAppearResumeInCategory(resumeDto)) {
             resumeRepository.save(Resume.builder()
-                    .specialist(specialistRepository.findById(
-                                    resumeDto.getSpecialistId())
-                            .orElseThrow(() -> new NoSuchElementException("Specialist not found")
-                            )
-                    )
+                    .specialist(specialist)
                     .timeOfResume(Timestamp.valueOf(LocalDateTime.now()))
                     .resumeDescription(resumeDto.getResumeDescription())
                     .category(categoryRepository.findById(resumeDto.getCategoryId())
@@ -82,10 +75,10 @@ public class ResumeService {
     public boolean checkDuplicateCategoryResumes(Long categoryId, List<Resume> resumes) {
         for(Resume r: resumes) {
             if(r.getCategory().getId().equals(categoryId)) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public void deleteResume(long specialistId, long resumeId) {
