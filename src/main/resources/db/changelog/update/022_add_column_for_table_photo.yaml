@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: Add_column_for_table_photos
+      author: Muhammed
+      changes:
+        - addColumn:
+            tableName: photos
+            columns:
+              - column:
+                  name: time_of_saving_photo
+                  type: timestamp
