@@ -77,7 +77,7 @@
             <input type="text" id="title" name="title" required>
 
             <label for="workRequiredTime">Когда требуется выполнить услугу:</label>
-            <input type="datetime-local" id="workRequiredTime" name="workRequiredTime">
+            <input type="datetime-local" id="workRequiredTime" name="workRequiredTime" required>
             <p id="error-message" style="color: red;"></p>
 
             <label for="description">Содержание запроса:</label>

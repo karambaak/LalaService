@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,14 +38,16 @@ public class StorageService {
         photosRepository.save(Photo.builder()
                 .portfolio(portfolio)
                 .photoLink(ROOT + fileName)
+                .timeOfSavingPhoto(LocalDateTime.now())
                 .build());
     }
-public String uploadPhoto(MultipartFile file) {
-    File fileObj = convertMultiPartFileToFile(file);
-    String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-    s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
-    return ROOT + fileName;
-}
+
+    public String uploadPhoto(MultipartFile file) {
+        File fileObj = convertMultiPartFileToFile(file);
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
+        return ROOT + fileName;
+    }
 
     public byte[] downloadFile(String fileName) {
         S3Object s3Object = s3Client.getObject(bucketName, fileName);
@@ -62,6 +65,7 @@ public String uploadPhoto(MultipartFile file) {
         s3Client.deleteObject(bucketName, fileName);
 
     }
+
     public void deleteFile(String imgLink) {
         int lastIndex = imgLink.lastIndexOf("/");
         String fileName = imgLink.substring(lastIndex + 1);
@@ -82,9 +86,9 @@ public String uploadPhoto(MultipartFile file) {
     public List<String> getAllPhotos() {
         List<Photo> photos = photosRepository.findAll();
         List<String> urls = new ArrayList<>();
-        if(!photos.isEmpty()) {
-            for (Photo p:
-                 photos) {
+        if (!photos.isEmpty()) {
+            for (Photo p :
+                    photos) {
                 urls.add(p.getPhotoLink());
             }
         }

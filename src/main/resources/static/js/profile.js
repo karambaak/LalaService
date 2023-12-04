@@ -62,19 +62,13 @@ for (let i = 0; i < maxRating; i++) {
 }
 
 
-// Get all share buttons
 const shareButtons = document.querySelectorAll('.share-button');
 
-// Add click event listener to each button
 shareButtons.forEach(button => {
     button.addEventListener('click', () => {
-        // Get the URL of the current page
         const url = window.location.href;
-
-        // Get the social media platform from the button's class name
         const platform = button.classList[1];
 
-        // Set the URL to share based on the social media platform
         let shareUrl;
         switch (platform) {
             case 'facebook':
@@ -94,7 +88,6 @@ shareButtons.forEach(button => {
                 break;
         }
 
-        // Open a new window to share the URL
         window.open(shareUrl, '_blank');
     });
 });
@@ -197,4 +190,3 @@ function validateForm() {
 
     return true;
 }
-
