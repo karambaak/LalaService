@@ -1,13 +1,6 @@
 insert into PHOTOS (portfolio_id, photo_link)
 VALUES (1, 'https://www.imperialhotel.ru/upload/iblock/f7b/photo_2021-06-30_13-27-56.jpg'),
-       (7, 'https://upload.wikimedia.org/wikipedia/commons/e/ef/Basingstoke_Sports_Centre_Pool.jpg');
-
-delete
-from resumes
-where id = 1;
-delete
-from resumes
-where id = 2;
+       (2, 'https://upload.wikimedia.org/wikipedia/commons/e/ef/Basingstoke_Sports_Centre_Pool.jpg');
 
 insert into RESUMES (CATEGORY_ID, SPECIALIST_ID, TIME_OF_RESUME, RESUME_DESCRIPTION, name)
 VALUES ((select id from CATEGORIES where CATEGORY_NAME ilike 'Строительные работы и ремонт'),
