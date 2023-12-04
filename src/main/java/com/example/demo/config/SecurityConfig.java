@@ -71,6 +71,8 @@ public class SecurityConfig {
                                 .requestMatchers("/api/get-theme").fullyAuthenticated()
                                 .requestMatchers("/api/notifications").fullyAuthenticated()
                                 .requestMatchers("/favourites/**").fullyAuthenticated()
+                                .requestMatchers("/contact/**").fullyAuthenticated()
+
                         .anyRequest().permitAll()
                 )
                 .rememberMe(customizer -> customizer
