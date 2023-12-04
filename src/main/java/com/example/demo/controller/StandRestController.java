@@ -22,7 +22,7 @@ private final ResponseService responseService;
         return postService.processResponse(postId, responseText);
     }
 
-    @PostMapping("/request_detail/{conversationId}")
+    @PostMapping("/request_detail/message/{conversationId}")
     public HttpStatus customerRequestDetail(@PathVariable String conversationId, @RequestBody MessageDto responseText) {
         Long p = postService.getPostByConversationId(conversationId);
         if (p != null) {

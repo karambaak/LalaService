@@ -38,18 +38,22 @@ public class ProfileControllerImpl implements ProfileController {
 
         if (currentUser.getRole().equalsIgnoreCase("ROLE_SPECIALIST")) {
             Long specialistId = specialistRepository.findByUser_Id(currentUser.getId()).orElseThrow(() -> new NoSuchElementException("Specialist not found")).getId();
-            model.addAttribute("resumes", resumeService.getResumesByUserId(currentUser.getId()));
-            model.addAttribute("rating", ratingService.getSpecialistRatingById(currentUser.getId()));
             String qrCodeText = "http://localhost:8089/profile" + specialistId;
+
             ByteArrayOutputStream qrCodeStream = QRCode.from(qrCodeText).stream();
             byte[] qrCodeBytes = qrCodeStream.toByteArray();
             String qrCodeBase64 = Base64.getEncoder().encodeToString(qrCodeBytes);
+
+            model.addAttribute("resumes", resumeService.getResumesByUserId(currentUser.getId()));
+            model.addAttribute("portfolios", portfolioService.getPortfolioListBySpecialistId(specialistId));
+            model.addAttribute("rating", ratingService.getSpecialistRatingById(currentUser.getId()));
             model.addAttribute("qrCodeBase64", qrCodeBase64);
-            model.addAttribute("portfolios", portfolioService.getPortfolioBySpecialistId(specialistId));
         }
+
         if (currentUser.getRole().equalsIgnoreCase("ROLE_CUSTOMER")) {
             model.addAttribute("stands", postService.getCustomerPostDtos(currentUser.getId()));
         }
+
         model.addAttribute("user", currentUser);
         return "users/profile";
     }

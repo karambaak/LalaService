@@ -58,7 +58,7 @@
             <!-- Messages will be displayed here -->
         </div>
         <div class="message-container">
-            <form method="post" action="/stand/request_detail/${conversationId}" id="message-form"
+            <form method="post" action="/stand/request_detail/message/${conversationId}" id="message-form"
                   class="d-flex flex-column align-items-end me-3">
                 <input type="text" id="message-text" class="msg-input" autofocus required>
                 <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
@@ -204,7 +204,7 @@
                     response: message,
                 };
                 console.log(responseText)
-                fetch(`/stand/request_detail/` + viewer, {
+                fetch(`/stand/request_detail/message/` + viewer, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

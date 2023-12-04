@@ -321,9 +321,15 @@ public class PostService {
     }
 
     public List<PostDto> getCustomerPostDtos(Long userId) {
+        log.warn("Error error");
         List<Post> posts = postRepository.findAllByUserId(userId);
-        if (posts.isEmpty()) return null;
-        return posts.stream().map(this::makeDtoFromPost).toList();
+        if (posts.isEmpty()) {
+            log.warn("Error error {}", posts.toString());
+            return null;
+        } else {
+            log.error("Error error {}", posts.toString());
+            return posts.stream().map(this::makeDtoFromPost).toList();
+        }
     }
 
     public Long getPostByConversationId(String conversationId) {
