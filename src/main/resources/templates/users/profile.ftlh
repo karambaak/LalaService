@@ -85,7 +85,6 @@
                         </#if>
                     </div>
                 </div>
-
                 <div class="tab-content" id="portfolio-content">
                     <div class="portfolio-list">
                         <div class="resume create-resume">

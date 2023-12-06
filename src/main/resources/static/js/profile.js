@@ -174,7 +174,6 @@ function showSuccessNotification(message, isResponseOk){
         successNotification.classList.remove("show");
     }, 3000);
 }
-
 function validateForm() {
     var fstValue = document.querySelector('input[name="fst"]:checked').value;
     var reviewText = document.getElementById('review-input').value;
