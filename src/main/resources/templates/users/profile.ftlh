@@ -3,15 +3,10 @@
     <link rel="stylesheet" href="/static/css/profileorigin.css">
     <title>Личный кабинет</title>
     <div id="content" class="content">
-        <#if user.role = "ROLE_SPECIALIST">
-            <a href="#" class="settings-link">
-                <i class="fas fa-cog"></i>
-            </a>
-        <#else>
-            <a href="#" class="settings-link" id="openModal">
-                <i class="fas fa-cog"></i>
-            </a>
-        </#if>
+        <a href="#" class="settings-link" id="openModal">
+            <i class="fas fa-cog"></i>
+        </a>
+
         <div class="square">
             <h2 class="logo">linky.</h2>
         </div>
@@ -171,29 +166,29 @@
                         </#if>
                     </div>
                 </div>
-                <div id="modal" class="modal">
-                    <div class="modal-content">
-                        <div id="side-menu" class="side-menu">
-                            <div class="close-button" id="close-button">X</div>
-                            <ul>
-                                <li><a href="profile/edit">Редактировать профиль</a></li>
-                                <li><a href="/favourites">Посмотреть избранные</a></li>
-                                <li><a href="/logout">Выйти из аккаунта</a></li>
-                                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                                       value="${(_csrf.token)!'--no-token--'}"/>
-                                <li><a href="#">
-                                        <div class="slider-container">
-                                            <span class="slider-label">Изменить тему:</span>
-                                            <input type="range" min="0" max="1" value="0" step="1" class="slider"
-                                                   id="themeToggle">
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
             </#if>
+        </div>
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div id="side-menu" class="side-menu">
+                <div class="close-button" id="close-button">X</div>
+                <ul>
+                    <li><a href="profile/edit">Редактировать профиль</a></li>
+                    <li><a href="/favourites">Посмотреть избранные</a></li>
+                    <li><a href="/logout">Выйти из аккаунта</a></li>
+                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                           value="${(_csrf.token)!'--no-token--'}"/>
+                    <li><a href="#">
+                            <div class="slider-container">
+                                <span class="slider-label">Изменить тему:</span>
+                                <input type="range" min="0" max="1" value="0" step="1" class="slider"
+                                       id="themeToggle">
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

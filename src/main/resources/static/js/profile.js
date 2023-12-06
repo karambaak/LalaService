@@ -16,12 +16,11 @@ $(document).ready(function () {
         $("#portfolio-content").show();
     });
 });
-
-const xCloseButton = document.getElementById("close-button").addEventListener("click", closeModal)
-
 document.getElementById("openModal").addEventListener("click", function () {
     openModal();
 });
+
+const xCloseButton = document.getElementById("close-button").addEventListener("click", closeModal)
 
 document.getElementById("close-button").addEventListener("click", function () {
     document.getElementById("side-menu").classList.remove("active");
@@ -170,7 +169,6 @@ function showSuccessNotification(message, isResponseOk){
         successNotification.classList.add("notificationError");
 
     }
-
     successNotification.classList.add("show");
     setTimeout(() => {
         successNotification.classList.remove("show");
