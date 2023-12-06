@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="/static/css/profileorigin.css">
     <title>Личный кабинет</title>
     <div id="content" class="content">
-        <a href="#" class="settings-link"  id="openModal">
+        <a href="#" class="settings-link" id="openModal">
             <i class="fas fa-cog"></i>
         </a>
 

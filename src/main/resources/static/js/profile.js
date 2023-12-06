@@ -169,7 +169,6 @@ function showSuccessNotification(message, isResponseOk){
         successNotification.classList.add("notificationError");
 
     }
-
     successNotification.classList.add("show");
     setTimeout(() => {
         successNotification.classList.remove("show");
