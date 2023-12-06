@@ -103,8 +103,10 @@
                             <#list portfolios as portfolio>
                                 <div class="portfolio">
                                     <div class="cover-photo">
-                                        <#if portfolio.coverPhotoLink?has_content>
+                                        <#if portfolio.coverPhotoLink??>
                                             <img src="${portfolio.coverPhotoLink}" alt class="portfolio-img">
+                                            <#else>
+                                                <img src="/static/noPhoto.png" alt class="portfolio-img">
                                         </#if>
                                     </div>
                                     <div class="portfolio-details">

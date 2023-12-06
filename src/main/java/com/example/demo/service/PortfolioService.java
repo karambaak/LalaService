@@ -111,9 +111,11 @@ public class PortfolioService {
 
 
     private String getCoverPhotoLink(Long portfolioId) {
-        Optional<Photo> coverPhoto = photosRepository.findAllByPortfolio_Id(portfolioId).stream()
-                .min(Comparator.comparing(Photo::getTimeOfSavingPhoto));
+        Optional<Photo> coverPhoto = photosRepository.findAllByPortfolio_Id(portfolioId)
+                .stream()
+                .sorted(Comparator.comparing(Photo::getTimeOfSavingPhoto))
+                .findFirst();
 
-        return coverPhoto.map(Photo::getPhotoLink).orElse(null);
+        return coverPhoto.orElse(null).getPhotoLink();
     }
 }

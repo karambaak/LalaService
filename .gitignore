@@ -33,7 +33,5 @@ build/
 .vscode/
 /db/
 /logs/
-/data/
-/data/
 /.jpb/jpb-settings.xml
 /config/
