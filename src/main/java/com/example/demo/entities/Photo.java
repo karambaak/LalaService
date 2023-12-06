@@ -3,6 +3,8 @@ package com.example.demo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Builder
@@ -20,4 +22,5 @@ public class Photo {
     private Portfolio portfolio;
 
     private String photoLink;
+    private LocalDateTime timeOfSavingPhoto;
 }

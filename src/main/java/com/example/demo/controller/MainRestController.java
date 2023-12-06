@@ -14,8 +14,8 @@ public interface MainRestController {
     List<SpecialistDto> searchSpecialistByName(@PathVariable String name);
 
     @PostMapping("/save-theme-preference")
-    public HttpStatus saveTheme(@RequestBody String theme);
+    HttpStatus saveTheme(@RequestBody String theme);
 
     @GetMapping("/get-theme")
-    public String getTheme();
+    String getTheme();
 }

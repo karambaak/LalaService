@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import com.example.demo.dto.PhotoDto;
 import com.example.demo.dto.PortfolioDto;
+import com.example.demo.dto.PortfolioListDto;
+import com.example.demo.entities.Photo;
 import com.example.demo.entities.Portfolio;
 import com.example.demo.entities.User;
 import com.example.demo.repository.PhotosRepository;
@@ -17,8 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,22 +98,22 @@ public class PortfolioService {
 
     }
 
-    public List<PortfolioDto> getPortfolioBySpecialistId(Long specialistId) {
+    public List<PortfolioListDto> getPortfolioListBySpecialistId(Long specialistId) {
         return portfolioRepository.findAllBySpecialist_Id(specialistId).stream()
-                .map(e -> PortfolioDto.builder()
+                .map(e -> PortfolioListDto.builder()
                         .id(e.getId())
-                        .specialistId(e.getSpecialist().getId())
                         .timeOfPortfolio(e.getTimeOfPortfolio() != null ? Timestamp.valueOf(e.getTimeOfPortfolio()) : null)
                         .title(e.getTitle())
-                        .photos(photosRepository.findAllByPortfolio_Id(e.getId()).stream()
-                                .map(p -> PhotoDto.builder()
-                                        .id(p.getId())
-                                        .portfolioId(p.getId())
-                                        .photoLink(p.getPhotoLink())
-                                        .build())
-                                .collect(Collectors.toList())
-                        )
+                        .coverPhotoLink(getCoverPhotoLink(e.getId()))
                         .build())
                 .collect(Collectors.toList());
+    }
+
+
+    private String getCoverPhotoLink(Long portfolioId) {
+        Optional<Photo> coverPhoto = photosRepository.findAllByPortfolio_Id(portfolioId).stream()
+                .min(Comparator.comparing(Photo::getTimeOfSavingPhoto));
+
+        return coverPhoto.map(Photo::getPhotoLink).orElse(null);
     }
 }
