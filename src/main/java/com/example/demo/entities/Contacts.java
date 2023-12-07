@@ -17,8 +17,8 @@ public class Contacts {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "specialist_id", referencedColumnName = "id")
-    private Specialist specialist;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
     @Column(name = "contact_type")
     private String contactType;

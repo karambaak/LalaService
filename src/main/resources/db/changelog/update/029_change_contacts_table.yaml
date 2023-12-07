@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: change contacts table
+      author: Asem
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: contacts
+            constraintName: fk_specialist_id_contacts
+        - dropTable:
+            tableName: contacts
+        - createTable:
+            tableName: contacts
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigserial
+                  constraints:
+                    nullable: false
+              - column:
+                  name: contact_type
+                  type: varchar(255)
+              - column:
+                  name: contact_value
+                  type: varchar(255)
+        - addForeignKeyConstraint:
+            baseTableName: contacts
+            baseColumnNames: user_id
+            constraintName: fk_user_id_contacts
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: cascade
+            onUpdate: cascade

@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -30,7 +31,7 @@ public class ProfileControllerImpl implements ProfileController {
     private final SpecialistRepository specialistRepository;
     private final PortfolioService portfolioService;
     private final GeolocationService geolocationService;
-
+private final ContactsService contactsService;
 
     @Override
     public String profile(Authentication auth, Model model) {
@@ -55,6 +56,7 @@ public class ProfileControllerImpl implements ProfileController {
         }
 
         model.addAttribute("user", currentUser);
+        model.addAttribute("businessCard", contactsService.getBusinessCard());
         return "users/profile";
     }
 
@@ -106,5 +108,11 @@ public class ProfileControllerImpl implements ProfileController {
         return "redirect:/profile";
     }
 
+    @Override
+    public String addContacts(Model model) {
+        model.addAttribute("contactTypes", contactsService.getContactTypeList());
+        model.addAttribute("businessCard", contactsService.getBusinessCard());
+        return "users/add_contacts";
+    }
 
 }

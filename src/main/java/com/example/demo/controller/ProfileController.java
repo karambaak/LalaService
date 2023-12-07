@@ -23,4 +23,6 @@ public interface ProfileController {
     @PostMapping("/profile/edit")
     String updateProfile(UserDto userDto, Authentication auth);
 
+    @GetMapping("/profile/add_contacts")
+    String addContacts(Model model);
 }
