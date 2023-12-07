@@ -12,6 +12,8 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -465,5 +467,32 @@ public class UserService {
         u.setResetPasswordToken(null);
         u.setPassword(encoder.encode(newPasswd));
         repository.saveAndFlush(u);
+    }
+
+    public List<UserDto> getAllUsersForAdmin() {
+        return repository.findAll().stream()
+                .map(user -> UserDto.builder()
+                        .id(user.getId())
+                        .userName(user.getUserName())
+                        .role(user.getRole().getRole())
+                        .phoneNumber(user.getPhoneNumber())
+                        .email(user.getEmail())
+                        .photo(user.getPhoto())
+                        .country(user.getGeolocation().getCountry())
+                        .city(user.getGeolocation().getCity())
+                        .enabled(user.isEnabled())
+                        .build())
+                .toList();
+    }
+
+    public ResponseEntity<?> blockOrUnBlockUserByUserId(Long userId) {
+        Optional<User> user = repository.findById(userId);
+        if (user.isEmpty()) {
+            return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.NOT_FOUND);
+        }
+        User changedUser = user.get();
+        changedUser.setEnabled(!user.get().isEnabled());
+        repository.saveAndFlush(changedUser);
+        return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.OK);
     }
 }

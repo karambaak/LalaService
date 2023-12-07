@@ -73,7 +73,7 @@ VALUES ('12345', 'Qwerty', 'SPECIALIST', 'some@mail.ru', '$2a$12$a72Udagvfj0P2ez
 INSERT INTO specialists (user_id, company_name, tariff_id)
 VALUES (2, 'Facebook, Inc.', 1),
        (3, 'Tesla, Inc.', 2),
-       (3, 'Intel Corporation', 3),
+       (14, 'Intel Corporation', 3),
        (4, 'IBM Corporation', 4),
        (5, 'Oracle Corporation', 5),
        (6, 'Samsung Electronics', 2),

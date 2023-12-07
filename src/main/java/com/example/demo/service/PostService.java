@@ -39,8 +39,6 @@ public class PostService {
     public List<StandCategoryDto> getAllStandCategoryDtos(List<Post> list) {
         list.sort(Comparator.comparing(post -> post.getCategory().getCategoryName()));
         List<StandCategoryDto> standPostList = new ArrayList<>();
-
-
         Map<Category, List<Post>> postsByCategory = new HashMap<>();
         for (Post post : list) {
             Category category = post.getCategory();

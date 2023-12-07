@@ -33,4 +33,6 @@ public class UserDto {
 //            message = "Password should contain at least one uppercase letter, one number")
     private String password;
     private String resetPasswordToken;
+    private boolean enabled;
+
 }
