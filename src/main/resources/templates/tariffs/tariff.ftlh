@@ -30,7 +30,43 @@
                 </div>
             </div>
         </div>
-
+        <div>
+            <h3 class="mb-4">Доступные тарифы</h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Вид</th>
+                    <th scope="col">Стоимость</th>
+                    <th scope="col">Функционал</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">Бесплатный</th>
+                    <td>0.00</td>
+                    <td>Создание визитки, возможность размещать ссылку на свой профиль в соц.сетях.</td>
+                </tr>
+                <tr>
+                    <th scope="row">Помесячный</th>
+                    <td>0.00</td>
+                    <td rowspan="4">Отображение специалиста в поиске, возможность отвечать на запросы в стенде и
+                        размещать резюме</td>
+                </tr>
+                <tr>
+                    <th scope="row">Поквартальный</th>
+                    <td>0.00</td>
+                </tr>
+                <tr>
+                    <th scope="row">Полугодовой</th>
+                    <td>0.00</td>
+                </tr>
+                <tr>
+                    <th scope="row">Годовой</th>
+                    <td>0.00</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
         <!-- Confirmation Modal -->
         <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">

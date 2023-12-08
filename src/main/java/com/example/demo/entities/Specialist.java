@@ -35,9 +35,6 @@ public class Specialist {
     @JoinColumn(name = "tariff_id", referencedColumnName = "id")
     private Tariff tariff;
 
-    @OneToMany(mappedBy = "specialist", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Contacts> contacts;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "specialist")
     private List<Resume> resumes;
 

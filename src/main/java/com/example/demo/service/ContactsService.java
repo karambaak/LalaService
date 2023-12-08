@@ -1,20 +1,18 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.ContactInfoSubmitDto;
 import com.example.demo.dto.ContactsDto;
 import com.example.demo.dto.SpecialistShortInfoDto;
-import com.example.demo.entities.Category;
-import com.example.demo.entities.Resume;
-import com.example.demo.entities.Specialist;
+import com.example.demo.entities.*;
+import com.example.demo.enums.ContactType;
 import com.example.demo.repository.CategoryRepository;
+import com.example.demo.repository.ContactsRepository;
 import com.example.demo.repository.ResumeRepository;
 import com.example.demo.repository.SpecialistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +21,8 @@ public class ContactsService {
     private final ResumeRepository resumeRepository;
     private final CategoryRepository categoryRepository;
     private final SpecialistService specialistService;
+    private final ContactsRepository contactsRepository;
+    private final UserService userService;
 
     public List<ContactsDto> getAll() {
         List<Category> categories = categoryRepository.findAll();
@@ -34,7 +34,7 @@ public class ContactsService {
             Set<SpecialistShortInfoDto> ss = new HashSet<>();
             Set<Long> specialistIds = new HashSet<>();
             for (Resume r : resumes) {
-                if(specialistService.isFullAuthority(r.getSpecialist())) {
+                if (specialistService.isFullAuthority(r.getSpecialist())) {
                     if (r.getCategory().getCategoryName().equalsIgnoreCase(c.getCategoryName()) && !specialistIds.contains(r.getSpecialist().getId())) {
                         ss.add(SpecialistShortInfoDto.builder()
                                 .id(r.getSpecialist().getId())
@@ -58,7 +58,7 @@ public class ContactsService {
         List<SpecialistShortInfoDto> list = new ArrayList<>();
         for (Resume r :
                 resumes) {
-            if(specialistService.isFullAuthority(r.getSpecialist())) {
+            if (specialistService.isFullAuthority(r.getSpecialist())) {
                 list.add(SpecialistShortInfoDto.builder()
                         .id(r.getSpecialist().getId())
                         .name(r.getName())
@@ -71,7 +71,7 @@ public class ContactsService {
         }
         for (Specialist s :
                 specialists) {
-            if(specialistService.isFullAuthority(s)) {
+            if (specialistService.isFullAuthority(s)) {
                 String name = specialistService.findSpecialistName(s);
                 list.add(SpecialistShortInfoDto.builder()
                         .id(s.getId())
@@ -80,5 +80,57 @@ public class ContactsService {
             }
         }
         return list;
+    }
+
+    public List<String> getContactTypeList() {
+        List<String> list = ContactType.getValuesAsStrings();
+        return list;
+    }
+
+    public List<ContactInfoSubmitDto> getBusinessCard() {
+        User user = userService.getUserFromSecurityContextHolder();
+        if (user != null) {
+            List<Contacts> all = contactsRepository.findAllByUser(user);
+            List<ContactInfoSubmitDto> list = new ArrayList<>();
+            for (Contacts c : all) {
+                ContactType type = ContactType.getByEnumName(c.getContactType());
+                list.add(ContactInfoSubmitDto.builder()
+                        .contactType(type.getValue())
+                        .contactValue(c.getContactValue())
+                        .build());
+            }
+            return list;
+        }
+        return Collections.emptyList();
+    }
+
+    public void saveNewContactInfo(List<ContactInfoSubmitDto> contactInfoSubmitDto) {
+        User user = userService.getUserFromSecurityContextHolder();
+        if (user != null) {
+            for (ContactInfoSubmitDto c : contactInfoSubmitDto) {
+                ContactType type = ContactType.getByValue(c.getContactType());
+
+                contactsRepository.save(Contacts.builder()
+                        .user(user)
+                        .contactType(type.toString())
+                        .contactValue(c.getContactValue())
+                        .build());
+            }
+        }
+    }
+
+    public void deleteContactInfo(String contactType, String contactValue) {
+        User user = userService.getUserFromSecurityContextHolder();
+        if (user != null) {
+            ContactType cT = ContactType.getByValue(contactType);
+            List<Contacts> maybeContacts = contactsRepository.findAllByContactTypeAndContactValue(cT.toString(), contactValue);
+            if (!maybeContacts.isEmpty()) {
+                for (Contacts c : maybeContacts) {
+                    if (c.getUser().getId() == user.getId()) {
+                        contactsRepository.delete(c);
+                    }
+                }
+            }
+        }
     }
 }

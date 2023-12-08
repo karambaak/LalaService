@@ -28,20 +28,29 @@
             </div>
             <div class="personal-info col-6">
                 <#if user.userName?has_content>
-                    <p class="username">${user.userName}</p>
+                <p class="username">${user.userName}</p>
                 </#if>
-                <#if user.phoneNumber?has_content>
+                <#if businessCard??>
+                    <#if businessCard?has_content>
+                    <#list businessCard as it>
+                   <p> ${it.contactType} : ${it.contactValue}</p>
+                    </#list>
+                    </#if>
+                <#else>
+                    <#if user.phoneNumber?has_content>
                     <p>${user.phoneNumber}</p>
+                    </#if>
                 </#if>
+
                 <#if rating?has_content>
-                    <div class="rating">
-                        <span class="star fas fa-star"></span>
-                        <span class="star fas fa-star"></span>
-                        <span class="star fas fa-star"></span>
-                        <span class="star fas fa-star"></span>
-                        <span class="star fas fa-star"></span>
-                        <span class="rating-number" id="rating"><#if rating??>${rating}</#if></span>
-                    </div>
+                <div class="rating">
+                    <span class="star fas fa-star"></span>
+                    <span class="star fas fa-star"></span>
+                    <span class="star fas fa-star"></span>
+                    <span class="star fas fa-star"></span>
+                    <span class="star fas fa-star"></span>
+                    <span class="rating-number" id="rating"><#if rating??>${rating}</#if></span>
+                </div>
                 </#if>
             </div>
         </div>
@@ -175,6 +184,7 @@
                 <ul>
                     <li><a href="profile/edit">Редактировать профиль</a></li>
                     <li><a href="/favourites">Посмотреть избранные</a></li>
+                    <li><a href="/profile/add_contacts">Редактировать визитку</a></li>
                     <li><a href="/logout">Выйти из аккаунта</a></li>
                     <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                            value="${(_csrf.token)!'--no-token--'}"/>
