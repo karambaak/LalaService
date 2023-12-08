@@ -488,11 +488,17 @@ public class UserService {
     public ResponseEntity<?> blockOrUnBlockUserByUserId(Long userId) {
         Optional<User> user = repository.findById(userId);
         if (user.isEmpty()) {
-            return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Not found", HttpStatus.NOT_FOUND);
         }
         User changedUser = user.get();
         changedUser.setEnabled(!user.get().isEnabled());
         repository.saveAndFlush(changedUser);
-        return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.OK);
+        if (changedUser.isEnabled()) {
+            log.info("User un blocker" + changedUser.getPhoneNumber());
+            return new ResponseEntity<>("Un blocked", HttpStatus.OK);
+        } else {
+            log.info("User blocker" + changedUser.getPhoneNumber());
+            return new ResponseEntity<>("Blocked", HttpStatus.OK);
+        }
     }
 }
