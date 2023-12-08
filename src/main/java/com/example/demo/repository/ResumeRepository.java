@@ -35,7 +35,7 @@ public interface ResumeRepository extends JpaRepository<Resume, Long> {
             select exists(
             select *
             from resumes
-            where specialist_id = :id and id = :resumeid and specialist_id in (SELECT specialists.id
+            where specialist_id = :specialistId and id = :resumeId and specialist_id in (SELECT specialists.id
                                     from specialists
                                     where user_id in (select users.id
                                                       FROM users
