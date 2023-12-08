@@ -37,7 +37,7 @@ public class AuthUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User userEntity = userRepository.findByPhoneNumber(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return new org.springframework.security.core.userdetails.User(userEntity.getPhoneNumber(), userEntity.getPassword(), userEntity.getAuthorities());
+        return new org.springframework.security.core.userdetails.User(userEntity.getPhoneNumber(), userEntity.getPassword(), userEntity.isEnabled(), true, true, true, userEntity.getAuthorities());
     }
 
 
