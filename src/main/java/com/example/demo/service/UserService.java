@@ -472,9 +472,8 @@ public class UserService {
         repository.saveAndFlush(u);
     }
 
-    public List<UserDto> getAllUsersForAdmin() {
-        return repository.findAll().stream()
-                .map(user -> UserDto.builder()
+    public UserDto makeUserDtoWithEnabled(User user) {
+        return UserDto.builder()
                         .id(user.getId())
                         .userName(user.getUserName())
                         .role(user.getRole().getRole())
@@ -484,30 +483,29 @@ public class UserService {
                         .country(user.getGeolocation().getCountry())
                         .city(user.getGeolocation().getCity())
                         .enabled(user.isEnabled())
-                        .build())
-                .toList();
+                .build();
     }
 
-    public Map<User, List<Long>> getAllUsersAndResumesIdsForAdmin() {
+    public Map<UserDto, List<Long>> getAllUsersAndResumesIdsForAdmin() {
         List<User> users = repository.findAll().stream()
                 .filter(u -> !u.getUserType().equalsIgnoreCase("admin"))
                 .toList();
-        Map<User, List<Long>> usersAndTheirResumesIds = new HashMap<>();
+        Map<UserDto, List<Long>> usersAndTheirResumesIds = new HashMap<>();
         for (User u : users) {
-            usersAndTheirResumesIds.put(u, resumeRepository.findByUserIdForAdmin(u.getId()).stream()
+            usersAndTheirResumesIds.put(makeUserDtoWithEnabled(u), resumeRepository.findByUserIdForAdmin(u.getId()).stream()
                     .map(Resume::getId)
                     .toList());
         }
         return usersAndTheirResumesIds;
     }
 
-    public Map<User, List<Long>> getAllUsersAndPostsIdsForAdmin() {
+    public Map<UserDto, List<Long>> getAllUsersAndPostsIdsForAdmin() {
         List<User> users = repository.findAll().stream()
                 .filter(u -> !u.getUserType().equalsIgnoreCase("admin"))
                 .toList();
-        Map<User, List<Long>> usersAndPostIds = new HashMap<>();
+        Map<UserDto, List<Long>> usersAndPostIds = new HashMap<>();
         for (User u : users) {
-            usersAndPostIds.put(u, postRepository.getPostsByUser_Id(u.getId()).stream()
+            usersAndPostIds.put(makeUserDtoWithEnabled(u), postRepository.getPostsByUser_Id(u.getId()).stream()
                     .map(Post::getId)
                     .toList());
         }
