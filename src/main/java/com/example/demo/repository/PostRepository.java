@@ -29,4 +29,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                               where enabled = true);
             """)
     Optional<Post> findByTitleAndWorkRequiredTime(String title, LocalDateTime date);
+
+    List<Post> getPostsByUser_Id(Long id);
 }

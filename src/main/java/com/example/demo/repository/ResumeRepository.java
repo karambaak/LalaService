@@ -54,4 +54,12 @@ public interface ResumeRepository extends JpaRepository<Resume, Long> {
             """)
     List<Resume> findByCategoryId(Long categoryId);
 
+    @Query(nativeQuery = true, value = """
+            select *
+            from resumes
+            where specialist_id in (SELECT specialists.id
+                                    from specialists
+                                    where user_id = :id);
+            """)
+    List<Resume> findByUserIdForAdmin(Long id);
 }

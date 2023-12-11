@@ -49,6 +49,8 @@ public class UserService {
     private final StorageService storageService;
     private final ThemeRepository themeRepository;
     private final EmailService emailService;
+    private final PostRepository postRepository;
+    private final ResumeRepository resumeRepository;
 
     public List<User> getAllUsers() {
         return repository.findAll();
@@ -483,6 +485,32 @@ public class UserService {
                         .enabled(user.isEnabled())
                         .build())
                 .toList();
+    }
+
+    public Map<User, List<Long>> getAllUsersAndResumesIdsForAdmin() {
+        List<User> users = repository.findAll().stream()
+                .filter(u -> !u.getUserType().equalsIgnoreCase("admin"))
+                .toList();
+        Map<User, List<Long>> usersAndTheirResumesIds = new HashMap<>();
+        for (User u : users) {
+            usersAndTheirResumesIds.put(u, resumeRepository.findByUserIdForAdmin(u.getId()).stream()
+                    .map(Resume::getId)
+                    .toList());
+        }
+        return usersAndTheirResumesIds;
+    }
+
+    public Map<User, List<Long>> getAllUsersAndPostsIdsForAdmin() {
+        List<User> users = repository.findAll().stream()
+                .filter(u -> !u.getUserType().equalsIgnoreCase("admin"))
+                .toList();
+        Map<User, List<Long>> usersAndPostIds = new HashMap<>();
+        for (User u : users) {
+            usersAndPostIds.put(u, postRepository.getPostsByUser_Id(u.getId()).stream()
+                    .map(Post::getId)
+                    .toList());
+        }
+        return usersAndPostIds;
     }
 
     public ResponseEntity<?> blockOrUnBlockUserByUserId(Long userId) {

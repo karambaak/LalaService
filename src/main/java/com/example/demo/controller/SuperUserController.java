@@ -1,14 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.UserDto;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/super")
@@ -18,8 +15,8 @@ public class SuperUserController {
 
     @GetMapping("/profiles")
     public String getUsersProfileForSuperUser(Model model) {
-        List<UserDto> users = userService.getAllUsersForAdmin();
-        model.addAttribute("users", users);
+        model.addAttribute("usersAndResumesId", userService.getAllUsersAndResumesIdsForAdmin());
+        model.addAttribute("usersAndPostsId", userService.getAllUsersAndPostsIdsForAdmin());
         return "";
     }
 }
