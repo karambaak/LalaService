@@ -28,7 +28,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.example.demo.utils.CountryCode.readCountryCodesFromFile;
 
 @Slf4j
 @Service
@@ -406,7 +405,9 @@ public class UserService {
     }
 
     public List<CountryCode> getCountryCodes() throws IOException {
-        return readCountryCodesFromFile();
+        List<CountryCode> list = new ArrayList<>();
+        list.add(new CountryCode(996, "\uD83C\uDDF0\uD83C\uDDEC", 9));
+        return list;
     }
 
     private boolean isValidPhoneNumber(Integer phoneNumberCode, String phoneNumber) throws IOException {
