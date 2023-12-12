@@ -73,7 +73,7 @@ public class SecurityConfig {
                         .requestMatchers("/favourites/**").hasAnyAuthority(SPECIALIST, CUSTOMER)
                         .requestMatchers("/contact/**").hasAnyAuthority(SPECIALIST, CUSTOMER)
                         .requestMatchers("/super/profiles").hasAuthority(ADMIN)
-                        .requestMatchers("api/super/**").hasAuthority(ADMIN)
+//                        .requestMatchers("api/super/**").hasAuthority(ADMIN)
                         .anyRequest().permitAll()
                 )
                 .rememberMe(customizer -> customizer

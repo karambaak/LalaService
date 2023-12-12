@@ -36,6 +36,7 @@ private final ContactsService contactsService;
     @Override
     public String profile(Authentication auth, Model model) {
         UserDto currentUser = userService.getUserByAuthentication(auth);
+        System.out.println("ROLE:"+currentUser.getRole());
 
         if (currentUser.getRole().equalsIgnoreCase("ROLE_SPECIALIST")) {
             Long specialistId = specialistRepository.findByUser_Id(currentUser.getId()).orElseThrow(() -> new NoSuchElementException("Specialist not found")).getId();
@@ -57,6 +58,7 @@ private final ContactsService contactsService;
 
         model.addAttribute("user", currentUser);
         model.addAttribute("businessCard", contactsService.getBusinessCard());
+        System.out.println("ROLE:"+currentUser.getRole());
         return "users/profile";
     }
 

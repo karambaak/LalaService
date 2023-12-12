@@ -17,6 +17,6 @@ public class SuperUserController {
     public String getUsersProfileForSuperUser(Model model) {
         model.addAttribute("usersAndResumesId", userService.getAllUsersAndResumesIdsForAdmin());
         model.addAttribute("usersAndPostsId", userService.getAllUsersAndPostsIdsForAdmin());
-        return "";
+        return "users/managment";
     }
 }
