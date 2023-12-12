@@ -42,6 +42,7 @@ public class MessageService {
         if (user != null) {
             List<MessageBundleDto> list = getMessages(user);
             list.addAll(getResponses(user));
+            list.sort(Comparator.comparing(MessageBundleDto::getLastMessageDateTime).reversed());
             log.info("Fetched {} messages for user {}", list.size(), user.getId());
             return list;
         }
