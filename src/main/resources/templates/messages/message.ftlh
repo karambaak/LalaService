@@ -171,9 +171,7 @@
         }
 
         .notification-card {
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.2, 0.2);
+            border: 1px solid #99999986;
             margin: 10px;
             padding: 20px 30px;
             overflow: hidden;
