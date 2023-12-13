@@ -491,6 +491,7 @@ public class UserService {
                 .filter(u -> !u.getUserType().equalsIgnoreCase("admin"))
                 .toList();
         Map<UserDto, List<Long>> usersAndTheirResumesIds = new HashMap<>();
+
         for (User u : users) {
             usersAndTheirResumesIds.put(makeUserDtoWithEnabled(u), resumeRepository.findByUserIdForAdmin(u.getId()).stream()
                     .map(Resume::getId)

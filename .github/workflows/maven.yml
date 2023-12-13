@@ -9,9 +9,9 @@
 name: LalaService project CI with Maven
 
 on:
-  #  workflow_dispatch
-  push:
-    branches: [ "master" ]
+  workflow_dispatch
+#  push:
+#    branches: [ "master" ]
 #  pull_request:
 #    branches: [ "master" ]
 
