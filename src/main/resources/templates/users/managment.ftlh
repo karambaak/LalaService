@@ -16,12 +16,10 @@
             border-radius: 8px;
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease-in-out;
+
         }
 
-        .user-card:hover {
-            transform: translateY(-5px);
-        }
+
 
         .btn-group {
             margin-top: 15px;
@@ -67,6 +65,7 @@
 <body>
 
 <div class="container">
+    <div><a href="/logout">LOGOUT</a> </div>
     <h1 class="text-center mt-4 mb-5">Управление пользователями</h1>
 
 
@@ -86,8 +85,7 @@
 
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
 
 
 <script>

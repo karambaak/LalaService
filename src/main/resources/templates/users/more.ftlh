@@ -23,7 +23,8 @@
         .resume-card:hover {
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
-        #cart{
+
+        #cart {
             height: 220px;
         }
     </style>
@@ -42,24 +43,43 @@
     </div>
 
     <#if resumes??>
-    <div class="mt-5">
-        <h2>Резюме</h2>
+        <div class="mt-5">
+            <h2>Резюме</h2>
 
-        <div class="row row-cols-1 row-cols-md-2">
-            <#list resumes as resume>
-            <div class="col mb-4">
-                <div class="card resume-card"  id="cart">
-                    <div class="card-body">
-                        <h5 class="card-title">${resume.header}</h5>
-                        <p class="card-text">Description: ${resume.resumeDescription}</p>
-                        <p class="card-text">Date: ${resume.timeOfResume}</p>
+            <div class="row row-cols-1 row-cols-md-2">
+                <#list resumes as resume>
+                    <div class="col mb-4">
+                        <div class="card resume-card" id="cart">
+                            <div class="card-body">
+                                <h5 class="card-title">${resume.header}</h5>
+                                <p class="card-text">Description: ${resume.resumeDescription}</p>
+                                <p class="card-text">Date: ${resume.timeOfResume}</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </#list>
             </div>
-            </#list>
-        </div>
 
-    </div>
+        </div>
+    </#if>
+
+    <#if posts??>
+        <div class="mt-5">
+            <h2>Посты</h2>
+            <div class="row row-cols-1 row-cols-md-2">
+                <#list posts as post>
+                    <div class="col mb-4">
+                        <div class="card resume-card" id="cart">
+                            <div class="card-body">
+                                <h5 class="card-title">${post.title}</h5>
+                                <p class="card-text">Description: ${post.description}</p>
+                                <p class="card-text">Date: ${post.publishedDate}</p>
+                            </div>
+                        </div>
+                    </div>
+                </#list>
+            </div>
+        </div>
     </#if>
 </div>
 

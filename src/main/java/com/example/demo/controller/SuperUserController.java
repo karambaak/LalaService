@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.UserDto;
+import com.example.demo.service.PostService;
 import com.example.demo.service.ResumeService;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SuperUserController {
     private final UserService userService;
     private final ResumeService resumeService;
+    private final PostService postService;
 
     @GetMapping("/profiles")
     public String getUsersProfileForSuperUser(Model model) {
@@ -28,8 +30,12 @@ public class SuperUserController {
     @GetMapping("/info/{userId}")
     public String getUserInfoForSuperUser(Model model, @PathVariable long userId) {
         model.addAttribute("user", userService.getUserById(userId));
-        if(userService.getUserById(userId).getRole().equals("ROLE_SPECIALIST")){
-            model.addAttribute("resumes",resumeService.getResumesByUserId(userId));
+        if (userService.getUserById(userId).getRole().equals("ROLE_SPECIALIST")) {
+            model.addAttribute("resumes", resumeService.getResumesByUserId(userId));
+        }
+        if (userService.getUserById(userId).getRole().equals("ROLE_CUSTOMER")) {
+            model.addAttribute("posts", postService.getPostByUserId(userId));
+
         }
         return "users/more";
     }
