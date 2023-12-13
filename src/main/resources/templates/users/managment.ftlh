@@ -143,7 +143,7 @@
                 const detailLink = document.createElement('a');
                 detailLink.classList.add('btn', 'btn-primary', 'mr-2');
                 detailLink.textContent = 'Подробнее';
-                detailLink.href = `/super/profile/`+user.id;
+                detailLink.href = `/super/info/`+user.id;
 
                 blockButton.addEventListener('click', async (event) => {
                     const userId = event.target.dataset.userid;

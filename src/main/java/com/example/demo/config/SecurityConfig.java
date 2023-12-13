@@ -80,7 +80,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/notifications").hasAnyAuthority(SPECIALIST, CUSTOMER)
                         .requestMatchers("/favourites/**").hasAnyAuthority(SPECIALIST, CUSTOMER)
                         .requestMatchers("/contact/**").hasAnyAuthority(SPECIALIST, CUSTOMER)
-                        .requestMatchers("/super/profiles").hasAuthority(ADMIN)
+                        .requestMatchers("/super/**").hasAuthority(ADMIN)
                        .requestMatchers("api/super/**").hasAuthority(ADMIN)
                         .anyRequest().permitAll()
                 )

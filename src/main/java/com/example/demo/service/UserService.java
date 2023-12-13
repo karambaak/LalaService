@@ -531,4 +531,8 @@ public class UserService {
             return new ResponseEntity<>("Blocked", HttpStatus.OK);
         }
     }
+    public UserDto getUserById(long id){
+        return makeUserDto(repository.findById(id).orElseThrow());
+    }
+
 }
