@@ -116,6 +116,7 @@ public class UserService {
         if (userRole.equalsIgnoreCase("role_customer")) {
             role = roleRepository.findByRole("ROLE_CUSTOMER");
         }
+
         if (role == null) {
             log.warn("Invalid role name: {}", userRole);
             throw new IllegalArgumentException("Invalid role name: " + userRole);
@@ -197,6 +198,7 @@ public class UserService {
             if (isValidEmail(user.getUsername())) {
                 return makeUserDto(repository.findByEmail(user.getUsername()).orElseThrow(() -> new NoSuchElementException("Auth is null, user email not found")));
             } else {
+                System.out.println("Rep role:"+repository.findByPhoneNumber(user.getUsername()).orElseThrow(() -> new NoSuchElementException("Auth is null, user phone number not found")).getRole().getRole());
                 return makeUserDto(repository.findByPhoneNumber(user.getUsername()).orElseThrow(() -> new NoSuchElementException("Auth is null, user phone number not found")));
             }
         }
@@ -529,4 +531,8 @@ public class UserService {
             return new ResponseEntity<>("Blocked", HttpStatus.OK);
         }
     }
+    public UserDto getUserById(long id){
+        return makeUserDto(repository.findById(id).orElseThrow());
+    }
+
 }

@@ -21,8 +21,10 @@
                         </a>
                         <div class="resume-buttons">
                             <a class="view-button" href="/resume/${resume.id}">Больше узнать</a>
+
                             <meta name="_csrf_header" content="${_csrf.headerName}"/>
                             <meta name="_csrf_token" content="${_csrf.token}"/>
+
                             <button class="favorite-button" id="favoriteButton"
                                     data-specialist-id="${resume.specialistId}">
 
