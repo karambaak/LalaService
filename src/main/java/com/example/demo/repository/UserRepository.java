@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.entities.Geolocation;
+import com.example.demo.entities.Resume;
 import com.example.demo.entities.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,4 +27,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findUserByEmail(String email);
 
     Optional<User> findUserByResetPasswordToken(String token);
+
 }
