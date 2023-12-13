@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Управление пользователями</title>
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        /* Custom Styles */
         body {
             background-color: #f8f9fa;
         }
@@ -32,6 +30,38 @@
         .sort-dropdown {
             margin-bottom: 20px;
         }
+
+        #unblock {
+            color: green;
+            border: solid 1px green;
+            background-color: white;
+            border-radius: 3px;
+        }
+        #unblock:hover {
+            color: green;
+            background-color: lightgray;
+            border-color: green;
+        }
+        .notification {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            z-index: 1000;
+            margin: 20px;
+            border-radius: 11px;
+            display: none;
+        }
+
+        .notification.show {
+            display: block;
+            animation: fadeOut 4s ease-in-out;
+        }
+
     </style>
 </head>
 <body>
@@ -43,36 +73,117 @@
     <div class="row">
         <div class="col-md-8 offset-md-2">
 
-            <#list usersAndResumesId? keys as userg>
-                <div class="user-card">
-                    <h3>${userg.userName}</h3>
-                    <p>Email:${userg.email} </p>
-                    <p>Роль: ${userg.role}</p>
-                    <div class="btn-group" role="group" aria-label="Действия с пользователем">
-                        <button type="button" class="btn btn-danger mr-2">Заблокировать</button>
-                        <button type="button" class="btn btn-primary mr-2">Подробнее</button>
-                    </div>
-                </div>
-            </#list>
+            <meta name="_csrf_header" content="${_csrf.headerName}"/>
+            <meta name="_csrf_token" content="${_csrf.token}"/>
 
+            <div id="userList">
+
+            </div>
 
         </div>
     </div>
+
+
 </div>
 
-<!-- Bootstrap JS and dependencies -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-<!-- Скрипт для обработки выбора параметра сортировки (пока заглушка) -->
+
 <script>
-    $(document).ready(function () {
-        $('.dropdown-item').on('click', function () {
-            var selectedSort = $(this).text();
-            alert('Выбрана сортировка по: ' + selectedSort);
-            // Добавьте здесь логику сортировки по выбранному параметру
-        });
+    document.addEventListener("DOMContentLoaded", () => {
+        async function fetchAndDisplayUsers() {
+            try {
+                const response = await fetch('/api/super/users');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                const usersData = await response.json();
+                displayUsers(usersData);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        }
+
+        function displayUsers(usersData) {
+            const userListContainer = document.getElementById('userList');
+            userListContainer.innerHTML = '';
+
+            usersData.forEach(user => {
+                const userCard = document.createElement('div');
+                userCard.classList.add('user-card');
+
+                const userNameElement = document.createElement('h3');
+                userNameElement.textContent = user.userName;
+
+                const emailElement = document.createElement('p');
+                emailElement.textContent = `Email:` + user.email;
+
+                const roleElement = document.createElement('p');
+                roleElement.textContent = `Роль: ` + user.role;
+
+                const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+                const csrfToken = document.querySelector('meta[name="_csrf_token"]').getAttribute('content');
+
+                const buttonGroup = document.createElement('div');
+                buttonGroup.classList.add('btn-group');
+                buttonGroup.setAttribute('role', 'group');
+                buttonGroup.setAttribute('aria-label', 'Действия с пользователем');
+
+                const blockButton = document.createElement('button');
+                blockButton.classList.add('btn', 'btn-danger', 'mr-2', 'block-btn');
+                blockButton.setAttribute('data-userid', user.id);
+                if (user.enabled) {
+                    blockButton.textContent = 'Заблокировать';
+                } else {
+                    blockButton.id = 'unblock';
+                    blockButton.textContent = 'Разблокировать';
+                }
+
+                const detailLink = document.createElement('a');
+                detailLink.classList.add('btn', 'btn-primary', 'mr-2');
+                detailLink.textContent = 'Подробнее';
+                detailLink.href = `/super/profile/`+user.id;
+
+                blockButton.addEventListener('click', async (event) => {
+                    const userId = event.target.dataset.userid;
+
+                    try {
+                        const response = await fetch(`/api/super/block/` + userId, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                [csrfHeader]: csrfToken,
+                            },
+                        });
+
+                        if (response.status === 200) {
+                            console.log('SUCCESS!');
+
+                        } else {
+                            console.error('Failed to update favorites.');
+                        }
+                    } catch (error) {
+                        console.error('Error in updating favorites:', error);
+                    }
+                });
+
+                buttonGroup.appendChild(blockButton);
+                buttonGroup.appendChild(detailLink)
+                userCard.append(userNameElement, emailElement, roleElement, buttonGroup);
+                userListContainer.appendChild(userCard);
+            });
+        }
+
+        fetchAndDisplayUsers();
+
+        setInterval(fetchAndDisplayUsers, 1000);
+
+
     });
+
 </script>
+
+
 </body>
 </html>

@@ -1,12 +1,16 @@
 package com.example.demo.controller;
 
+
+import com.example.demo.dto.UserDto;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/super")
@@ -14,9 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class SuperUserRestController {
     private final UserService userService;
 
-    @GetMapping("/block/{userId}")
+    @PostMapping("/block/{userId}")
     public ResponseEntity<?> blockUserById(@PathVariable Long userId) {
         return userService.blockOrUnBlockUserByUserId(userId);
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity< List<UserDto>> getAllUsers() {
+        Map<UserDto, List<Long>> users = userService.getAllUsersAndResumesIdsForAdmin();
+        List<UserDto> userDtoList = new ArrayList<>(users.keySet());
+        userDtoList.sort(Comparator.comparing(UserDto::getId));
+        return ResponseEntity.ok(userDtoList);
     }
 
 }
