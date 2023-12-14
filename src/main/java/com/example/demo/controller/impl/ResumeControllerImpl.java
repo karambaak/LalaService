@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Component
 @RequiredArgsConstructor
@@ -49,5 +50,15 @@ public class ResumeControllerImpl implements ResumeController {
         }
         model.addAttribute("resume", service.getResumeById(resumeId));
         return "resumes/more";
+    }
+    @Override
+    public String upResume(@PathVariable Long id) {
+        service.upResume(id);
+        return "redirect:/profile";
+    }
+    @Override
+    public String delete(@PathVariable Long id) {
+        service.deleteResume(id);
+        return "redirect:/profile";
     }
 }

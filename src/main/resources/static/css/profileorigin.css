@@ -152,8 +152,33 @@
     padding: 5px 10px;
     margin: 10px 0px;
     box-shadow: 0px 5px 15px rgba(0.0, 0.0, 0.1, 0.1);
+    display: flex;
+}
+.buttons-resume {
+    margin-left: auto;
+
 }
 
+.resume-button {
+    background-color: #7F88FF;
+    color: white;
+    width: 100px;
+    margin-right: 50px;
+    margin-top: 20px;
+}
+.resume-button:hover {
+    background-color: #ccc;
+}
+@media screen and (max-width: 769px) {
+    .buttons-resume {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .resume-button {
+        margin-right: 20px;
+    }
+}
 .resume p{
     margin: 0rem;
 }

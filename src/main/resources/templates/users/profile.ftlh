@@ -84,9 +84,13 @@
                                             <p class="resume-category">Категория: ${resume.category}</p>
                                         </#if>
                                         <#if resume.timeOfResume?has_content>
-                                            <p class="resume-date">Дата создания: ${resume.timeOfResume}</p>
+                                            <p class="resume-date">Дата публикации: ${resume.timeOfResume}</p>
                                         </#if>
                                     </a>
+                                    <div class="buttons-resume">
+                                        <a href="/resume/up/${resume.id}"><button class="btn resume-button">Ап</button></a>
+                                        <a href="/resume/delete/${resume.id}"> <button class="btn resume-button">Удалить</button></a>
+                                    </div>
                                 </div>
                             </#list>
                         <#else>

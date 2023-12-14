@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -81,17 +82,23 @@ public class ResumeService {
         return true;
     }
 
-    public void deleteResume(long specialistId, long resumeId) {
-        if (resumeRepository.findResumeBySpecialistIdAndId(specialistId, resumeId)) {
-            resumeRepository.deleteById(resumeId);
-        } else {
-            log.warn("Value does not exist or you do not have access to this value");
-            throw new IllegalArgumentException("Value does not exist or you do not have access to this value");
+    public void deleteResume(long resumeId) {
+        var maybeResume = resumeRepository.findById(resumeId);
+        if(maybeResume.isPresent()) {
+            Resume r = maybeResume.get();
+            User user = userService.getUserFromSecurityContextHolder();
+            Specialist s = r.getSpecialist();
+            if(user != null && user.getId() == s.getUser().getId()) {
+                resumeRepository.delete(r);
+            }
+        }else {
+            log.warn("Resume does not exist or you do not have access to this value");
         }
     }
 
     public List<ResumeDto> getResumesByCategory(Long categoryId) {
         List<Resume> resumes = resumeRepository.findByCategoryId(categoryId);
+        resumes.sort(Comparator.comparing(Resume::getTimeOfResume).reversed());
         return resumes.stream().map(this::makeDto).toList();
     }
 
@@ -134,5 +141,18 @@ public class ResumeService {
     public ResumeDto getResumeById(Long resumeId) {
         Resume resume = resumeRepository.findById(resumeId).orElseThrow(() -> new NoSuchElementException("resume not found"));
         return makeDto(resume);
+    }
+
+    public void upResume(Long id) {
+        var maybeResume = resumeRepository.findById(id);
+        if(maybeResume.isPresent()) {
+            Resume r = maybeResume.get();
+            User user = userService.getUserFromSecurityContextHolder();
+            Specialist s = r.getSpecialist();
+            if(user != null && user.getId() == s.getUser().getId()) {
+                r.setTimeOfResume(Timestamp.valueOf(LocalDateTime.now()));
+                resumeRepository.save(r);
+            }
+        }
     }
 }
