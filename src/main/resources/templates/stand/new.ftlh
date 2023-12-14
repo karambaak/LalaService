@@ -4,12 +4,11 @@
 <style>
     .content {
         max-width: 600px;
-        margin: 0 auto;
-        margin-top: 100px;
         padding: 20px;
         background-color: #fff;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        margin: 100px 20px 70px;
     }
 .dark-theme .content {
     border: 1px solid #555;
@@ -68,7 +67,14 @@
         text-decoration: none;
         margin-right: 20px;
     }
+
+    .back-button{
+        margin: 15px;
+    }
 </style>
+    <a href="javascript:history.go(-1);" class="back-button">
+        <i class="fas fa-arrow-left"></i>Назад
+    </a>
     <div class="content">
         <h2 class="text-center">Создать новый запрос на стенде</h2>
         <form action="/stand/new" method="post">
