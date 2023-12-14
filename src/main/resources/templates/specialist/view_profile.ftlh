@@ -1,5 +1,6 @@
 <#import "../layout.ftlh" as main>
 <@main.layout>
+<title>Профиль специалиста</title>
 <link rel="stylesheet" href="/static/css/profile.css">
 <meta name="_csrf_header" content="${_csrf.headerName}"/>
 <meta name="_csrf_token" content="${_csrf.token}"/>

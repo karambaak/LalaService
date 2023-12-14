@@ -1,5 +1,6 @@
 <#import '../layout.ftlh' as main>
 <@main.layout>
+    <title>Создать новый запрос на стенд</title>
 <style>
     .content {
         max-width: 600px;

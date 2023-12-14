@@ -1,5 +1,6 @@
 <#import "../layout.ftlh" as main>
 <@main.layout>
+    <title>Резюме</title>
     <link rel="stylesheet" href="../../static/css/resumes.css">
     <link rel="stylesheet" href="../../static/css/layout.css">
     <div id="content" class="content">

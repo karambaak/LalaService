@@ -1,5 +1,6 @@
 <#import "../layout.ftlh" as main>
 <@main.layout>
+    <title>Создать новое резюме</title>
     <style>
         .content {
             max-width: 600px;

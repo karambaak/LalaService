@@ -1,5 +1,6 @@
 <#import "../layout.ftlh" as main>
 <@main.layout>
+    <title>Создать новое портфолио</title>
     <div class="container">
     <h1 class="text-center">Создать портфолио</h1>
     <div class="bordered">

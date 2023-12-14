@@ -1,5 +1,6 @@
 <#import '../layout.ftlh' as main>
 <@main.layout>
+<title>Отзывы</title>
 <style>
     body {
         font-family: Arial, sans-serif;
