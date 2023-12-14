@@ -421,4 +421,9 @@ public class PostService {
         List<Notification> notifications = notificationRepository.findByNotificationTextContaining(keyword);
         notificationRepository.deleteAll(notifications);
     }
+
+    public List<PostDto> getPostByUserId(long userId){
+        List<Post> posts=postRepository.getPostsByUser_Id(userId);
+        return posts.stream().map(this::makeDtoFromPost).toList();
+    }
 }

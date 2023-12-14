@@ -38,7 +38,15 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage(LOGIN)
                         .loginProcessingUrl(LOGIN)
-                        .defaultSuccessUrl("/profile")
+                        //.defaultSuccessUrl("/profile")
+                        .successHandler((request, response, authentication) -> {
+                            if (authentication.getAuthorities().stream()
+                                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+                                response.sendRedirect("/super/profiles");
+                            } else {
+                                response.sendRedirect("/profile");
+                            }
+                        })
                         .failureUrl("/auth/login?error=true")
                         .permitAll())
                 .logout(logout -> logout
@@ -72,8 +80,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/notifications").hasAnyAuthority(SPECIALIST, CUSTOMER)
                         .requestMatchers("/favourites/**").hasAnyAuthority(SPECIALIST, CUSTOMER)
                         .requestMatchers("/contact/**").hasAnyAuthority(SPECIALIST, CUSTOMER)
-                        .requestMatchers("/super/profiles").hasAuthority(ADMIN)
-                        .requestMatchers("api/super/**").hasAuthority(ADMIN)
+                        .requestMatchers("/super/**").hasAuthority(ADMIN)
+                       .requestMatchers("api/super/**").hasAuthority(ADMIN)
                         .anyRequest().permitAll()
                 )
                 .rememberMe(customizer -> customizer

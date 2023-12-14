@@ -37,6 +37,7 @@ private final ContactsService contactsService;
     public String profile(Authentication auth, Model model) {
         UserDto currentUser = userService.getUserByAuthentication(auth);
 
+
         if (currentUser.getRole().equalsIgnoreCase("ROLE_SPECIALIST")) {
             Long specialistId = specialistRepository.findByUser_Id(currentUser.getId()).orElseThrow(() -> new NoSuchElementException("Specialist not found")).getId();
             String qrCodeText = "http://localhost:8089/profile" + specialistId;
@@ -57,6 +58,7 @@ private final ContactsService contactsService;
 
         model.addAttribute("user", currentUser);
         model.addAttribute("businessCard", contactsService.getBusinessCard());
+
         return "users/profile";
     }
 
