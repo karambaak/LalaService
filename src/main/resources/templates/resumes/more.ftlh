@@ -1,5 +1,7 @@
 <#import '../layout.ftlh' as main>
 <@main.layout>
+    <title>Резюме</title>
+
     <link rel="stylesheet" href="../../static/css/resume_more.css">
     <div class="header shadow">
         <a href="javascript:history.go(-1);" class="back-button">

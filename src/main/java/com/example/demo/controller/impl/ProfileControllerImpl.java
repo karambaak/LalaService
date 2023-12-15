@@ -74,6 +74,7 @@ private final ContactsService contactsService;
             model.addAttribute("resumes", resumeService.getResumesByUserId(user.getId()));
             model.addAttribute("rating", ratingService.getSpecialistRatingById(user.getSpecialist().getId()));
             model.addAttribute("specialistId", user.getSpecialist().getId());
+            model.addAttribute("portfolios", portfolioService.getPortfolioListBySpecialistId(user.getSpecialist().getId()));
         }
         if (userRole.equalsIgnoreCase("ROLE_CUSTOMER")) {
             model.addAttribute("stands", postService.getCustomerPostDtos(user.getId()));

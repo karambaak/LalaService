@@ -1,5 +1,6 @@
 <#import "../layout.ftlh" as main>
 <@main.layout>
+<title>Профиль специалиста</title>
 <link rel="stylesheet" href="/static/css/profile.css">
 <meta name="_csrf_header" content="${_csrf.headerName}"/>
 <meta name="_csrf_token" content="${_csrf.token}"/>
@@ -52,7 +53,7 @@
             </div>
         </div>
     </div>
-    <button class="leave-review-btn"  id="openModalRating" onclick="openModalRating()">Оставить отзыв</button>
+    <button class="leave-review-btn" id="openModalRating" onclick="openModalRating()">Оставить отзыв</button>
 
     <div>
         <div class="tabs">
@@ -88,10 +89,20 @@
                 <#if portfolios?has_content>
                     <#list portfolios as portfolio>
                         <div class="portfolio">
-                            <img src="${portfolio.photo}" alt class="portfolio-img">
-                            <div>
-                                <p>${portfolio.name}</p>
-                                <p>Дата публикации: ${portfolio.createdDate}</p>
+                            <div class="cover-photo">
+                                <#if portfolio.coverPhotoLink??>
+                                    <img src="${portfolio.coverPhotoLink}" alt class="portfolio-img">
+                                <#else>
+                                    <img src="/static/noPhoto.png" alt class="portfolio-img">
+                                </#if>
+                            </div>
+                            <div class="portfolio-details">
+                                <#if portfolio.title??>
+                                    <p class="resume-name">${portfolio.title}</p>
+                                </#if>
+                                <#if portfolio.timeOfPortfolio??>
+                                    <p>Дата публикации ${portfolio.timeOfPortfolio}</p>
+                                </#if>
                             </div>
                         </div>
                     </#list>
@@ -120,52 +131,62 @@
                         <input type="hidden" id="specialistId" value="${specialistId}">
                         <!-- по умолчанию 0 -->
                         <input name="fst" value="0" type="radio"
-                               disabled checked />
+                               disabled checked/>
 
                         <!-- рейтинг 1 -->
                         <label for="fst-1">
                             <svg xmlns="http://www.w3.org/2000/svg"
-                                 viewBox="0 0 576 512"><path
-                                        d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" /></svg>
+                                 viewBox="0 0 576 512">
+                                <path
+                                        d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"/>
+                            </svg>
                         </label>
                         <input name="fst" id="fst-1" value="1"
-                               type="radio" />
+                               type="radio"/>
 
                         <!-- рейтинг 2 -->
                         <label for="fst-2">
                             <svg xmlns="http://www.w3.org/2000/svg"
-                                 viewBox="0 0 576 512"><path
-                                        d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" /></svg>
+                                 viewBox="0 0 576 512">
+                                <path
+                                        d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"/>
+                            </svg>
                         </label>
                         <input name="fst" id="fst-2" value="2"
-                               type="radio" />
+                               type="radio"/>
 
                         <!-- рейтинг 3 -->
                         <label for="fst-3">
                             <svg xmlns="http://www.w3.org/2000/svg"
-                                 viewBox="0 0 576 512"><path
-                                        d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" /></svg>
+                                 viewBox="0 0 576 512">
+                                <path
+                                        d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"/>
+                            </svg>
                         </label>
                         <input name="fst" id="fst-3" value="3"
-                               type="radio" />
+                               type="radio"/>
 
                         <!-- рейтинг 4 -->
                         <label for="fst-4">
                             <svg xmlns="http://www.w3.org/2000/svg"
-                                 viewBox="0 0 576 512"><path
-                                        d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" /></svg>
+                                 viewBox="0 0 576 512">
+                                <path
+                                        d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"/>
+                            </svg>
                         </label>
                         <input name="fst" id="fst-4" value="4"
-                               type="radio" />
+                               type="radio"/>
 
                         <!-- рейтинг 5 -->
                         <label for="fst-5">
                             <svg xmlns="http://www.w3.org/2000/svg"
-                                 viewBox="0 0 576 512"><path
-                                        d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" /></svg>
+                                 viewBox="0 0 576 512">
+                                <path
+                                        d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"/>
+                            </svg>
                         </label>
                         <input name="fst" id="fst-5" value="5"
-                               type="radio" />
+                               type="radio"/>
                     </div>
                 </div>
                 <input type="text" placeholder="Оставьте отзыв"

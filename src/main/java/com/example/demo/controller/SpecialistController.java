@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.service.PortfolioService;
 import com.example.demo.service.RatingService;
 import com.example.demo.service.ResumeService;
 import com.example.demo.service.UserService;
@@ -17,6 +18,7 @@ public class SpecialistController {
     private final UserService userService;
     private final RatingService ratingService;
     private final ResumeService resumeService;
+    private final PortfolioService portfolioService;
 
     @GetMapping("/{specialistId}")
     public String viewSpecialistProfile(@PathVariable Long specialistId, Model model) {
@@ -24,6 +26,7 @@ public class SpecialistController {
         model.addAttribute("user", userService.getSpecialistUserById(specialistId));
         model.addAttribute("rating", ratingService.getSpecialistRatingById(specialistId));
         model.addAttribute("specialistId", specialistId);
+        model.addAttribute("portfolios", portfolioService.getPortfolioListBySpecialistId(specialistId));
 
         return "specialist/view_profile";
     }
