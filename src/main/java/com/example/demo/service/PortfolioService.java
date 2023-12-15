@@ -99,7 +99,7 @@ public class PortfolioService {
     }
 
     public List<PortfolioListDto> getPortfolioListBySpecialistId(Long specialistId) {
-        return portfolioRepository.findAllBySpecialist_Id(specialistId).stream()
+        List<PortfolioListDto> list = portfolioRepository.findAllBySpecialist_Id(specialistId).stream()
                 .map(e -> PortfolioListDto.builder()
                         .id(e.getId())
                         .timeOfPortfolio(e.getTimeOfPortfolio() != null ? Timestamp.valueOf(e.getTimeOfPortfolio()) : null)
@@ -107,6 +107,9 @@ public class PortfolioService {
                         .coverPhotoLink(getCoverPhotoLink(e.getId()))
                         .build())
                 .collect(Collectors.toList());
+
+        list.sort(Comparator.comparing(PortfolioListDto::getTimeOfPortfolio).reversed());
+        return list;
     }
 
 

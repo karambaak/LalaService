@@ -10,15 +10,12 @@ import com.example.demo.errors.exceptions.OnlyOneResumeInSameCategoryException;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ResumeRepository;
 import com.example.demo.repository.SpecialistRepository;
-import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -26,7 +23,6 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 @Service
 @Slf4j
@@ -36,6 +32,7 @@ public class ResumeService {
     private final SpecialistRepository specialistRepository;
     private final CategoryRepository categoryRepository;
     private final UserService userService;
+    private final UpdateCountsService updateCountsService;
 
     public Page<ResumeDto> getAllResumes(int start, int end) {
         Sort sort = Sort.by(Sort.Order.desc("timeOfResume"));
@@ -75,9 +72,10 @@ public class ResumeService {
         List<Resume> resumesBySpecialistId = resumeRepository.findAllBySpecialist_Id(resumeDto.getSpecialistId());
         return checkDuplicateCategoryResumes(resumeDto.getCategoryId(), resumesBySpecialistId);
     }
+
     public boolean checkDuplicateCategoryResumes(Long categoryId, List<Resume> resumes) {
-        for(Resume r: resumes) {
-            if(r.getCategory().getId().equals(categoryId)) {
+        for (Resume r : resumes) {
+            if (r.getCategory().getId().equals(categoryId)) {
                 return false;
             }
         }
@@ -86,14 +84,14 @@ public class ResumeService {
 
     public void deleteResume(long resumeId) {
         var maybeResume = resumeRepository.findById(resumeId);
-        if(maybeResume.isPresent()) {
+        if (maybeResume.isPresent()) {
             Resume r = maybeResume.get();
             User user = userService.getUserFromSecurityContextHolder();
             Specialist s = r.getSpecialist();
-            if(user != null && user.getId() == s.getUser().getId()) {
+            if (user != null && user.getId() == s.getUser().getId()) {
                 resumeRepository.delete(r);
             }
-        }else {
+        } else {
             log.warn("Resume does not exist or you do not have access to this value");
         }
     }
@@ -121,7 +119,7 @@ public class ResumeService {
                 () -> new NoSuchElementException("Specialist not found")
         );
         List<Resume> resumes = resumeRepository.findAllBySpecialist_Id(specialist.getId());
-
+resumes.sort(Comparator.comparing(Resume::getTimeOfResume).reversed());
         return resumes.stream().map(this::makeDto).toList();
     }
 
@@ -160,13 +158,16 @@ public class ResumeService {
 
     public void upResume(Long id) {
         var maybeResume = resumeRepository.findById(id);
-        if(maybeResume.isPresent()) {
+        if (maybeResume.isPresent()) {
             Resume r = maybeResume.get();
             User user = userService.getUserFromSecurityContextHolder();
             Specialist s = r.getSpecialist();
-            if(user != null && user.getId() == s.getUser().getId()) {
-                r.setTimeOfResume(Timestamp.valueOf(LocalDateTime.now()));
-                resumeRepository.save(r);
+            if (user != null && user.getId() == s.getUser().getId()) {
+
+                if(updateCountsService.saveUpdate(user)) {
+                    r.setTimeOfResume(Timestamp.valueOf(LocalDateTime.now()));
+                    resumeRepository.save(r);
+                }
             }
         }
     }
