@@ -56,8 +56,8 @@
                     <#if conversations?has_content>
                         <#list conversations as item>
                             <#assign varId = item.conversationId>
-                            <div class="message-card" href=""><a href="/profile/${item.userId}"
-                                                                 class="link-profile-stand">${item.username}</a>
+                            <div class="message-card"><a href="/profile/${item.userId}"
+                                                                 class="link-profile-stand">${item.userName}</a>
                                 <a class="stand-button chatb"
                                    href="/stand/request_detail/${item.conversationId}">Чат</a>
                                 <a class="stand-button selectb" href="/stand/select/${item.conversationId}">Выбрать</a>

@@ -19,9 +19,8 @@
 
     .container {
         max-width: 800px;
-        margin: 0 auto;
         padding: 10px;
-        margin-top: 50px;
+        margin: 50px auto 0;
     }
 
     .reviews {
@@ -31,7 +30,7 @@
     .review {
         background-color: white;
         border-radius: 10px;
-        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         padding: 15px;
         margin-bottom: 10px;
     }

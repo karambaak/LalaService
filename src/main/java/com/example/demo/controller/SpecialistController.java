@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.service.PortfolioService;
-import com.example.demo.service.RatingService;
-import com.example.demo.service.ResumeService;
-import com.example.demo.service.UserService;
+import com.example.demo.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +16,7 @@ public class SpecialistController {
     private final RatingService ratingService;
     private final ResumeService resumeService;
     private final PortfolioService portfolioService;
-
+private final ContactsService contactsService;
     @GetMapping("/{specialistId}")
     public String viewSpecialistProfile(@PathVariable Long specialistId, Model model) {
         model.addAttribute("resumes", resumeService.getResumesBySpecialistId(specialistId));
@@ -27,7 +24,7 @@ public class SpecialistController {
         model.addAttribute("rating", ratingService.getSpecialistRatingById(specialistId));
         model.addAttribute("specialistId", specialistId);
         model.addAttribute("portfolios", portfolioService.getPortfolioListBySpecialistId(specialistId));
-
+        model.addAttribute("businessCard", contactsService.getBusinessCardSpecialist(specialistId));
         return "specialist/view_profile";
     }
 }
