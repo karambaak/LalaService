@@ -5,6 +5,7 @@ import com.example.demo.controller.ResumeController;
 import com.example.demo.dto.ResumeDto;
 import com.example.demo.errors.exceptions.OnlyOneResumeInSameCategoryException;
 import com.example.demo.service.CategoryService;
+import com.example.demo.service.ContactsService;
 import com.example.demo.service.ResumeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class ResumeControllerImpl implements ResumeController {
     private final ResumeService service;
     private final CategoryService categoryService;
-
+private final ContactsService contactsService;
 
     @Override
     public String getResumesByCategory(Long categoryId, Model model) {
@@ -49,6 +50,7 @@ public class ResumeControllerImpl implements ResumeController {
             model.addAttribute("noUser","noUser");
         }
         model.addAttribute("resume", service.getResumeById(resumeId));
+        model.addAttribute("businessCard", contactsService.getBusinessCardResume(resumeId));
         return "resumes/more";
     }
     @Override

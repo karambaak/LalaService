@@ -4,13 +4,10 @@
     <style>
         .content {
             max-width: 600px;
-            margin: 0 auto;
-            margin-top: 100px;
             padding: 20px;
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin: 20px;
             margin-top: 20%;
         }
 

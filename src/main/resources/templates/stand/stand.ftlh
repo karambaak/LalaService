@@ -174,12 +174,10 @@
             margin-left: auto;
             font-size: 30px;
             color: #4b6ad0;
-            /* Unicode for square-plus icon */
         }
 
         .category.collapsed::after {
             content: "\f147";
-            /* Unicode for square-minus icon */
         }
 
         #content {
@@ -200,7 +198,7 @@
         }
 
         .response-link:hover {
-            color: #fff;
+            color: mediumpurple;
         }
 
         .tasks {
@@ -269,7 +267,6 @@
 
         .task::before {
             content: "\f11e";
-            /* Unicode for fa-circle-check */
             font-family: 'Font Awesome 5 Free';
             margin-right: 20px;
             font-size: 20px;

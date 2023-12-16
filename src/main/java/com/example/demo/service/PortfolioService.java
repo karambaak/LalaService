@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.PhotoDto;
 import com.example.demo.dto.PortfolioDto;
 import com.example.demo.dto.PortfolioListDto;
 import com.example.demo.entities.Photo;
@@ -106,9 +105,8 @@ public class PortfolioService {
                         .title(e.getTitle())
                         .coverPhotoLink(getCoverPhotoLink(e.getId()))
                         .build())
-                .collect(Collectors.toList());
+                .toList();
 
-        list.sort(Comparator.comparing(PortfolioListDto::getTimeOfPortfolio).reversed());
         return list;
     }
 

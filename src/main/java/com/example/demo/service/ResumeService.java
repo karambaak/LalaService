@@ -88,7 +88,7 @@ public class ResumeService {
             Resume r = maybeResume.get();
             User user = userService.getUserFromSecurityContextHolder();
             Specialist s = r.getSpecialist();
-            if (user != null && user.getId() == s.getUser().getId()) {
+            if (user != null && user.getId().equals(s.getUser().getId())) {
                 resumeRepository.delete(r);
             }
         } else {
@@ -162,7 +162,7 @@ resumes.sort(Comparator.comparing(Resume::getTimeOfResume).reversed());
             Resume r = maybeResume.get();
             User user = userService.getUserFromSecurityContextHolder();
             Specialist s = r.getSpecialist();
-            if (user != null && user.getId() == s.getUser().getId()) {
+            if (user != null && user.getId().equals(s.getUser().getId())) {
 
                 if(updateCountsService.saveUpdate(user)) {
                     r.setTimeOfResume(Timestamp.valueOf(LocalDateTime.now()));

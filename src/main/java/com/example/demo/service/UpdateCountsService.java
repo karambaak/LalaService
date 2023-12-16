@@ -73,7 +73,7 @@ public class UpdateCountsService {
                     .user(user)
                     .tariff(getFreeTariff())
                     .startPeriodTime(LocalDateTime.now())
-                    .endPeriodTime(LocalDateTime.of(3000, 12, 31, 00, 00))
+                    .endPeriodTime(LocalDateTime.of(3000, 12, 31, 0, 0))
                     .build());
 
         } else {
@@ -109,16 +109,14 @@ public class UpdateCountsService {
                 list.remove(s);
             }
         }
-        if (list.size() == 1) {
-            return list.get(0);
-        } else {
+        if (list.size() != 1) {
             for (SubscriptionsOnTariffs s : list) {
                 if (s.getTariff().getId() != 1L) {
                     return s;
                 }
             }
-            return list.get(0);
         }
+        return list.get(0);
     }
 
     private Tariff getFreeTariff() {
