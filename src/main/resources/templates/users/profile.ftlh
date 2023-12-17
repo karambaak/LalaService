@@ -5,7 +5,7 @@
 
     <title>Личный кабинет</title>
     <div id="content" class="content">
-        <a href="#" class="settings-link" id="openModal">
+        <a href="/profile/details" class="settings-link" id="">
             <i class="fas fa-cog"></i>
         </a>
 
@@ -32,48 +32,48 @@
                 <#if user.userName?has_content>
                     <p class="username text-center">${user.userName}</p>
                 </#if>
-                <#if businessCard??>
-                    <#if businessCard?has_content>
-                        <#list businessCard as it>
-                            <p class="margin-left-div">
-                                <#if it.contactType == "Telegram">
-                                    <span class="social-icon"><i class="fa-brands fa-telegram"
-                                                                 style="color: #0056d6;"></i></span>
-                                <#elseif it.contactType == "Instagram">
-                                    <span class="social-icon"><i class="fa-brands fa-instagram"
-                                                                 style="color: #ff40ff;"></i></span>
-                                <#elseif it.contactType == "WhatsApp">
-                                    <span class="social-icon"><i class="fa-brands fa-whatsapp"
-                                                                 style="color: #669c35;"></i></span>
-                                <#elseif it.contactType == "Facebook">
-                                    <span class="social-icon"><i class="fa-brands fa-facebook"
-                                                                 style="color: #0042aa;"></i></span>
-                                <#elseif it.contactType == "TikTok">
-                                    <span class="social-icon"><i class="fa-brands fa-tiktok"></i></span>
-                                <#elseif it.contactType == "LinkedIn">
-                                    <span class="social-icon"><i class="fa-brands fa-linkedin"
-                                                                 style="color: #0056d6;"></i></span>
-                                <#elseif it.contactType == "Email">
-                                    <span class="social-icon"><i class="fa-solid fa-envelope"></i></span>
-                                <#elseif it.contactType == "Телефон">
-                                    <span class="social-icon"><i class="fa-solid fa-phone"></i></span>
-                                <#elseif it.contactType == "ВКонтакте">
-                                    <span class="social-icon"><i class="fa-brands fa-vk"
-                                                                 style="color: #0042aa;"></i></span>
-                                <#elseif it.contactType == "Одноклассники">
-                                    <span class="social-icon"><i class="fa-brands fa-odnoklassniki"
-                                                                 style="color: #d29d00;"></i></span>
-                                <#elseif it.contactType == "Другое">
-                                    <span class="social-icon">Др.</span>
-                                </#if>
-                                : ${it.contactValue}</p>
-                        </#list>
-                    </#if>
-                <#else>
+<#--                <#if businessCard??>-->
+<#--                    <#if businessCard?has_content>-->
+<#--                        <#list businessCard as it>-->
+<#--                            <p class="margin-left-div">-->
+<#--                                <#if it.contactType == "Telegram">-->
+<#--                                    <span class="social-icon"><i class="fa-brands fa-telegram"-->
+<#--                                                                 style="color: #0056d6;"></i></span>-->
+<#--                                <#elseif it.contactType == "Instagram">-->
+<#--                                    <span class="social-icon"><i class="fa-brands fa-instagram"-->
+<#--                                                                 style="color: #ff40ff;"></i></span>-->
+<#--                                <#elseif it.contactType == "WhatsApp">-->
+<#--                                    <span class="social-icon"><i class="fa-brands fa-whatsapp"-->
+<#--                                                                 style="color: #669c35;"></i></span>-->
+<#--                                <#elseif it.contactType == "Facebook">-->
+<#--                                    <span class="social-icon"><i class="fa-brands fa-facebook"-->
+<#--                                                                 style="color: #0042aa;"></i></span>-->
+<#--                                <#elseif it.contactType == "TikTok">-->
+<#--                                    <span class="social-icon"><i class="fa-brands fa-tiktok"></i></span>-->
+<#--                                <#elseif it.contactType == "LinkedIn">-->
+<#--                                    <span class="social-icon"><i class="fa-brands fa-linkedin"-->
+<#--                                                                 style="color: #0056d6;"></i></span>-->
+<#--                                <#elseif it.contactType == "Email">-->
+<#--                                    <span class="social-icon"><i class="fa-solid fa-envelope"></i></span>-->
+<#--                                <#elseif it.contactType == "Телефон">-->
+<#--                                    <span class="social-icon"><i class="fa-solid fa-phone"></i></span>-->
+<#--                                <#elseif it.contactType == "ВКонтакте">-->
+<#--                                    <span class="social-icon"><i class="fa-brands fa-vk"-->
+<#--                                                                 style="color: #0042aa;"></i></span>-->
+<#--                                <#elseif it.contactType == "Одноклассники">-->
+<#--                                    <span class="social-icon"><i class="fa-brands fa-odnoklassniki"-->
+<#--                                                                 style="color: #d29d00;"></i></span>-->
+<#--                                <#elseif it.contactType == "Другое">-->
+<#--                                    <span class="social-icon">Др.</span>-->
+<#--                                </#if>-->
+<#--                                : ${it.contactValue}</p>-->
+<#--                        </#list>-->
+<#--                    </#if>-->
+<#--                <#else>-->
                     <#if user.phoneNumber?has_content>
                         <p>${user.phoneNumber}</p>
                     </#if>
-                </#if>
+<#--                </#if>-->
 
                 <#if rating?has_content>
                     <div class="rating text-center">
@@ -95,10 +95,10 @@
                 </div>
                 <div class="tab-content" id="resume-content">
                     <div class="resume-list">
-                        <div class="resume create-resume">
+                        <div class="create-resume">
                             <a href="/resume/create" class="add-resume-link">
-                                <p class="add-resume-text">Добавить резюме</p>
-                                <i class="fas fa-plus"></i>
+                                <p class="add-resume-text col">Добавить резюме</p>
+                                <i class="fas fa-plus mt-1"></i>
                             </a>
                         </div>
                         <#if resumes?has_content>
@@ -137,10 +137,10 @@
                 </div>
                 <div class="tab-content" id="portfolio-content">
                     <div class="portfolio-list">
-                        <div class="resume create-resume">
+                        <div class="create-resume">
                             <a href="/portfolio/new" class="add-resume-link">
                                 <p class="add-resume-text">Добавить портфолио</p>
-                                <i class="fas fa-plus"></i>
+                                <i class="fas fa-plus mt-1"></i>
                             </a>
                         </div>
                         <#if portfolios?has_content>
