@@ -51,7 +51,6 @@ public class ProfileControllerImpl implements ProfileController {
         }
 
         model.addAttribute("user", currentUser);
-        model.addAttribute("businessCard", contactsService.getBusinessCard());
 
         return "users/profile";
     }
@@ -116,6 +115,9 @@ public class ProfileControllerImpl implements ProfileController {
             model.addAttribute("qrCodeBase64", qrCodeBase64);
             model.addAttribute("isUserSpecialist", isUserSpecialist);
         }
+
+        model.addAttribute("businessCard", contactsService.getBusinessCard());
+        model.addAttribute("details", userService.getAccountDetailsByUserId(user.getId()));
 
         return "users/details";
     }

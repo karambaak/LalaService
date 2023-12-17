@@ -1,6 +1,7 @@
 <#import "../layout.ftlh" as main>
 <@main.layout>
     <title>Настройки аккаунта</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/static/css/account_details.css">
     <a href="javascript:history.go(-1);" class="back-button">
         <i class="fas fa-arrow-left"></i>Назад
@@ -8,7 +9,7 @@
     <div id="content" class="content">
         <#if isUserSpecialist??>
             <#if isUserSpecialist>
-                <div class="qr-code-section mt-5" id="openModal">
+                <div class="qr-code-section" id="openModal">
                     <i class="fas fa-qrcode fa-3x"></i>
                     <p class="mt-2">Мой QR-код</p>
                 </div>
@@ -34,12 +35,26 @@
             </div>
         </div>
         <ul class="mt-4">
-            <li><p>ваш город: Кыргызстан, Бишкек</p></li>
-            <li><p>email: isabaevvm@gmail.com</p></li>
-            <li><a href="profile/edit">Редактировать профиль</a></li>
+            <#if details??>
+                <#if details.email?has_content>
+                    <li><p>ваш город: ${details.email}</p></li>
+                <#else>
+                    <li><p>ваш город: не указан</p></li>
+                </#if>
+                <#if details.geolocation??>
+                    <li><p>email: ${details.geolocation}</p></li>
+                <#else>
+                    <li><p>email: не указан</p></li>
+                </#if>
+            </#if>
+            <li><a href="/profile/edit">Редактировать профиль</a></li>
             <li><a href="/favourites">Посмотреть избранные</a></li>
             <li><a href="/profile/add_contacts">Редактировать визитницу</a></li>
-            <li><a href="/tariff">Выбрать тариф</a></li>
+            <#if isUserSpecialist??>
+                <#if isUserSpecialist>
+                    <li><a href="/tariff">Выбрать тариф</a></li>
+                </#if>
+            </#if>
             <li><a href="/logout">Выйти из аккаунта</a></li>
             <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                    value="${(_csrf.token)!'--no-token--'}"/>
@@ -52,6 +67,7 @@
                 </p>
             </li>
         </ul>
+        <h4 class="text-center mt-3">Визитница</h4>
         <#if businessCard??>
             <#if businessCard?has_content>
                 <#list businessCard as it>
@@ -105,6 +121,85 @@
         </div>
     </div>
     <script>
+        function getThemeFromServer() {
+            const storedTheme = localStorage.getItem('theme');
+            if (storedTheme !== null) {
+                applyThemeToPage(storedTheme);
+                themeToggle.value = storedTheme;
+            } else {
+                const url = '/api/get-theme';
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        localStorage.setItem('theme', data);
+                        applyThemeToPage(data);
+                    })
+                    .catch(error => {
+                        console.error('Error getting theme from server:', error);
+                    });
+            }
+        }
+
+        function applyThemeToPage(theme) {
+
+            const body = document.body;
+            const otherElements = document.querySelectorAll('.other-elements');
+
+            body.classList.toggle('dark-theme', theme == 1);
+            otherElements.forEach(element => {
+                element.classList.toggle('dark-theme', theme == 1);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            getThemeFromServer();
+        });
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('input', function () {
+            const theme = parseInt(themeToggle.value);
+            body.classList.toggle('dark-theme', theme === 1);
+            localStorage.setItem('theme', theme);
+            const otherElements = document.querySelectorAll('.other-elements');
+            otherElements.forEach(element => {
+                element.classList.toggle('dark-theme', theme === 1);
+            });
+            saveThemePreference(theme);
+        });
+
+        function saveThemePreference(theme) {
+            const url = '/api/save-theme-preference';
+            const csrfToken = document.querySelector('input[name="_csrf"]').value;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    theme
+                }),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Theme preference saved:', data);
+                })
+                .catch(error => {
+                    console.error('Error saving theme preference:', error);
+                });
+        }
 
         document.getElementById("openModal").addEventListener("click", function () {
             openModal();
