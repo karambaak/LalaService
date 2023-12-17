@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.AccountDetailsDto;
 import com.example.demo.dto.FindUserNameDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.dto.ViewerDto;
@@ -518,4 +519,14 @@ public class UserService {
         return makeUserDto(repository.findById(id).orElseThrow());
     }
 
+    public AccountDetailsDto getAccountDetailsByUserId(Long userId){
+        User user = repository.findById(userId).orElseThrow(() -> new NoSuchElementException("User not found"));
+        var geo = user.getGeolocation();
+        String userGeolocation = geo.getCountry() + ", " + geo.getCity();
+
+        return AccountDetailsDto.builder()
+                .email(user.getEmail())
+                .geolocation(userGeolocation)
+                .build();
+    }
 }
