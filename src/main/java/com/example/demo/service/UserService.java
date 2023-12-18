@@ -455,7 +455,7 @@ public class UserService {
         return UserDto.builder()
                         .id(user.getId())
                         .userName(user.getUserName())
-                        .role(user.getRole().getRole())
+                .role(user.getRole().getRole().equalsIgnoreCase("ROLE_SPECIALIST") ? "Specialist" : "Costumer")
                         .phoneNumber(user.getPhoneNumber())
                         .email(user.getEmail())
                         .photo(user.getPhoto())
