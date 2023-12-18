@@ -180,17 +180,6 @@
     background-color: #ccc;
 }
 
-@media screen and (max-width: 769px) {
-    .buttons-resume {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .resume-button {
-        margin-right: 20px;
-    }
-}
-
 .resume p {
     margin: 0rem;
 }
@@ -262,6 +251,19 @@
 
 
 @media screen and (min-width: 769px) {
+    .buttons-resume {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .resume-button {
+        margin-right: 20px;
+    }
+
+    .leave-review-btn{
+        margin-bottom: 100px;
+    }
+
     .content {
         max-width: 900px;
         margin: 0 auto;
@@ -344,6 +346,10 @@
 
     .settings-link {
         right: 17%;
+    }
+
+    .leave-review-btn{
+        margin-bottom: 100px;
     }
 }
 
