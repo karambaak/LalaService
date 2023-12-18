@@ -114,6 +114,7 @@ public class ProfileControllerImpl implements ProfileController {
 
             model.addAttribute("qrCodeBase64", qrCodeBase64);
             model.addAttribute("isUserSpecialist", isUserSpecialist);
+            model.addAttribute("specialistId", specialist.get().getId());
         }
 
         model.addAttribute("businessCard", contactsService.getBusinessCard());
