@@ -54,6 +54,9 @@
                 <#if isUserSpecialist>
                     <li><a href="/tariff">Выбрать тариф</a></li>
                 </#if>
+                <#if specialistId?has_content>
+                    <li><a href="/rating/${specialistId}/reviews">Посмотреть отзывы</a></li>
+                </#if>
             </#if>
             <li><a href="/logout">Выйти из аккаунта</a></li>
             <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
