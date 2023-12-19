@@ -82,7 +82,7 @@
                                     </a>
                                     <div class="buttons-resume">
                                         <a href="/resume/up/${resume.id}">
-                                            <button class="btn resume-button">Ап</button>
+                                            <button class="btn resume-button">Поднять</button>
                                         </a>
                                         <a href="/resume/delete/${resume.id}">
                                             <button class="btn resume-button">Удалить</button>
