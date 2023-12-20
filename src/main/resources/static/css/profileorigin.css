@@ -191,6 +191,17 @@
     border-radius: inherit;
 }
 
+.star {
+    margin-top: 10px;
+    font-size: 17px;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.star.active {
+    color: #ffdd00;
+}
+
 .create-resume {
     background-color: rgb(255, 255, 255);
     border-radius: 15px;
