@@ -113,14 +113,14 @@
                                             <img src="/static/noPhoto.png" alt class="portfolio-img">
                                         </#if>
                                     </div>
-                                    <div class="portfolio-details">
+                                    <a href="/portfolio/${portfolio.id}" class="portfolio-details">
                                         <#if portfolio.title?has_content>
                                             <p class="resume-name">${portfolio.title}</p>
                                         </#if>
                                         <#if portfolio.timeOfPortfolio?has_content>
                                             <p>Дата публикации ${portfolio.timeOfPortfolio}</p>
                                         </#if>
-                                    </div>
+                                    </a>
                                 </div>
                             </#list>
                         <#else>

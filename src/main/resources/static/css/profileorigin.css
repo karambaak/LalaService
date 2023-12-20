@@ -256,6 +256,10 @@
     overflow: hidden;
 }
 
+.portfolio-details{
+    text-decoration: none;
+}
+
 .cover-photo img {
     width: 100%;
     height: 100%;
