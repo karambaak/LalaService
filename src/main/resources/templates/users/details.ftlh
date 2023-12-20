@@ -37,12 +37,12 @@
         <ul class="mt-4">
             <#if details??>
                 <#if details.email?has_content>
-                    <li><p>ваш город: ${details.email}</p></li>
+                    <li><p>ваш город: ${details.geolocation}</p></li>
                 <#else>
                     <li><p>ваш город: не указан</p></li>
                 </#if>
                 <#if details.geolocation??>
-                    <li><p>email: ${details.geolocation}</p></li>
+                    <li><p>email: ${details.email}</p></li>
                 <#else>
                     <li><p>email: не указан</p></li>
                 </#if>
